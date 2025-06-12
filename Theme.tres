@@ -1,0 +1,13 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b0ixpqfc0nrgw"]
+
+[ext_resource type="FontFile" uid="uid://bdk7xuiuykjti" path="res://DTM.otf" id="1_yd3fu"]
+
+[resource]
+default_font = ExtResource("1_yd3fu")
+Button/font_sizes/font_size = 27
+Button/fonts/font = ExtResource("1_yd3fu")
+Label/font_sizes/font_size = 27
+Label/fonts/font = ExtResource("1_yd3fu")
+PopupMenu/font_sizes/font_separator_size = 27
+PopupMenu/font_sizes/font_size = 27
+PopupMenu/font_sizes/title_font_size = 27

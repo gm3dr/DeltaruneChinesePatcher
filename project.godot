@@ -1,0 +1,47 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="DELTARUNE Chinese Patcher"
+config/name_localized={
+"zh_CN": "DELTARUNE 汉化安装器",
+"zh_TW": "DELTARUNE 漢化安裝器"
+}
+config/version="1.0.0"
+run/main_scene="uid://hv4jki47g85q"
+config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
+config/icon="res://icon.svg"
+config/size/resizable=true
+
+[display]
+
+window/size/viewport_width=640
+window/size/viewport_height=480
+window/size/resizable=false
+window/subwindows/embed_subwindows=false
+window/per_pixel_transparency/allowed=true
+
+[dotnet]
+
+project/assembly_name="DeltaruneChinesePatcher"
+
+[gui]
+
+timers/tooltip_delay_sec=0.0
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://Locale/loc.en.translation", "res://Locale/loc.zh_CN.translation", "res://Locale/loc.zh_TW.translation")
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

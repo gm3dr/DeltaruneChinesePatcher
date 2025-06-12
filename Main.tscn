@@ -1,0 +1,226 @@
+[gd_scene load_steps=3 format=3 uid="uid://hv4jki47g85q"]
+
+[ext_resource type="Theme" uid="uid://b0ixpqfc0nrgw" path="res://Theme.tres" id="1_glv2v"]
+[ext_resource type="Script" uid="uid://cxec4g8oww2if" path="res://Main.cs" id="2_uu6xs"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_glv2v")
+script = ExtResource("2_uu6xs")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "locLocalVer
+locNewestVer"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UpdatePatch" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "locUpdatePatch"
+
+[node name="Control2" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 13
+placeholder_text = "locDeltaruneDir"
+
+[node name="Browse" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "locBrowse"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Patch" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "locPatch"
+
+[node name="Control2" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OptionButton" type="OptionButton" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -202.0
+offset_bottom = 42.0
+grow_horizontal = 0
+item_count = 3
+popup/item_0/text = "English"
+popup/item_0/id = 0
+popup/item_1/text = "中文（简体）"
+popup/item_1/id = 1
+popup/item_2/text = "中文（繁體）"
+popup/item_2/id = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 69.0
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "v0.0.0"
+
+[node name="Update" type="Button" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
+tooltip_text = "locClickToUpdate"
+text = "locUpdate"
+
+[node name="Info" type="Button" parent="."]
+layout_mode = 1
+offset_right = 40.0
+offset_bottom = 42.0
+tooltip_text = "locInfo"
+text = "!"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a Directory"
+ok_button_text = "Select Current Folder"
+file_mode = 2
+access = 2
+use_native_dialog = true
+
+[node name="Log" type="Window" parent="."]
+title = "locLog"
+initial_position = 2
+size = Vector2i(960, 600)
+visible = false
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Log"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Log/ScrollContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+
+[node name="Popup" type="Window" parent="."]
+title = "locResult"
+initial_position = 2
+size = Vector2i(240, 120)
+visible = false
+
+[node name="Label" type="Label" parent="Popup"]
+custom_minimum_size = Vector2(320, 120)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "locPatched"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Patch" type="Window" parent="."]
+title = "locPatch"
+initial_position = 2
+size = Vector2i(480, 240)
+visible = false
+
+[node name="CenterContainer" type="CenterContainer" parent="Patch"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Patch/CenterContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Patch/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "locBakDetected"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Patch/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PatchUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "locPatchUpdated"
+
+[node name="Control2" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Patch/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GameUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "locGameUpdated"
+
+[node name="Control2" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer/Browse" to="." method="_on_browse_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer2/Patch" to="." method="_on_patch_pressed"]
+[connection signal="item_selected" from="OptionButton" to="." method="_on_language_item_selected"]
+[connection signal="pressed" from="HBoxContainer/Update" to="." method="_on_update_pressed"]
+[connection signal="pressed" from="Info" to="." method="_on_info_pressed"]
+[connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
+[connection signal="close_requested" from="Log" to="." method="_on_window_close_requested"]
+[connection signal="close_requested" from="Popup" to="." method="_on_popup_close_requested"]
+[connection signal="close_requested" from="Patch" to="." method="_on_patch_close_requested"]
+[connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="Patch"]
+[connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer2/GameUpdated" to="." method="_on_game_updated_pressed"]
