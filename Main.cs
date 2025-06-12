@@ -119,6 +119,7 @@ public partial class Main : Control
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak"))
 			{
+				GD.Print("Found: "+path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak");
 				found = true;
 				break;
 			}
@@ -187,14 +188,16 @@ public partial class Main : Control
 		if (FileAccess.FileExists(path + "/data.win.bak"))
 		{
 			DirAccess.RemoveAbsolute(path + "/data.win.bak");
+			GD.Print("Removed " + path + "/data.win.bak");
 		}
 		foreach (var chapter in chapters)
+		{
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak"))
 			{
-				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak"))
-				{
-					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak");
-				}
+				DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak");
+				GD.Print("Removed " + path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak");
 			}
+		}
 		GetNode<Window>("Patch").Hide();
 		GetNode<Label>("Popup/Label").Text = "locVerifyIntegrity";
 		GetNode<Window>("Popup").Size = new Vector2I(640,360);
@@ -207,15 +210,16 @@ public partial class Main : Control
 		GetNode<Window>("Patch").Hide();
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
 		Godot.Collections.Array output = [];
+		Godot.Collections.Array outputtemp = [];
 		GD.Print("Extracting...");
 		output.Add("Extracting...");
-		OS.Execute(_7zip, ["x", patchdir, "-o" + path, "-aoa", "-y"], output, true, true);
+		OS.Execute(_7zip, ["x", patchdir, "-o" + path, "-aoa", "-y"], outputtemp, true, true);
 		GD.Print($"{_7zip} x {patchdir} -o{path} -aoa -y");
-		foreach (var i in output)
+		foreach (var i in outputtemp)
 		{
 			GD.Print(i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n"));
-			GetNode<Label>("Log/ScrollContainer/Label").Text += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
+		output += outputtemp;
 		var count = "";
 		/*while (FileAccess.FileExists(path + "/data.win.bak" + count))
 		{
@@ -235,12 +239,17 @@ public partial class Main : Control
 			if (FileAccess.FileExists(path + "/data.win.bak" + count))
 			{
 				DirAccess.RemoveAbsolute(path + "/data.win");
+				GD.Print("Removed " + path + "/data.win");
+				output.Add("Removed " + path + "/data.win");
 			}
 			else
 			{
 				DirAccess.RenameAbsolute(path + "/data.win", path + "/data.win.bak" + count);
+				GD.Print("Renamed " + path + "/data.win to " + path + "/data.win.bak" + count);
+				output.Add("Renamed " + path + "/data.win to " + path + "/data.win.bak" + count);
 			}
-			OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/data.win.bak" + count, path + "/main.xdelta", path + "/data.win"], output, true, true);
+			outputtemp = [];
+			OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/data.win.bak" + count, path + "/main.xdelta", path + "/data.win"], outputtemp, true, true);
 			GD.Print($"{xdelta3} -f -d -v -s {path}/data.win.bak{count} {path}/main.xdelta {path}/data.win");
 		}
 		foreach (var chapter in chapters)
@@ -252,18 +261,26 @@ public partial class Main : Control
 				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak" + count))
 				{
 					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win");
+					GD.Print("Removed " + path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win");
+					output.Add("Removed " + path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win");
 				}
 				else
 				{
-					DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win", path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/`" + count);
+					DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win", path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak" + count);
+					GD.Print("Renamed " + path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win to " + path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak" + count);
+					output.Add("Renamed " + path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win to " + path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak" + count);
 				}
-				OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak" + count, path + "/chapter" + chapter + ".xdelta", path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win"], output, true, true);
+				OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win.bak" + count, path + "/chapter" + chapter + ".xdelta", path + "/chapter" + chapter + "_" + OS.GetName().ToLower() + "/data.win"], outputtemp, true, true);
 				GD.Print($"{xdelta3} -f -d -v -s {path}/chapter{chapter}_{OS.GetName().ToLower()}/data.win.bak{count} {path}/chapter{chapter}.xdelta {path}/chapter{chapter}_{OS.GetName().ToLower()}/data.win");
 			}
 		}
-		foreach (var i in output)
+		foreach (var i in outputtemp)
 		{
 			GD.Print(i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n"));
+		}
+		output += outputtemp;
+		foreach (var i in output)
+		{
 			GetNode<Label>("Log/ScrollContainer/Label").Text += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
 		GetNode<Window>("Log").Show();
