@@ -14,7 +14,7 @@ locClickToUpdate,Click to update,点击更新,點擊更新
 locDownloadFailed,Download failed: ,下载失败：,下載失敗：
 locWaiting4Restart,Waiting for restart,等待重启,等待重啟
 locResult,Result,结果,結果
-locPatched,Patched!,安装完成！,安裝完成！
+locPatched,"Patched!\nOriginal data.win was renamed to data.win.bak\nFor updating in future, please don't delete it.",安装完成！\n原本的 data.win 已被重命名为 data.win.bak\n为了未来更新所需，请不要删除。,安裝完成！\n原本的 data.win 已被重命名為 data.win.bak\n為了未來更新所需，請不要刪除。
 locBakDetected,A patched version detected.\nIs game updated or only patch updated?,检测到打了补丁的版本。\n是游戏更新了还是只是补丁更新了？,偵測到打了補丁的版本。\n是遊戲更新了還是只是補丁更新了？
 locPatchUpdated, Only patch updated , 只是补丁更新了, 只是補丁更新了
 locGameUpdated, Game updated , 游戏更新了, 遊戲更新了

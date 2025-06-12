@@ -285,7 +285,7 @@ public partial class Main : Control
 		}
 		GetNode<Window>("Log").Show();
 		GetNode<Label>("Popup/Label").Text = "locPatched";
-		GetNode<Window>("Popup").Size = new Vector2I(240,120);
+		GetNode<Window>("Popup").Size = new Vector2I(480,240);//240,120);
 		GetNode<Window>("Popup").Show();
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
 	}
