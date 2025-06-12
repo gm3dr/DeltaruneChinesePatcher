@@ -16,7 +16,7 @@ locWaiting4Restart,Waiting for restart,等待重启,等待重啟
 locResult,Result,结果,結果
 locPatched,Patched!,安装完成！,安裝完成！
 locBakDetected,A patched version detected.\nIs game updated or only patch updated?,检测到打了补丁的版本。\n是游戏更新了还是只是补丁更新了？,偵測到打了補丁的版本。\n是遊戲更新了還是只是補丁更新了？
-locPatchUpdated,Only patch updated,只是补丁更新了,只是補丁更新了
-locGameUpdated,Game updated,游戏更新了,遊戲更新了
+locPatchUpdated, Only patch updated , 只是补丁更新了, 只是補丁更新了
+locGameUpdated, Game updated , 游戏更新了, 遊戲更新了
 locVerifyIntegrity,Please go to Steam and right click DELTARUNE in your game library\nProperties...→Installed Files→Verify integrity of game files\nThen back to here for patch after verified.,请打开 Steam 并在你的库中右键 DELTARUNE\n属性...→已安装文件→验证游戏文件的完整性\n等待验证完成后回来安装补丁,請打開 Steam 並在你的收藏庫中右鍵 DELTARUNE\n內容...→已安裝檔案→驗證遊戲檔案的完整性\n等待驗證完成后回來安裝補丁
 locInfo,DELTARUNE Chinese Patcher By SheepYhangCN\nMade with Godot Engine 4.1.1 .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installtion directory of the Steam version of DELTARUNE\nPatcher will automatically patch data.win of every chapter\n\nThis patcher is open source on Github\nClick to open Github repository,DELTARUNE 汉化安装器 By 憨憨羊の宇航鸽鸽\n使用 Godot Engine 4.1.1 .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data.win 安装补丁\n\n此安装器已在 Github 上开源\n点击打开 Github 仓库,
