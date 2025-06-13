@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Linq;
+using System.Net.Http;
 
 public partial class Main : Control
 {
@@ -15,6 +16,7 @@ public partial class Main : Control
 	static Godot.Collections.Dictionary patchreleases = new();
 	static string osname = (OS.GetName() == "macOS" ? "mac" : "windows");
 	static string dataname = (OS.GetName() == "macOS" ? "game.ios" : "data.win");
+	System.IO.FileStream fileStream = null;
 	public override async void _Ready()
 	{
 		//首次初始化
@@ -81,10 +83,15 @@ public partial class Main : Control
 				patchreleases = json.Data.AsGodotDictionary();
 			}
 			GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locNewestVer") + patchreleases["tag_name"].AsString();
+			if (patchver != patchreleases["tag_name"].AsString())
+			{
+				GetNode<HBoxContainer>("CenterContainer/VBoxContainer/HBoxContainer3").Visible = true;
+			}
 		}
-		catch (System.Net.Http.HttpRequestException exc)
+		catch (HttpRequestException exc)
 		{
 			GD.PushError("Exception catched when requesting patch latest: "+exc.ToString()+" ("+exc.Message+")");
+			//GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locNewestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
 		}
 		//安装器更新
 		json = new Json();
@@ -101,7 +108,7 @@ public partial class Main : Control
 				GetNode<Button>("HBoxContainer/Update").Visible = true;
 			}
 		}
-		catch (System.Net.Http.HttpRequestException exc)
+		catch (HttpRequestException exc)
 		{
 			GD.PushError("Exception catched when requesting patcher latest: "+exc.ToString()+" ("+exc.Message+")");
 		}
@@ -181,14 +188,82 @@ public partial class Main : Control
 		GetNode<Button>("HBoxContainer/Update").Disabled = true;
 		var url = "";
 		var file = "";
+		var size = 0;
 		foreach (var asset in patcherreleases["assets"].AsGodotArray())
 		{
 			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(OS.GetName().ToLower()))
 			{
 				url = asset.AsGodotDictionary()["browser_download_url"].AsString();
 				file = asset.AsGodotDictionary()["name"].AsString();
+				size = asset.AsGodotDictionary()["size"].AsInt32();
 				break;
 			}
+		}
+		if (url != "")
+		{
+			Godot.Collections.Array output = [];
+			GD.Print("Downloading " + url + " to " + GetGameDirPath("UpdateTemp/" + file));
+			output.Add("Downloading " + url + " to " + GetGameDirPath("UpdateTemp/" + file));
+			try
+			{
+				using (var httpClient = new System.Net.Http.HttpClient())
+				{
+					using (var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+					{
+						response.EnsureSuccessStatusCode();
+						using var bodyStream = await response.Content.ReadAsStreamAsync();
+						fileStream = new System.IO.FileStream(GetGameDirPath("UpdateTemp/" + file), System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None);
+						var buffer = new byte[4096];
+						double totalRead = 0;
+						int bytesRead;
+						while ((bytesRead = await bodyStream.ReadAsync(buffer)) > 0)
+						{
+							await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+							totalRead += bytesRead;
+							if (size > 0)
+							{
+								GD.Print($"Downloaded: {totalRead} / {size}");
+							}
+							if (totalRead >= size)
+							{
+								break;
+							}
+						}
+					}
+				}
+			}
+			catch (Exception exc)
+			{
+				GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
+				GD.PushError("Exception catched when updating patcher: " + exc.ToString() + " ("+exc.Message+")");
+				return;
+			}
+			fileStream.Dispose();
+			fileStream = null;
+			GD.Print("Extracting " + GetGameDirPath("UpdateTemp/" + file));
+			output.Add("Extracting " + GetGameDirPath("UpdateTemp/" + file));
+			OS.Execute(_7zip, ["x", GetGameDirPath("UpdateTemp/" + file), "-o" + GetGameDirPath(), "-aoa", "-y"], output, true, true);
+			GD.Print($"{_7zip} x {GetGameDirPath("UpdateTemp/" + file)} -o{GetGameDirPath()} -aoa -y");
+			foreach (var ff in DirAccess.GetFilesAt(GetGameDirPath()))
+			{
+				if (ff.EndsWith(".pck") && ff != "DELTARUNE Chinese Patcher.pck")
+				{
+					DirAccess.RemoveAbsolute(GetGameDirPath(ff));
+					DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.pck"), GetGameDirPath(ff));
+				}
+				if (OS.GetName() == "Windows" && ff.EndsWith(".exe") && ff != "DELTARUNE Chinese Patcher.exe")
+				{
+					DirAccess.RemoveAbsolute(GetGameDirPath(ff));
+					DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.exe"), GetGameDirPath(ff));
+				}
+				if (OS.GetName() == "Linux" && ff.EndsWith(".x86_64") && ff != "DELTARUNE Chinese Patcher.x86_64")
+				{
+					DirAccess.RemoveAbsolute(GetGameDirPath(ff));
+					DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.x86_64"), GetGameDirPath(ff));
+				}
+			}
+			OS.MoveToTrash(GetGameDirPath("UpdateTemp"));
+			GetNode<Button>("HBoxContainer/Update").Text = "locWaiting4Restart";
 		}
 		if (url != "")
 		{
@@ -262,6 +337,100 @@ public partial class Main : Control
 		GetNode<Window>("Popup").Size = new Vector2I(640,360);
 		GetNode<Window>("Popup").Show();
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+	}
+	public async void _on_update_patch_pressed()
+	{
+		var updatepatch = GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatch");
+		updatepatch.Disabled = true;
+		var progressbar = GetNode<ProgressBar>("CenterContainer/VBoxContainer/ProgressBar");
+		progressbar.Visible = true;
+		Godot.Collections.Array output = [];
+		//删除旧patch
+		foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
+		{
+			if (fff.StartsWith("patch_"))
+			{
+				DirAccess.RemoveAbsolute(GetGameDirPath(fff));
+				GD.Print("Removed " + GetGameDirPath(fff));
+				output.Add("Removed " + GetGameDirPath(fff));
+			}
+		}
+		//下载patch
+		var url = "";
+		var file = "";
+		var size = 0;
+		foreach (var asset in patchreleases["assets"].AsGodotArray())
+		{
+			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(OS.GetName().ToLower()))
+			{
+				url = /*(TranslationServer.GetLocale() == "zh_CN" ? "https://ghfast.top/" : "") + */asset.AsGodotDictionary()["browser_download_url"].AsString();
+				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
+				size = asset.AsGodotDictionary()["size"].AsInt32();
+				progressbar.MaxValue = size;
+				break;
+			}
+		}
+		if (url != "")
+		{
+			GD.Print("Downloading " + url + " to " + GetGameDirPath(file));
+			output.Add("Downloading " + url + " to " + GetGameDirPath(file));
+			try
+			{
+				using (var httpClient = new System.Net.Http.HttpClient())
+				{
+					using (var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+					{
+						response.EnsureSuccessStatusCode();
+						using var bodyStream = await response.Content.ReadAsStreamAsync();
+						fileStream = new System.IO.FileStream(GetGameDirPath(file), System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None);
+						var buffer = new byte[4096];
+						double totalRead = 0;
+						int bytesRead;
+						while ((bytesRead = await bodyStream.ReadAsync(buffer)) > 0)
+						{
+							await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+							totalRead += bytesRead;
+							if (size > 0)
+							{
+								progressbar.Value = totalRead;
+								//progressbar.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
+								updatepatch.Text = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
+								GD.Print($"Downloaded: {totalRead} / {size}");
+							}
+							if (totalRead >= size)
+							{
+								break;
+							}
+						}
+					}
+				}
+			}
+			catch (Exception exc)
+			{
+				updatepatch.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
+				GD.PushError("Exception catched when updating patch: " + exc.ToString() + " ("+exc.Message+")");
+				return;
+			}
+			fileStream.Dispose();
+			fileStream = null;
+			GD.Print($"Download {file} finished.");
+			output.Add($"Download {file} finished.");
+			DirAccess.RenameAbsolute(GetGameDirPath(file), GetGameDirPath(file.TrimPrefix("_downloadingtemp_")));
+			GD.Print($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
+			output.Add($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
+			updatepatch.Text = "locWaiting4Restart";
+		}
+	}
+	public void _on_update_patch_browser_pressed()
+	{
+		foreach (var asset in patchreleases["assets"].AsGodotArray())
+		{
+			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(OS.GetName().ToLower()))
+			{
+				OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
+				break;
+			}
+		}
 	}
 
 	public void Patch()
@@ -378,6 +547,26 @@ public partial class Main : Control
 		else
 		{
 			return OS.GetExecutablePath().GetBaseDir() + "/" + str;
+		}
+	}
+	//退出
+	public override void _Notification(int what)
+	{
+		if (what == NotificationWMCloseRequest)
+		{
+			if (fileStream != null)
+			{
+				fileStream.Dispose();
+				fileStream = null;
+			}
+			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
+			{
+				if (file.StartsWith("_downloadingtemp_"))
+				{
+					DirAccess.RemoveAbsolute(GetGameDirPath(file));
+					GD.Print("Removed " + GetGameDirPath(file));
+				}
+			}
 		}
 	}
 }

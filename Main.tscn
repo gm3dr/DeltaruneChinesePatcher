@@ -41,11 +41,23 @@ size_flags_horizontal = 3
 
 [node name="UpdatePatch" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
+tooltip_text = "locUpdatePatchInfo"
 text = "locUpdatePatch"
+
+[node name="UpdatePatchBrowser" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+tooltip_text = "locUpdatePatchBrowserInfo"
+text = "locUpdatePatchBrowser"
 
 [node name="Control2" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="CenterContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 27
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(500, 0)
@@ -218,6 +230,8 @@ text = "locGameUpdated"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatch" to="." method="_on_update_patch_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatchBrowser" to="." method="_on_update_patch_browser_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer/Browse" to="." method="_on_browse_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer2/Patch" to="." method="_on_patch_pressed"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_language_item_selected"]
