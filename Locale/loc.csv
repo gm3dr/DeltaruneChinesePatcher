@@ -11,7 +11,7 @@ locNotFound,Not found,未找到,未找到
 locUpdatePatch, Update patch (Auto) , 更新补丁包（自动）, 更新補丁包（自動）
 locUpdatePatchInfo,"Automatically download latest patch\nOnly single thread supported, might be slow",自动下载最新的补丁包\n仅支持单线程，可能会很慢,自動下載最新的補丁包\n僅支援單執行緒，可能會很慢
 locUpdatePatchBrowser, Update patch (Browser) , 更新补丁包（浏览器）, 更新補丁包（瀏覽器）
-locUpdatePatchBrowserInfo,"Download latest patch with your browser, faster speed\nYou need to move it into the patcher's directory after download finished\nPlease restart patcher after you finished",通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要自行将其移动到安装器目录\n请在完成后重启安装器,透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要自行將其移動到安裝器目錄\n請在完成後重啟安裝器
+locUpdatePatchBrowserInfo,"Download latest patch with your browser, faster speed\nYou need to move it into the patcher's directory after download finished\n(No need for extracting it)\nPlease restart patcher after you finished",通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要自行将其移动到安装器目录\n（不需要解压）\n请在完成后重启安装器,透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要自行將其移動到安裝器目錄\n（不需要提取壓縮包）\n請在完成後重啟安裝器
 locUpdate, Newer version detected: {VER} , 检测到新版：{VER} , 偵測到新版：{VER} 
 locClickToUpdate,"Click to update\n(Experimental, might won't work)",点击更新\n（实验性，可能不管用）,點擊更新\n（實驗性，可能不管用）
 locDownloadFailed,Download failed: ,下载失败：,下載失敗：
