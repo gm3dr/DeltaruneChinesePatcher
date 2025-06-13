@@ -10,7 +10,7 @@ locRequesting,Requesting...,获取中...,獲取中...
 locNotFound,Not found,未找到,未找到
 locUpdatePatch,Update patch,更新补丁包,更新補丁包
 locUpdate,Newer version detected: {VER},检测到新版：{VER},偵測到新版：{VER}
-locClickToUpdate,Click to update,点击更新,點擊更新
+locClickToUpdate,"Click to update\n(Experimental, might won't work)",点击更新\n（实验性，可能不管用）,點擊更新\n（實驗性，可能不管用）
 locDownloadFailed,Download failed: ,下载失败：,下載失敗：
 locWaiting4Restart,Waiting for restart,等待重启,等待重啟
 locResult,Result,结果,結果
