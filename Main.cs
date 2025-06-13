@@ -81,8 +81,9 @@ public partial class Main : Control
 			}
 			GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locNewestVer") + patchreleases["tag_name"].AsString();
 		}
-		catch (System.Net.Http.HttpRequestException)
+		catch (System.Net.Http.HttpRequestException exc)
 		{
+			GD.PushError("Exception catched when requesting patch latest: "+exc.ToString()+" ("+exc.Message+")");
 		}
 		//安装器更新
 		json = new Json();
@@ -99,8 +100,9 @@ public partial class Main : Control
 				GetNode<Button>("HBoxContainer/Update").Visible = true;
 			}
 		}
-		catch (System.Net.Http.HttpRequestException)
+		catch (System.Net.Http.HttpRequestException exc)
 		{
+			GD.PushError("Exception catched when requesting patcher latest: "+exc.ToString()+" ("+exc.Message+")");
 		}
 
 		if (!inited)
