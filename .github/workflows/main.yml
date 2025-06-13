@@ -1,0 +1,62 @@
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    name: Export
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: |
+          8.0.x
+    
+    - name: .NET Restore
+      uses: zyactions/dotnet-restore@v1
+
+    - name: Build Solution
+      run: dotnet build
+
+    - name: Install Wine
+      id: wine_install
+      run: |
+        sudo apt update
+        sudo apt install wine64
+        echo "WINE_PATH=$(which wine64)" >> $GITHUB_OUTPUT
+  
+    - name: Download rcedit
+      run: |
+        mkdir -p ~/rcedit
+        wget -O ~/rcedit/rcedit.exe https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
+
+    - name: Setup Godot Editor Settings
+      run: |
+        mkdir -p ~/.config/godot/
+        cat << EOF > ~/.config/godot/editor_settings-4.4.1.tres
+        [resource]
+        export/windows/rcedit = "wine $HOME/rcedit/rcedit.exe"
+        EOF
+  
+    - name: Export Project
+      id: export
+      uses: firebelley/godot-export@v6.0.0
+      with:
+        godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_linux_x86_64.zip
+        godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_export_templates.tpz
+        relative_project_path: ./
+        archive_output: true
+        wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
+        presets_to_export: "Linux"
+
+    - name: Upload artifacts (Linux)
+      uses: actions/upload-artifact@v4
+      with:
+        name: Linux
+        path: ${{ steps.export.outputs.archive_directory }}/Linux.zip
