@@ -66,13 +66,16 @@ public partial class Main : Control
 			node.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.GetTranslationObject(current).GetMessage("locLanguageName"));
 		}
 		node.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
+		//HttpClient
+		var httpc = new System.Net.Http.HttpClient();
+		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 		//补丁版本号
 		GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver);//todo + "\n" + TranslationServer.Translate("locNewestVer") + TranslationServer.Translate("locRequesting");
 		//安装器更新
 		var json = new Json();
 		try
 		{
-			json.Parse(await new System.Net.Http.HttpClient().GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
+			json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
 			patcherreleases = json.Data.AsGodotDictionary();
 			if (patcherreleases["tag_name"].AsString() != "v" + ProjectSettings.GetSetting("application/config/version").AsString())
 			{
