@@ -183,6 +183,7 @@ autowrap_mode = 3
 title = "locPatch"
 initial_position = 2
 size = Vector2i(480, 240)
+visible = false
 
 [node name="CenterContainer" type="CenterContainer" parent="Patch"]
 anchors_preset = 15
