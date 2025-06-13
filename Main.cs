@@ -210,12 +210,22 @@ public partial class Main : Control
 			DirAccess.RemoveAbsolute(path + "/"+dataname+".bak");
 			GD.Print("Removed " + path + "/"+dataname+".bak");
 		}
+		if (FileAccess.FileExists(path + "/main.xdelta"))
+		{
+			DirAccess.RemoveAbsolute(path + "/main.xdelta");
+			GD.Print("Removed " + path + "/main.xdelta");
+		}
 		foreach (var chapter in chapters)
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
 			{
 				DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
 				GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
+			}
+			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
+			{
+				DirAccess.RemoveAbsolute(path + "/chapter" + chapter + ".xdelta");
+				GD.Print("Removed " + path + "/chapter" + chapter + ".xdelta");
 			}
 		}
 		GetNode<Window>("Patch").Hide();
