@@ -174,6 +174,24 @@ public partial class Main : Control
 				output.Add("Extracting " + GetGameDirPath("UpdateTemp/" + file));
 				OS.Execute(_7zip, ["x", GetGameDirPath("UpdateTemp/" + file), "-o" + GetGameDirPath(), "-aoa", "-y"], output, true, true);
 				GD.Print($"{_7zip} x {GetGameDirPath("UpdateTemp/" + file)} -o{GetGameDirPath()} -aoa -y");
+				foreach (var ff in DirAccess.GetFilesAt(GetGameDirPath()))
+				{
+					if (ff.EndsWith(".pck") && ff != "DELTARUNE Chinese Patcher.pck")
+					{
+						DirAccess.RemoveAbsolute(GetGameDirPath(ff));
+						DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.pck"), GetGameDirPath(ff));
+					}
+					if (OS.GetName() == "Windows" && ff.EndsWith(".exe") && ff != "DELTARUNE Chinese Patcher.exe")
+					{
+						DirAccess.RemoveAbsolute(GetGameDirPath(ff));
+						DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.exe"), GetGameDirPath(ff));
+					}
+					if (OS.GetName() == "Linux" && ff.EndsWith(".x86_64") && ff != "DELTARUNE Chinese Patcher.x86_64")
+					{
+						DirAccess.RemoveAbsolute(GetGameDirPath(ff));
+						DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.x86_64"), GetGameDirPath(ff));
+					}
+				}
 				GetNode<Button>("HBoxContainer/Update").Text = "locWaiting4Restart";
 			}
 			else
