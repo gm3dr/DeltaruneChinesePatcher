@@ -225,7 +225,7 @@ public partial class Main : Control
 			}
 			else
 			{
-				GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locUpdateFailed") + response.StatusCode.ToString();
+				GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locDownloadFailed") + response.StatusCode.ToString();
 			}
 		}
 	}
