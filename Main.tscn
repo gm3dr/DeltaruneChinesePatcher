@@ -147,16 +147,21 @@ theme_override_font_sizes/font_size = 13
 [node name="Popup" type="Window" parent="."]
 title = "locResult"
 initial_position = 2
-size = Vector2i(240, 120)
+size = Vector2i(480, 240)
 visible = false
 
-[node name="Label" type="Label" parent="Popup"]
-custom_minimum_size = Vector2(320, 120)
+[node name="ScrollContainer" type="ScrollContainer" parent="Popup"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Label" type="Label" parent="Popup/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "locPatched"
 horizontal_alignment = 1
 vertical_alignment = 1

@@ -15,6 +15,8 @@ locDownloadFailed,Download failed: ,下载失败：,下載失敗：
 locWaiting4Restart,Waiting for restart,等待重启,等待重啟
 locResult,Result,结果,結果
 locPatched,"Patched!\nOriginal data.win was renamed to data.win.bak\nFor updating in future, please don't delete it.",安装完成！\n原本的 data.win 已被重命名为 data.win.bak\n为了未来更新所需，请不要删除。,安裝完成！\n原本的 data.win 已被重命名為 data.win.bak\n為了未來更新所需，請不要刪除。
+locPatchFailedChecksum,Patch failed (checksum mismatch)\n\nHere are possible reasons and how to fix:\nGame updated and patch is outdated\nFix: Download new patch or wait for patch update\nGame version is outdated\nFix: Go to Steam update DELTARUNE\nGame file was modified / Old file left\nFix: Go to Steam library right click DELTARUNE\nProperties...→Installed Files→Verify integrity of game files,补丁安装失败（checksum mismatch）\n可能原因与对应解决方法如下：\n游戏更新了但并未更新补丁\n解决方法：下载新版补丁/等待补丁更新\n游戏版本过低\n解决方法：前往 Steam 更新 DELTARUNE\n游戏文件被修改了/旧文件遗留\n解决方法：前往 Steam 库右键 DELTARUNE\n属性...→已安装文件→验证游戏文件的完整性,補丁安裝失敗（checksum mismatch）\n可能原因與對應解決方法如下：\n遊戲更新了但並未更新補丁\n解決方法：下載新版補丁/等待補丁更新\n遊戲版本過低\n解決方法：前往 Steam 更新 DELTARUNE\n遊戲文件被修改了/舊文件遺留\n解決方法：前往 Steam 收藏庫右鍵 DELTARUNE\n內容...→已安裝檔案→驗證遊戲檔案的完整性
+locPatchFailed,"Patch failed\nUnknown error, please report with the screenshot of log window or the log.txt in the patcher directory",补丁安装失败\n未知错误，请在报告问题时把日志窗口截图或是安装器目录下的 log.txt 一同附上,補丁安裝失敗\n未知錯誤，請在報告問題時把日誌視窗截屏或是安裝器目錄下的 log.txt 一同附上
 locBakDetected,A patched version detected.\nIs game updated or only patch updated?,检测到打了补丁的版本。\n是游戏更新了还是只是补丁更新了？,偵測到打了補丁的版本。\n是遊戲更新了還是只是補丁更新了？
 locPatchUpdated, Only patch updated , 只是补丁更新了, 只是補丁更新了
 locGameUpdated, Game updated , 游戏更新了, 遊戲更新了
