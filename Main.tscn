@@ -27,7 +27,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "locLocalVer
-locNewestVer"
+locLatestVer"
 horizontal_alignment = 1
 vertical_alignment = 1
 

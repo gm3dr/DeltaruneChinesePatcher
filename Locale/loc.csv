@@ -2,7 +2,7 @@ keys,en,zh_CN,zh_TW
 locLanguageName,English,中文（简体）,中文（繁體）
 locBrowse, Browse , 浏览, 瀏覽
 locLocalVer,Local patch version: ,本地补丁版本：,本地補丁版本：
-locNewestVer,Latest patch version: ,最新补丁版本：,最新補丁版本：
+locLatestVer,Latest patch version: ,最新补丁版本：,最新補丁版本：
 locPatch, Patch , 安装补丁, 安裝補丁
 locLog,Log,日志,日誌
 locDeltaruneDir,Installtion Directory of the Steam version of DELTARUNE,DELTARUNE Steam 版安装目录,DELTARUNE Steam 版安裝目錄
