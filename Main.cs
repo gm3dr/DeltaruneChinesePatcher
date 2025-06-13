@@ -238,6 +238,7 @@ public partial class Main : Control
 	public void Patch()
 	{
 		GetNode<Window>("Patch").Hide();
+		GetNode<Label>("Log/ScrollContainer/Label").Text = "";
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
 		Godot.Collections.Array output = [];
 		Godot.Collections.Array outputtemp = [];
