@@ -423,6 +423,15 @@ public partial class Main : Control
 	}
 	public void _on_update_patch_browser_pressed()
 	{
+		foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
+		{
+			if (fff.StartsWith("patch_"))
+			{
+				DirAccess.RemoveAbsolute(GetGameDirPath(fff));
+				GD.Print("Removed " + GetGameDirPath(fff));
+				output.Add("Removed " + GetGameDirPath(fff));
+			}
+		}
 		foreach (var asset in patchreleases["assets"].AsGodotArray())
 		{
 			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(OS.GetName().ToLower()))
