@@ -114,7 +114,7 @@ public partial class Main : Control
 	}
 	public void _on_patch_pressed()
 	{
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = true;
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
 		bool found = FileAccess.FileExists(path + "/"+dataname+".bak");
 		foreach (var chapter in chapters)
