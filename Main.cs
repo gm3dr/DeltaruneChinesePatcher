@@ -13,6 +13,7 @@ public partial class Main : Control
 	static string patchver = "locNotFound";
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static string osname = (OS.GetName() == "macOS" ? "mac" : "windows");
+	static string dataname = (OS.GetName() == "macOS" ? "game.ios" : "data.win");
 	public override async void _Ready()
 	{
 		//首次初始化
@@ -115,12 +116,12 @@ public partial class Main : Control
 	{
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
-		bool found = FileAccess.FileExists(path + "/data.win.bak");
+		bool found = FileAccess.FileExists(path + "/"+dataname+".bak");
 		foreach (var chapter in chapters)
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/data.win.bak"))
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
 			{
-				GD.Print("Found: "+path + "/chapter" + chapter + "_" + osname + "/data.win.bak");
+				GD.Print("Found: "+path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
 				found = true;
 				break;
 			}
@@ -204,17 +205,17 @@ public partial class Main : Control
 	public void _on_game_updated_pressed()
 	{
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
-		if (FileAccess.FileExists(path + "/data.win.bak"))
+		if (FileAccess.FileExists(path + "/"+dataname+".bak"))
 		{
-			DirAccess.RemoveAbsolute(path + "/data.win.bak");
-			GD.Print("Removed " + path + "/data.win.bak");
+			DirAccess.RemoveAbsolute(path + "/"+dataname+".bak");
+			GD.Print("Removed " + path + "/"+dataname+".bak");
 		}
 		foreach (var chapter in chapters)
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/data.win.bak"))
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
 			{
-				DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/data.win.bak");
-				GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/data.win.bak");
+				DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
+				GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
 			}
 		}
 		GetNode<Window>("Patch").Hide();
@@ -241,44 +242,44 @@ public partial class Main : Control
 		output += outputtemp;
 		if (FileAccess.FileExists(path + "/main.xdelta"))
 		{
-			GD.Print("Patching main data.win");
-			output.Add("Patching main data.win");
-			if (FileAccess.FileExists(path + "/data.win.bak"))
+			GD.Print("Patching main data");
+			output.Add("Patching main data");
+			if (FileAccess.FileExists(path + "/"+dataname+".bak"))
 			{
-				DirAccess.RemoveAbsolute(path + "/data.win");
-				GD.Print("Removed " + path + "/data.win");
-				output.Add("Removed " + path + "/data.win");
+				DirAccess.RemoveAbsolute(path + "/"+dataname+"");
+				GD.Print("Removed " + path + "/"+dataname+"");
+				output.Add("Removed " + path + "/"+dataname+"");
 			}
 			else
 			{
-				DirAccess.RenameAbsolute(path + "/data.win", path + "/data.win.bak");
-				GD.Print("Renamed " + path + "/data.win to " + path + "/data.win.bak");
-				output.Add("Renamed " + path + "/data.win to " + path + "/data.win.bak");
+				DirAccess.RenameAbsolute(path + "/"+dataname+"", path + "/"+dataname+".bak");
+				GD.Print("Renamed " + path + "/"+dataname+" to " + path + "/"+dataname+".bak");
+				output.Add("Renamed " + path + "/"+dataname+" to " + path + "/"+dataname+".bak");
 			}
 			outputtemp = [];
-			OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/data.win.bak", path + "/main.xdelta", path + "/data.win"], outputtemp, true, true);
-			GD.Print($"{xdelta3} -f -d -v -s {path}/data.win.bak {path}/main.xdelta {path}/data.win");
+			OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/"+dataname+".bak", path + "/main.xdelta", path + "/"+dataname+""], outputtemp, true, true);
+			GD.Print($"{xdelta3} -f -d -v -s {path}/{dataname}.bak {path}/main.xdelta {path}/{dataname}");
 		}
 		foreach (var chapter in chapters)
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
 			{
-				GD.Print("Patching chapter" + chapter + " data.win");
-				output.Add("Patching chapter" + chapter + " data.win");
-				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/data.win.bak"))
+				GD.Print("Patching chapter" + chapter + " data");
+				output.Add("Patching chapter" + chapter + " data");
+				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
 				{
-					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/data.win");
-					GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/data.win");
-					output.Add("Removed " + path + "/chapter" + chapter + "_" + osname + "/data.win");
+					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
+					GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
+					output.Add("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
 				}
 				else
 				{
-					DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/data.win", path + "/chapter" + chapter + "_" + osname + "/data.win.bak");
-					GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/data.win to " + path + "/chapter" + chapter + "_" + osname + "/data.win.bak");
-					output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/data.win to " + path + "/chapter" + chapter + "_" + osname + "/data.win.bak");
+					DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+"", path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
+					GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+" to " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
+					output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+" to " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
 				}
-				OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/chapter" + chapter + "_" + osname + "/data.win.bak", path + "/chapter" + chapter + ".xdelta", path + "/chapter" + chapter + "_" + osname + "/data.win"], outputtemp, true, true);
-				GD.Print($"{xdelta3} -f -d -v -s {path}/chapter{chapter}_{osname}/data.win.bak {path}/chapter{chapter}.xdelta {path}/chapter{chapter}_{osname}/data.win");
+				OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak", path + "/chapter" + chapter + ".xdelta", path + "/chapter" + chapter + "_" + osname + "/"+dataname+""], outputtemp, true, true);
+				GD.Print($"{xdelta3} -f -d -v -s {path}/chapter{chapter}_{osname}/{dataname}.bak {path}/chapter{chapter}.xdelta {path}/chapter{chapter}_{osname}/{dataname}");
 			}
 		}
 		foreach (var i in outputtemp)
@@ -320,10 +321,10 @@ public partial class Main : Control
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
 		foreach (var chapter in chapters)
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/data.win.bak"))
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
 			{
-				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/data.win.bak", path + "/chapter" + chapter + "_" + osname + "/data.win");
-				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/data.win.bak to " + path + "/chapter" + chapter + "_" + osname + "/data.win");
+				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak", path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
+				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak to " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
 			}
 		}
 	}
