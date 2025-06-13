@@ -20,6 +20,7 @@ public partial class Main : Control
 		//首次初始化
 		if (!inited)
 		{
+			GetNode<OptionButton>("OptionButton").Disabled = true;
 			//根据系统语言切换语言
 			if (OS.GetLocale() == "zh_TW" || OS.GetLocale() == "zh_HK" || OS.GetLocale() == "zh_MO")
 			{
@@ -107,6 +108,7 @@ public partial class Main : Control
 
 		if (!inited)
 		{
+			GetNode<OptionButton>("OptionButton").Disabled = false;
 			inited = true;
 		}
 	}
