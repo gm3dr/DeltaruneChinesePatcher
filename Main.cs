@@ -42,7 +42,6 @@ public partial class Main : Control
 					GD.Print("Found patch file " + patchdir);
 				}
 			}
-			inited = true;
 		}
 		//安装器版本号
 		GetNode<Label>("HBoxContainer/Label").Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
@@ -75,8 +74,11 @@ public partial class Main : Control
 		var json = new Json();
 		try
 		{
-			json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
-			patcherreleases = json.Data.AsGodotDictionary();
+			if (!inited)
+			{
+				json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
+				patcherreleases = json.Data.AsGodotDictionary();
+			}
 			if (patcherreleases["tag_name"].AsString() != "v" + ProjectSettings.GetSetting("application/config/version").AsString())
 			{
 				GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locUpdate").ToString().Replace("{VER}", patcherreleases["tag_name"].AsString());
@@ -85,6 +87,11 @@ public partial class Main : Control
 		}
 		catch (System.Net.Http.HttpRequestException)
 		{
+		}
+
+		if (!inited)
+		{
+			inited = true;
 		}
 	}
 
