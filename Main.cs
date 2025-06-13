@@ -220,6 +220,7 @@ public partial class Main : Control
 						DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.x86_64"), GetGameDirPath(ff));
 					}
 				}
+				OS.MoveToTrash(GetGameDirPath("UpdateTemp"));
 				GetNode<Button>("HBoxContainer/Update").Text = "locWaiting4Restart";
 			}
 			else
