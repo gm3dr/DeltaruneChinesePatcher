@@ -151,12 +151,18 @@ public partial class Main : Control
 	{
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = true;
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
-		bool found = FileAccess.FileExists(path + "/"+dataname+".bak");
+		bool found = FileAccess.FileExists(path + "/"+dataname+".bak") || FileAccess.FileExists(path + "/main.xdelta");
 		foreach (var chapter in chapters)
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
 			{
 				GD.Print("Found: "+path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
+				found = true;
+				break;
+			}
+			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
+			{
+				GD.Print("Found: "+path + "/chapter" + chapter + ".xdelta");
 				found = true;
 				break;
 			}
