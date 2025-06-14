@@ -265,46 +265,6 @@ public partial class Main : Control
 			OS.MoveToTrash(GetGameDirPath("UpdateTemp"));
 			GetNode<Button>("HBoxContainer/Update").Text = "locWaiting4Restart";
 		}
-		if (url != "")
-		{
-			Godot.Collections.Array output = [];
-			GD.Print("Downloading " + url + " to " + GetGameDirPath("UpdateTemp/" + file));
-			output.Add("Downloading " + url + " to " + GetGameDirPath("UpdateTemp/" + file));
-			var response = await new System.Net.Http.HttpClient().GetAsync(url);
-			if (response.IsSuccessStatusCode)
-			{
-				var data = await response.Content.ReadAsByteArrayAsync();
-				System.IO.File.WriteAllBytes(GetGameDirPath("UpdateTemp/" + file), data);
-				GD.Print("Extracting " + GetGameDirPath("UpdateTemp/" + file));
-				output.Add("Extracting " + GetGameDirPath("UpdateTemp/" + file));
-				OS.Execute(_7zip, ["x", GetGameDirPath("UpdateTemp/" + file), "-o" + GetGameDirPath(), "-aoa", "-y"], output, true, true);
-				GD.Print($"{_7zip} x {GetGameDirPath("UpdateTemp/" + file)} -o{GetGameDirPath()} -aoa -y");
-				foreach (var ff in DirAccess.GetFilesAt(GetGameDirPath()))
-				{
-					if (ff.EndsWith(".pck") && ff != "DELTARUNE Chinese Patcher.pck")
-					{
-						DirAccess.RemoveAbsolute(GetGameDirPath(ff));
-						DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.pck"), GetGameDirPath(ff));
-					}
-					if (OS.GetName() == "Windows" && ff.EndsWith(".exe") && ff != "DELTARUNE Chinese Patcher.exe")
-					{
-						DirAccess.RemoveAbsolute(GetGameDirPath(ff));
-						DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.exe"), GetGameDirPath(ff));
-					}
-					if (OS.GetName() == "Linux" && ff.EndsWith(".x86_64") && ff != "DELTARUNE Chinese Patcher.x86_64")
-					{
-						DirAccess.RemoveAbsolute(GetGameDirPath(ff));
-						DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.x86_64"), GetGameDirPath(ff));
-					}
-				}
-				OS.MoveToTrash(GetGameDirPath("UpdateTemp"));
-				GetNode<Button>("HBoxContainer/Update").Text = "locWaiting4Restart";
-			}
-			else
-			{
-				GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locDownloadFailed") + response.StatusCode.ToString();
-			}
-		}
 	}
 	public void _on_game_updated_pressed()
 	{
