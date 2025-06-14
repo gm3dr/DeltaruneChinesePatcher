@@ -536,6 +536,16 @@ public partial class Main : Control
 	internal void RestoreData()
 	{
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
+		if (FileAccess.FileExists(path + "/" + dataname + ".bak"))
+		{
+			if (FileAccess.FileExists(path + "/" + dataname))
+			{
+				DirAccess.RemoveAbsolute(path + "/" + dataname);
+				GD.Print("Removed " + path + "/" + dataname);
+			}
+			DirAccess.RenameAbsolute(path + "/" + dataname + ".bak", path + "/" + dataname);
+			GD.Print("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
+		}
 		foreach (var chapter in chapters)
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
