@@ -540,8 +540,13 @@ public partial class Main : Control
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
 			{
-				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak", path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
-				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak to " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
+				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname))
+				{
+					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname);
+					GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname);
+				}
+				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak", path + "/chapter" + chapter + "_" + osname + "/"+dataname);
+				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak to " + path + "/chapter" + chapter + "_" + osname + "/"+dataname);
 			}
 		}
 	}
