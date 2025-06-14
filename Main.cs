@@ -429,7 +429,6 @@ public partial class Main : Control
 			{
 				DirAccess.RemoveAbsolute(GetGameDirPath(fff));
 				GD.Print("Removed " + GetGameDirPath(fff));
-				output.Add("Removed " + GetGameDirPath(fff));
 			}
 		}
 		foreach (var asset in patchreleases["assets"].AsGodotArray())
