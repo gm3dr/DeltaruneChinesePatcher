@@ -5,7 +5,7 @@ using System.Net.Http;
 
 public partial class Main : Control
 {
-	static string[] chapters = ["1", "2", "3", "4"];
+	static readonly string[] chapters = ["1", "2", "3", "4"];
 	string[] locales;
 	bool inited = false;
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
@@ -14,8 +14,8 @@ public partial class Main : Control
 	static string patchver = "locNotFound";
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
-	static string osname = (OS.GetName() == "macOS" ? "mac" : "windows");
-	static string dataname = (OS.GetName() == "macOS" ? "game.ios" : "data.win");
+	static readonly string osname = (OS.GetName() == "macOS" ? "mac" : "windows");
+	static readonly string dataname = (OS.GetName() == "macOS" ? "game.ios" : "data.win");
 	System.IO.FileStream fileStream = null;
 	public override async void _Ready()
 	{
