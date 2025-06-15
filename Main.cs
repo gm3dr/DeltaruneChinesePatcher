@@ -46,6 +46,17 @@ public partial class Main : Control
 					GD.Print("Found patch file " + patchdir);
 				}
 			}
+			//自动显示readme
+			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("")))
+			{
+				if (file.ToLower().Contains("readme"))
+				{
+					GetNode<Label>("Readme/ScrollContainer/Label").Text = FileAccess.Open(GetGameDirPath(file), FileAccess.ModeFlags.Read).GetAsText();
+					GetNode<Window>("Readme").Title = file;
+					GetNode<Window>("Readme").Show();
+					break;
+				}
+			}
 		}
 		//安装器版本号
 		GetNode<Label>("HBoxContainer/Label").Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
@@ -87,10 +98,25 @@ public partial class Main : Control
 			{
 				GetNode<HBoxContainer>("CenterContainer/VBoxContainer/HBoxContainer3").Visible = true;
 			}
+			if (GetNode<Label>("Readme/ScrollContainer/Label").Text != "")
+			{
+				foreach (var asset in patchreleases["assets"].AsGodotArray())
+				{
+					if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains("readme"))
+					{
+						var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
+						FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write).StoreString(text);
+						GetNode<Label>("Readme/ScrollContainer/Label").Text = text;
+						GetNode<Window>("Readme").Title = "readme.txt";
+						GetNode<Window>("Readme").Show();
+						break;
+					}
+				}
+			}
 		}
 		catch (HttpRequestException exc)
 		{
-			GD.PushError("Exception catched when requesting patch latest: "+exc.ToString()+" ("+exc.Message+")");
+			GD.PushError("Exception catched when requesting patch latest: " + exc.ToString() + " (" + exc.Message + ")");
 			//GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
 		}
 		//安装器更新
@@ -189,6 +215,10 @@ public partial class Main : Control
 		GetNode<Window>("Patch").Hide();
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
 	}
+	public void _on_readme_close_requested()
+	{
+		GetNode<Window>("Readme").Hide();
+	}
 	public async void _on_update_pressed()
 	{
 		GetNode<Button>("HBoxContainer/Update").Disabled = true;
@@ -241,7 +271,7 @@ public partial class Main : Control
 			catch (Exception exc)
 			{
 				GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
-				GD.PushError("Exception catched when updating patcher: " + exc.ToString() + " ("+exc.Message+")");
+				GD.PushError("Exception catched when updating patcher: " + exc.ToString() + " (" + exc.Message + ")");
 				return;
 			}
 			fileStream.Dispose();

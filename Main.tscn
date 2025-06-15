@@ -152,10 +152,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+horizontal_scroll_mode = 0
 
 [node name="Label" type="Label" parent="Log/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 13
+autowrap_mode = 3
 
 [node name="Popup" type="Window" parent="."]
 title = "locResult"
@@ -233,6 +236,26 @@ text = "locGameUpdated"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Readme" type="Window" parent="."]
+auto_translate_mode = 1
+title = "locReadme"
+initial_position = 2
+size = Vector2i(960, 600)
+visible = false
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Readme"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Label" type="Label" parent="Readme/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatch" to="." method="_on_update_patch_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatchBrowser" to="." method="_on_update_patch_browser_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer/Browse" to="." method="_on_browse_pressed"]
@@ -246,3 +269,4 @@ size_flags_horizontal = 3
 [connection signal="close_requested" from="Patch" to="." method="_on_patch_close_requested"]
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="Patch"]
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer2/GameUpdated" to="." method="_on_game_updated_pressed"]
+[connection signal="close_requested" from="Readme" to="." method="_on_readme_close_requested"]
