@@ -138,6 +138,7 @@ public partial class Main : Control
 		{
 			GD.PushError("Exception catched when requesting patcher latest: "+exc.ToString()+" ("+exc.Message+")");
 		}
+		httpc.Dispose();
 
 		if (!inited)
 		{
