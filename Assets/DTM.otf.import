@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bdk7xuiuykjti"
-path="res://.godot/imported/DTM.otf-f892ace9079215972f20ace2cdb085e1.fontdata"
+path="res://.godot/imported/DTM.otf-bf2d4b3dfb95f01051d9c06b88c2f4b4.fontdata"
 
 [deps]
 
-source_file="res://DTM.otf"
-dest_files=["res://.godot/imported/DTM.otf-f892ace9079215972f20ace2cdb085e1.fontdata"]
+source_file="res://Assets/DTM.otf"
+dest_files=["res://.godot/imported/DTM.otf-bf2d4b3dfb95f01051d9c06b88c2f4b4.fontdata"]
 
 [params]
 

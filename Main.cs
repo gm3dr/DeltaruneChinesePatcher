@@ -23,6 +23,7 @@ public partial class Main : Control
 		if (!inited)
 		{
 			GetNode<OptionButton>("OptionButton").Disabled = true;
+			GetNode<AnimationPlayer>("AnimationPlayer").Play("bg_anim");
 			//根据系统语言切换语言
 			if (OS.GetLocale() == "zh_TW" || OS.GetLocale() == "zh_HK" || OS.GetLocale() == "zh_MO")
 			{
@@ -59,7 +60,7 @@ public partial class Main : Control
 			}
 		}
 		//安装器版本号
-		GetNode<Label>("HBoxContainer/Label").Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
+		GetNode<Label>("HBoxContainer/VBoxContainer/Label").Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
 		//系统特供目录
 		if (OS.GetName() == "Windows")
 		{

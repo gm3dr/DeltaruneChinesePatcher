@@ -1,0 +1,119 @@
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://b0ixpqfc0nrgw"]
+
+[ext_resource type="FontFile" uid="uid://bdk7xuiuykjti" path="res://Assets/DTM.otf" id="1_yd3fu"]
+[ext_resource type="Texture2D" uid="uid://2dl1oybph4da" path="res://Assets/textbox.png" id="2_23v3e"]
+[ext_resource type="Texture2D" uid="uid://drwbdxclm5rw3" path="res://Assets/textbox-disabled.png" id="2_j4jqe"]
+[ext_resource type="Texture2D" uid="uid://mh28q8o51xts" path="res://Assets/textbox-select.png" id="3_k1aya"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_t6dyh"]
+texture = ExtResource("2_j4jqe")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j4jqe"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y2aw4"]
+texture = ExtResource("3_k1aya")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j4jqe"]
+texture = ExtResource("3_k1aya")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yd3fu"]
+texture = ExtResource("2_23v3e")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c6xh3"]
+texture = ExtResource("3_k1aya")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6xh3"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_23v3e"]
+texture = ExtResource("2_23v3e")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7yw46"]
+texture = ExtResource("2_j4jqe")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k4w01"]
+texture = ExtResource("2_23v3e")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_j4jqe"]
+color = Color(1, 1, 1, 1)
+thickness = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dgat3"]
+texture = ExtResource("2_23v3e")
+texture_margin_left = 13.0
+texture_margin_top = 13.0
+texture_margin_right = 13.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[resource]
+default_font = ExtResource("1_yd3fu")
+Button/colors/font_hover_pressed_color = Color(1, 1, 0, 1)
+Button/colors/font_pressed_color = Color(1, 1, 0, 1)
+Button/font_sizes/font_size = 27
+Button/fonts/font = ExtResource("1_yd3fu")
+Button/styles/disabled = SubResource("StyleBoxTexture_t6dyh")
+Button/styles/focus = SubResource("StyleBoxEmpty_j4jqe")
+Button/styles/hover = SubResource("StyleBoxTexture_y2aw4")
+Button/styles/hover_pressed = SubResource("StyleBoxTexture_j4jqe")
+Button/styles/normal = SubResource("StyleBoxTexture_yd3fu")
+Button/styles/pressed = SubResource("StyleBoxTexture_c6xh3")
+Label/font_sizes/font_size = 27
+Label/fonts/font = ExtResource("1_yd3fu")
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_c6xh3")
+LineEdit/styles/normal = SubResource("StyleBoxTexture_23v3e")
+LineEdit/styles/read_only = SubResource("StyleBoxTexture_7yw46")
+PopupMenu/font_sizes/font_separator_size = 27
+PopupMenu/font_sizes/font_size = 27
+PopupMenu/font_sizes/title_font_size = 27
+PopupMenu/styles/panel = SubResource("StyleBoxTexture_k4w01")
+PopupMenu/styles/separator = SubResource("StyleBoxLine_j4jqe")
+TooltipPanel/styles/panel = SubResource("StyleBoxTexture_dgat3")

@@ -1,7 +1,50 @@
-[gd_scene load_steps=3 format=3 uid="uid://hv4jki47g85q"]
+[gd_scene load_steps=12 format=3 uid="uid://hv4jki47g85q"]
 
-[ext_resource type="Theme" uid="uid://b0ixpqfc0nrgw" path="res://Theme.tres" id="1_glv2v"]
+[ext_resource type="Theme" uid="uid://b0ixpqfc0nrgw" path="res://Assets/Theme.tres" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://cxec4g8oww2if" path="res://Main.cs" id="2_uu6xs"]
+[ext_resource type="Texture2D" uid="uid://b7f4r7da4rjhi" path="res://Assets/Background/static.png" id="3_r0du0"]
+[ext_resource type="Texture2D" uid="uid://bb8yqnhbw0nhv" path="res://Assets/Background/animation/anim0.png" id="4_cm0pq"]
+[ext_resource type="Texture2D" uid="uid://dxpaxsfosimsr" path="res://Assets/Background/animation/anim1.png" id="5_trn2v"]
+[ext_resource type="Texture2D" uid="uid://666gqdeu718c" path="res://Assets/Background/animation/anim2.png" id="6_03owx"]
+[ext_resource type="Texture2D" uid="uid://doih7ph0v7vy8" path="res://Assets/Background/animation/anim3.png" id="7_wkp8b"]
+[ext_resource type="Texture2D" uid="uid://cq6fbe5egxp8o" path="res://Assets/Background/animation/anim4.png" id="8_20pc6"]
+
+[sub_resource type="Animation" id="Animation_cm0pq"]
+resource_name = "bg_anim"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TextureRect2:texture")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("4_cm0pq"), ExtResource("5_trn2v"), ExtResource("6_03owx"), ExtResource("7_wkp8b"), ExtResource("8_20pc6")]
+}
+
+[sub_resource type="Animation" id="Animation_5vvyt"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TextureRect2:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("4_cm0pq")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fos0i"]
+_data = {
+&"RESET": SubResource("Animation_5vvyt"),
+&"bg_anim": SubResource("Animation_cm0pq")
+}
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -12,6 +55,37 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_glv2v")
 script = ExtResource("2_uu6xs")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+offset_top = -40.0
+offset_right = 320.0
+offset_bottom = 220.0
+scale = Vector2(2, 2)
+texture = ExtResource("3_r0du0")
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+layout_mode = 1
+offset_top = 340.0
+offset_right = 320.0
+offset_bottom = 410.0
+scale = Vector2(2, 2)
+texture = ExtResource("4_cm0pq")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_fos0i")
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -112,13 +186,24 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 5.0
-offset_top = -40.0
-offset_right = 74.0
+offset_top = -60.0
+offset_right = 640.0
 grow_vertical = 0
 
-[node name="Label" type="Label" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 text = "v0.0.0"
+
+[node name="Control" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Update" type="Button" parent="HBoxContainer"]
 visible = false
@@ -131,7 +216,7 @@ layout_mode = 1
 offset_right = 40.0
 offset_bottom = 42.0
 tooltip_text = "locInfo"
-text = "!"
+text = "  !  "
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a Directory"
