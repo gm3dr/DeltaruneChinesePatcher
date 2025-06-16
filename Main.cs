@@ -121,23 +121,26 @@ public partial class Main : Control
 			//GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
 		}
 		//安装器更新
-		json = new Json();
-		try
+		if (!OS.HasFeature("editor"))
 		{
-			if (!inited)
+			json = new Json();
+			try
 			{
-				json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
-				patcherreleases = json.Data.AsGodotDictionary();
+				if (!inited)
+				{
+					json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
+					patcherreleases = json.Data.AsGodotDictionary();
+				}
+				if (patcherreleases["tag_name"].AsString() != "v" + ProjectSettings.GetSetting("application/config/version").AsString())
+				{
+					GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locUpdate").ToString().Replace("{VER}", patcherreleases["tag_name"].AsString());
+					GetNode<Button>("HBoxContainer/Update").Visible = true;
+				}
 			}
-			if (patcherreleases["tag_name"].AsString() != "v" + ProjectSettings.GetSetting("application/config/version").AsString())
+			catch (HttpRequestException exc)
 			{
-				GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locUpdate").ToString().Replace("{VER}", patcherreleases["tag_name"].AsString());
-				GetNode<Button>("HBoxContainer/Update").Visible = true;
+				GD.PushError("Exception catched when requesting patcher latest: " + exc.ToString() + " (" + exc.Message + ")");
 			}
-		}
-		catch (HttpRequestException exc)
-		{
-			GD.PushError("Exception catched when requesting patcher latest: "+exc.ToString()+" ("+exc.Message+")");
 		}
 		httpc.Dispose();
 
