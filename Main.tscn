@@ -134,7 +134,7 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 27
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(500, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
 [node name="LineEdit" type="LineEdit" parent="CenterContainer/VBoxContainer/HBoxContainer"]

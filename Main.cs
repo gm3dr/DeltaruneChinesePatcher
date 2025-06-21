@@ -520,6 +520,12 @@ public partial class Main : Control
 			GetNode<Window>("Popup").Size = new Vector2I(640,360);
 			RestoreData();
 		}
+		else if (logtext.Replace("\r","").Replace("\n","").Replace(" ","") == "Extracting...")
+		{
+			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedExternals";
+			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			RestoreData();
+		}
 		else if (logtext.ToLower().Contains("error") || !logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailed";
