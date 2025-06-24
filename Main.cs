@@ -446,6 +446,14 @@ public partial class Main : Control
 	{
 		GetNode<Window>("Patch").Hide();
 		GetNode<Label>("Log/ScrollContainer/Label").Text = "";
+		//chmod加权限
+		if (OS.GetName() == "macOS" || OS.GetName() == "Linux")
+		{
+			OS.Execute("chmod", ["+x", xdelta3]);
+			GD.Print($"chmod +x {xdelta3}");
+			OS.Execute("chmod", ["+x", _7zip]);
+			GD.Print($"chmod +x {_7zip}");
+		}
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
 		Godot.Collections.Array output = [];
 		Godot.Collections.Array outputtemp = [];
