@@ -153,7 +153,7 @@ public partial class Main : Control
 
 	public override void _Process(double delta)
 	{
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = (GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text == "" || patchver == "locNotFound");
+		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = (GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'") == "" || patchver == "locNotFound");
 	}
 
 	public void _on_language_item_selected(int selected)
@@ -181,7 +181,7 @@ public partial class Main : Control
 	public void _on_patch_pressed()
 	{
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = true;
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'");
 		bool found = FileAccess.FileExists(path + "/"+dataname+".bak") || FileAccess.FileExists(path + "/main.xdelta");
 		foreach (var chapter in chapters)
 		{
@@ -309,7 +309,7 @@ public partial class Main : Control
 	}
 	public void _on_game_updated_pressed()
 	{
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'");
 		if (FileAccess.FileExists(path + "/"+dataname+".bak"))
 		{
 			DirAccess.RemoveAbsolute(path + "/"+dataname+".bak");
@@ -449,12 +449,60 @@ public partial class Main : Control
 		//chmod加权限
 		if (OS.GetName() == "macOS" || OS.GetName() == "Linux")
 		{
-			OS.Execute("chmod", ["+x", xdelta3]);
-			GD.Print($"chmod +x {xdelta3}");
-			OS.Execute("chmod", ["+x", _7zip]);
-			GD.Print($"chmod +x {_7zip}");
+			if (xdelta3.Contains("/"))
+			{
+				OS.Execute("chmod", ["+x", xdelta3]);
+				GD.Print($"chmod +x {xdelta3}");
+			}
+			if (_7zip.Contains("/"))
+			{
+				OS.Execute("chmod", ["+x", _7zip]);
+				GD.Print($"chmod +x {_7zip}");
+			}
 		}
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
+		//外部程序检查
+		Godot.Collections.Array externalcheckoutput;
+		foreach (var __7z in new[]{"7z", "7zip", "7-zip", "7zr", "7za"})
+		{
+			externalcheckoutput = [];
+			OS.Execute(__7z,[], externalcheckoutput);
+			GD.Print("Checking " + __7z);
+			GD.Print(externalcheckoutput);
+			foreach (var line in externalcheckoutput)
+			{
+				if (line.AsString().Contains("7-Zip (r) "))
+				{
+					_7zip = __7z;
+					GD.Print("Found " + __7z);
+					break;
+				}
+			}
+			if (_7zip == __7z)
+			{
+				break;
+			}
+		}
+		foreach (var __xdelta in new[]{"zdelta", "xdelta3"})
+		{
+			externalcheckoutput = [];
+			OS.Execute(__xdelta, ["-h"], externalcheckoutput);
+			GD.Print("Checking " + __xdelta);
+			GD.Print(externalcheckoutput);
+			foreach (var line in externalcheckoutput)
+			{
+				if (line.AsString().Contains("Xdelta version "))
+				{
+					xdelta3 = __xdelta;
+					GD.Print("Found " + __xdelta);
+					break;
+				}
+			}
+			if (xdelta3 == __xdelta)
+			{
+				break;
+			}
+		}
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'");
 		Godot.Collections.Array output = [];
 		Godot.Collections.Array outputtemp = [];
 		GD.Print("Extracting...");
@@ -534,6 +582,18 @@ public partial class Main : Control
 			GetNode<Window>("Popup").Size = new Vector2I(640,360);
 			RestoreData();
 		}
+		else if (logtext.ToLower().Contains("(required by "))
+		{
+			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedRequired";
+			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			RestoreData();
+		}
+		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("permission denied"))
+		{
+			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedDenied";
+			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			RestoreData();
+		}
 		else if (logtext.ToLower().Contains("error") || !logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailed";
@@ -550,7 +610,7 @@ public partial class Main : Control
 	}
 	internal void RestoreData()
 	{
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text;
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'");
 		if (FileAccess.FileExists(path + "/" + dataname + ".bak"))
 		{
 			if (FileAccess.FileExists(path + "/" + dataname))
