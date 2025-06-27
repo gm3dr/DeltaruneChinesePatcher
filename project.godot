@@ -18,6 +18,7 @@ config/name_localized={
 config/version="2.0.0"
 run/main_scene="uid://hv4jki47g85q"
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
+boot_splash/image="uid://bfrw36sg0uuxc"
 config/icon="uid://svqxlx0p36cy"
 config/size/resizable=true
 
