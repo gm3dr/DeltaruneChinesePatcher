@@ -1,10 +1,11 @@
-<img width="150" height="150" align="left" style="float: left; margin: 0 10px 0 0;" alt="MS-DOS logo" src="patcher_icon.png">
+<img width="100" height="100" align="left" style="float: left; margin: 0 10px 0 0;" alt="MS-DOS logo" src="patcher_icon.png">
 
 # DELTARUNE 汉化安装器
 
 **下载安装器：[GitHub Release](https://github.com/gm3dr/DeltaruneChinese/releases)**
 
-*对于 Windows on Arm 用户, 如果遇到无法使用的问题, 请手动构建或手动打补丁！macOS 暂无安装器提供, 请手动打补丁！*
+> [!NOTE]
+> 对于 Windows on Arm 用户, 如果遇到无法使用的问题, 请手动构建或手动打补丁！macOS 暂无安装器提供, 请手动打补丁！
 
 ## 开发工具
 
