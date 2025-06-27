@@ -25,8 +25,8 @@ config/size/resizable=true
 
 window/size/viewport_width=640
 window/size/viewport_height=480
-window/size/resizable=false
 window/subwindows/embed_subwindows=false
+window/stretch/mode="viewport"
 window/per_pixel_transparency/allowed=true
 
 [dotnet]
