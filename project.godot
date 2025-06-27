@@ -18,7 +18,6 @@ config/name_localized={
 config/version="2.0.0"
 run/main_scene="uid://hv4jki47g85q"
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
-boot_splash/image="uid://bfrw36sg0uuxc"
 config/icon="uid://svqxlx0p36cy"
 config/size/resizable=true
 
@@ -26,8 +25,8 @@ config/size/resizable=true
 
 window/size/viewport_width=640
 window/size/viewport_height=480
-window/size/resizable=false
 window/subwindows/embed_subwindows=false
+window/stretch/mode="viewport"
 window/per_pixel_transparency/allowed=true
 
 [dotnet]

@@ -147,6 +147,7 @@ placeholder_text = "locDeltaruneDir"
 
 [node name="Browse" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 text = "locBrowse"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
