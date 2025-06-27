@@ -2,10 +2,10 @@
 
 # DELTARUNE 汉化安装器
 
-**下载安装器：[GitHub Release](https://github.com/gm3dr/DeltaruneChinese/releases)**
+**下载安装器：[GitHub Release](https://github.com/gm3dr/DeltaruneChinesePatcher/releases)**
 
 > [!NOTE]
-> 对于 Windows on Arm 用户, 如果遇到无法使用的问题, 请手动构建或手动打补丁！macOS 暂无安装器提供, 请手动打补丁！
+> 如果使用本安装器在安装补丁的时候失败, 请手动打补丁!
 
 ## 开发工具
 
@@ -18,6 +18,7 @@
 - [UPX](https://github.com/upx/upx/releases/latest) *(非必须, 用于压缩可执行文件大小)*
 
 ## 路线图
+
  - [x] \[v1.1.0\] 补丁安装失败错误信息
  - [x] \[v1.1.0\] Linux 平台支持
  - [x] \[v1.1.0\] 安装失败时恢复备份
