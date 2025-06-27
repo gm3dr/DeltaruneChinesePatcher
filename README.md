@@ -1,4 +1,4 @@
-<img width="100" height="100" align="left" style="float: left; margin: 0 10px 0 0;" alt="MS-DOS logo" src="patcher_icon.png">
+<img width="100" height="100" align="left" style="float: left; margin: 0 10px 0 0;" alt="Logo" src="patcher_icon.png">
 
 # DELTARUNE 汉化安装器
 

@@ -211,6 +211,12 @@ public partial class Main : Control
 	{
 		OS.ShellOpen("https://github.com/gm3dr/DeltaruneChinesePatcher");
 	}
+
+	public void _on_rungame_pressed()
+	{
+		OS.ShellOpen("steam://run/1671210");
+	}
+
 	public void _on_popup_close_requested()
 	{
 		GetNode<Window>("Popup").Hide();
@@ -573,37 +579,37 @@ public partial class Main : Control
 		if (logtext.Contains("checksum mismatch"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedChecksum";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			GetNode<Window>("Popup").Size = new Vector2I(640, 360);
 			RestoreData();
 		}
-		else if (logtext.Replace("\r","").Replace("\n","").Replace(" ","") == "Extracting...")
+		else if (logtext.Replace("\r", "").Replace("\n", "").Replace(" ", "") == "Extracting...")
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedExternals";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			GetNode<Window>("Popup").Size = new Vector2I(640, 360);
 			RestoreData();
 		}
 		else if (logtext.ToLower().Contains("(required by "))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedRequired";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			GetNode<Window>("Popup").Size = new Vector2I(640, 360);
 			RestoreData();
 		}
 		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("permission denied"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedDenied";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			GetNode<Window>("Popup").Size = new Vector2I(640, 360);
 			RestoreData();
 		}
 		else if (logtext.ToLower().Contains("error") || !logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailed";
-			GetNode<Window>("Popup").Size = new Vector2I(480,240);
+			GetNode<Window>("Popup").Size = new Vector2I(480, 240);
 			RestoreData();
 		}
 		else
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatched";
-			GetNode<Window>("Popup").Size = new Vector2I(480,240);
+			GetNode<Window>("Popup").Size = new Vector2I(480, 240);
 		}
 		GetNode<Window>("Popup").Show();
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;

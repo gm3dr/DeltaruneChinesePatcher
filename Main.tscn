@@ -211,12 +211,22 @@ layout_mode = 2
 tooltip_text = "locClickToUpdate"
 text = "locUpdate"
 
-[node name="Info" type="Button" parent="."]
-layout_mode = 1
-offset_right = 40.0
-offset_bottom = 42.0
+[node name="InfoButton" type="Button" parent="."]
+offset_left = 64.0
+offset_top = 1.0
+offset_right = 124.0
+offset_bottom = 61.0
 tooltip_text = "locInfo"
 text = "  !  "
+
+[node name="RunButton" type="Button" parent="."]
+layout_mode = 1
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 63.0
+offset_bottom = 61.0
+tooltip_text = "locRunTooltip"
+text = "  >  "
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a Directory"
@@ -347,7 +357,8 @@ autowrap_mode = 3
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer2/Patch" to="." method="_on_patch_pressed"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_language_item_selected"]
 [connection signal="pressed" from="HBoxContainer/Update" to="." method="_on_update_pressed"]
-[connection signal="pressed" from="Info" to="." method="_on_info_pressed"]
+[connection signal="pressed" from="InfoButton" to="." method="_on_info_pressed"]
+[connection signal="pressed" from="RunButton" to="." method="_on_rungame_pressed"]
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="close_requested" from="Log" to="." method="_on_window_close_requested"]
 [connection signal="close_requested" from="Popup" to="." method="_on_popup_close_requested"]
