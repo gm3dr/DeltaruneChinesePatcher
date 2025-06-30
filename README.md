@@ -35,5 +35,5 @@ UPX（用于压缩可执行档案大小）<br>
  - [x] 【v2.0.0】检测目录下Readme并弹出窗口
  - [ ] \[v2.1.0\] 调用本地安装的 XDelta3 与 7-Zip
  - [ ] \[v2.1.0\] Linux 与 macOS 自动`chmod +x`外部程序
- - [ ] 删除汉化补丁<br>（将被覆盖的内容存储到Backup目录用于还原）
+ - [ ] \[v2.1.0\]删除汉化补丁<br>（将被覆盖的内容存储到Backup目录用于还原）
  - [ ] 修复安装失败且只含有Extracting...（[#4](https://github.com/gm3dr/DeltaruneChinesePatcher/issues/4)）

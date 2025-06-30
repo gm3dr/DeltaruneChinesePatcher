@@ -160,6 +160,10 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "locPatch"
 
+[node name="Unpatch" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "locUnpatch"
+
 [node name="Control2" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -345,6 +349,7 @@ autowrap_mode = 3
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatchBrowser" to="." method="_on_update_patch_browser_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer/Browse" to="." method="_on_browse_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer2/Patch" to="." method="_on_patch_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer2/Unpatch" to="." method="_on_unpatch_pressed"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_language_item_selected"]
 [connection signal="pressed" from="HBoxContainer/Update" to="." method="_on_update_pressed"]
 [connection signal="pressed" from="Info" to="." method="_on_info_pressed"]

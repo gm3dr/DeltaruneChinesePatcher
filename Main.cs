@@ -173,7 +173,9 @@ public partial class Main : Control
 
 	public override void _Process(double delta)
 	{
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = (GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'") == "" || patchver == "locNotFound");
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = (path == "" || patchver == "locNotFound");
+		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Unpatch").Disabled = (path == "");
 	}
 
 	public void _on_language_item_selected(int selected)
@@ -201,19 +203,13 @@ public partial class Main : Control
 	public void _on_patch_pressed()
 	{
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = true;
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'");
-		bool found = FileAccess.FileExists(path + "/"+dataname+".bak") || FileAccess.FileExists(path + "/main.xdelta");
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		bool found = FileAccess.FileExists(path + "/"+dataname+".bak") || DirAccess.DirExistsAbsolute(path + "/backup");
 		foreach (var chapter in chapters)
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
 			{
 				GD.Print("Found: "+path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
-				found = true;
-				break;
-			}
-			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
-			{
-				GD.Print("Found: "+path + "/chapter" + chapter + ".xdelta");
 				found = true;
 				break;
 			}
@@ -350,16 +346,11 @@ public partial class Main : Control
 	}
 	public void _on_game_updated_pressed()
 	{
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'");
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		if (FileAccess.FileExists(path + "/"+dataname+".bak"))
 		{
 			DirAccess.RemoveAbsolute(path + "/"+dataname+".bak");
 			GD.Print("Removed " + path + "/"+dataname+".bak");
-		}
-		if (FileAccess.FileExists(path + "/main.xdelta"))
-		{
-			DirAccess.RemoveAbsolute(path + "/main.xdelta");
-			GD.Print("Removed " + path + "/main.xdelta");
 		}
 		foreach (var chapter in chapters)
 		{
@@ -368,12 +359,8 @@ public partial class Main : Control
 				DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
 				GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
 			}
-			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
-			{
-				DirAccess.RemoveAbsolute(path + "/chapter" + chapter + ".xdelta");
-				GD.Print("Removed " + path + "/chapter" + chapter + ".xdelta");
-			}
 		}
+		OS.MoveToTrash(path + "/backup");
 		GetNode<Window>("Patch").Hide();
 		GetNode<Label>("Popup/ScrollContainer/Label").Text = "locVerifyIntegrity";
 		GetNode<Window>("Popup").Size = new Vector2I(640,360);
@@ -562,37 +549,72 @@ public partial class Main : Control
 				break;
 			}
 		}
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'");
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		Godot.Collections.Array output = [];
 		Godot.Collections.Array outputtemp = [];
 		GD.Print("Extracting...");
 		output.Add("Extracting...");
-		OS.Execute(_7zip, ["x", patchdir, "-o" + path, "-aoa", "-y"], outputtemp, true, true);
-		GD.Print($"{_7zip} x {patchdir} -o{path} -aoa -y");
+		//恢复备份
+		if (DirAccess.DirExistsAbsolute(path + "/backup"))
+		{
+			output += RestoreData(path);
+		}
+		//兼容v2.1.0以前版本的bak备份
+		if (FileAccess.FileExists(path + "/" + dataname + ".bak"))
+		{
+			DirAccess.RenameAbsolute(path + "/" + dataname + ".bak", path + "/" + dataname);
+			GD.Print("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
+			output.Add("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
+		}
+		foreach (var chapter in chapters)
+		{
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak"))
+			{
+				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak", path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak to " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+				output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak to " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+			}
+		}
+		//解压
+		OS.Execute(_7zip, ["x", patchdir, "-o" + GetGameDirPath("ExtractTemp/"), "-aoa", "-y"], outputtemp, true, true);
+		GD.Print($"{_7zip} x {patchdir} -o{GetGameDirPath("ExtractTemp/")} -aoa -y");
 		foreach (var i in outputtemp)
 		{
 			GD.Print(i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n"));
 		}
 		output += outputtemp;
+		output += MoveAfterExtracted(GetGameDirPath("ExtractTemp"), "", path);
+		OS.MoveToTrash(GetGameDirPath("ExtractTemp/"));
+		//备份data
+		if (FileAccess.FileExists(path + "/" + dataname))
+		{
+			DirAccess.RenameAbsolute(path + "/" + dataname, path + "/backup/" + dataname);
+			GD.Print("Renamed " + path + "/" + dataname + " to " + path + "/backup/" + dataname);
+			output.Add("Renamed " + path + "/" + dataname + " to " + path + "/backup/" + dataname);
+		}
+		foreach (var chapter in chapters)
+		{
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+			{
+				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname, path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
+				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + " to " + path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
+				output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + " to " + path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
+			}
+		}
+		//Patch
 		if (FileAccess.FileExists(path + "/main.xdelta"))
 		{
 			GD.Print("Patching main data");
 			output.Add("Patching main data");
-			if (FileAccess.FileExists(path + "/"+dataname+".bak"))
+			if (FileAccess.FileExists(path + "/" + dataname))
 			{
-				DirAccess.RemoveAbsolute(path + "/"+dataname+"");
-				GD.Print("Removed " + path + "/"+dataname+"");
-				output.Add("Removed " + path + "/"+dataname+"");
-			}
-			else
-			{
-				DirAccess.RenameAbsolute(path + "/"+dataname+"", path + "/"+dataname+".bak");
-				GD.Print("Renamed " + path + "/"+dataname+" to " + path + "/"+dataname+".bak");
-				output.Add("Renamed " + path + "/"+dataname+" to " + path + "/"+dataname+".bak");
+				DirAccess.RemoveAbsolute(path + "/" + dataname);
+				GD.Print("Removed " + path + "/" + dataname);
+				output.Add("Removed " + path + "/" + dataname);
 			}
 			outputtemp = [];
-			OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/"+dataname+".bak", path + "/main.xdelta", path + "/"+dataname+""], outputtemp, true, true);
-			GD.Print($"{xdelta3} -f -d -v -s {path}/{dataname}.bak {path}/main.xdelta {path}/{dataname}");
+			OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/backup/" + dataname, path + "/main.xdelta", path + "/" + dataname], outputtemp, true, true);
+			GD.Print($"{xdelta3} -f -d -v -s {path}/backup/{dataname} {path}/main.xdelta {path}/{dataname}");
 		}
 		foreach (var chapter in chapters)
 		{
@@ -600,20 +622,14 @@ public partial class Main : Control
 			{
 				GD.Print("Patching chapter" + chapter + " data");
 				output.Add("Patching chapter" + chapter + " data");
-				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
+				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
 				{
-					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
-					GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
-					output.Add("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+"");
+					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					output.Add("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
 				}
-				else
-				{
-					DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+"", path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
-					GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+" to " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
-					output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+" to " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
-				}
-				OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak", path + "/chapter" + chapter + ".xdelta", path + "/chapter" + chapter + "_" + osname + "/"+dataname+""], outputtemp, true, true);
-				GD.Print($"{xdelta3} -f -d -v -s {path}/chapter{chapter}_{osname}/{dataname}.bak {path}/chapter{chapter}.xdelta {path}/chapter{chapter}_{osname}/{dataname}");
+				OS.Execute(xdelta3, ["-f", "-d", "-v", "-s", path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname, path + "/chapter" + chapter + ".xdelta", path + "/chapter" + chapter + "_" + osname + "/" + dataname], outputtemp, true, true);
+				GD.Print($"{xdelta3} -f -d -v -s {path}/backup/chapter{chapter}_{osname}/{dataname} {path}/chapter{chapter}.xdelta {path}/chapter{chapter}_{osname}/{dataname}");
 			}
 		}
 		foreach (var i in outputtemp)
@@ -621,79 +637,147 @@ public partial class Main : Control
 			GD.Print(i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n"));
 		}
 		output += outputtemp;
+		//cleanup
+		foreach (var file in DirAccess.GetFilesAt(path))
+		{
+			if (file.EndsWith(".xdelta"))
+			{
+				DirAccess.RemoveAbsolute(path + "/" + file);
+				GD.Print("Removed " + path + "/" + file);
+				output.Add("Removed " + path + "/" + file);
+			}
+		}
+		//end
+		var logtext = "";
 		foreach (var i in output)
 		{
-			GetNode<Label>("Log/ScrollContainer/Label").Text += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
+			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
-		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
-		var logtext = GetNode<Label>("Log/ScrollContainer/Label").Text;
-		log.StoreString(logtext);
-		log.Close();
-		GetNode<Window>("Log").Show();
 		if (logtext.Contains("checksum mismatch"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedChecksum";
 			GetNode<Window>("Popup").Size = new Vector2I(640,360);
-			RestoreData();
+			output += RestoreData(path);
+		}
+		if (logtext.Contains("cannot find the path specified"))
+		{
+			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedCantFind";
+			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			output += RestoreData(path);
 		}
 		else if (logtext.Replace("\r","").Replace("\n","").Replace(" ","") == "Extracting...")
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedExternals";
 			GetNode<Window>("Popup").Size = new Vector2I(640,360);
-			RestoreData();
+			output += RestoreData(path);
 		}
-		else if (logtext.ToLower().Contains("(required by "))
+		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("(required by "))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedRequired";
 			GetNode<Window>("Popup").Size = new Vector2I(640,360);
-			RestoreData();
+			output += RestoreData(path);
 		}
 		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("permission denied"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedDenied";
 			GetNode<Window>("Popup").Size = new Vector2I(640,360);
-			RestoreData();
+			output += RestoreData(path);
 		}
 		else if (logtext.ToLower().Contains("error") || !logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailed";
 			GetNode<Window>("Popup").Size = new Vector2I(480,240);
-			RestoreData();
+			output += RestoreData(path);
 		}
 		else
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatched";
 			GetNode<Window>("Popup").Size = new Vector2I(480,240);
 		}
+		logtext = "";
+		foreach (var i in output)
+		{
+			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
+		}
+		GetNode<Label>("Log/ScrollContainer/Label").Text = logtext;
+		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
+		log.StoreString(logtext);
+		log.Close();
+		GetNode<Window>("Log").Show();
 		GetNode<Window>("Popup").Show();
 		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
 	}
-	internal void RestoreData()
+	internal static Godot.Collections.Array MoveAfterExtracted(string dir, string relative_dir, string drsdir)
 	{
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'");
-		if (FileAccess.FileExists(path + "/" + dataname + ".bak"))
+		Godot.Collections.Array output = [];
+		foreach (var di in DirAccess.GetDirectoriesAt(dir))
 		{
-			if (FileAccess.FileExists(path + "/" + dataname))
-			{
-				DirAccess.RemoveAbsolute(path + "/" + dataname);
-				GD.Print("Removed " + path + "/" + dataname);
-			}
-			DirAccess.RenameAbsolute(path + "/" + dataname + ".bak", path + "/" + dataname);
-			GD.Print("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
+			output += MoveAfterExtracted(dir + "/" + di, relative_dir + di + "/", drsdir);
 		}
-		foreach (var chapter in chapters)
+		foreach (var file in DirAccess.GetFilesAt(dir))
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
+			if (FileAccess.FileExists(drsdir + "/" + relative_dir + file))
 			{
-				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname))
+				if (!DirAccess.DirExistsAbsolute(drsdir + "/backup/" + relative_dir))
 				{
-					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname);
-					GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname);
+					DirAccess.MakeDirRecursiveAbsolute(drsdir + "/backup/" + relative_dir);
 				}
-				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak", path + "/chapter" + chapter + "_" + osname + "/"+dataname);
-				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak to " + path + "/chapter" + chapter + "_" + osname + "/"+dataname);
+				DirAccess.RenameAbsolute(drsdir + "/" + relative_dir + file, drsdir + "/backup/" + relative_dir + file);
+				GD.Print("Renamed" + drsdir + "/" + relative_dir + file + " to " + drsdir + "/backup/" + relative_dir + file);
+				output.Add("Renamed " + drsdir + "/" + relative_dir + file + " to " + drsdir + "/backup/" + relative_dir + file);
+			}
+			DirAccess.RenameAbsolute(dir + "/" + file, drsdir + "/" + relative_dir + file);
+			GD.Print("Renamed " + dir + "/" + file + " to " + drsdir + "/" + relative_dir + file);
+			output.Add("Renamed " + dir + "/" + file + " to " + drsdir + "/" + relative_dir + file);
+		}
+		return output;
+	}
+	internal static Godot.Collections.Array RestoreData(string path)
+	{
+		Godot.Collections.Array output = [];
+		if (DirAccess.DirExistsAbsolute(path + "/backup"))
+		{
+			output += RestoreFolder(path + "/backup" , path);
+		}
+		OS.MoveToTrash(path + "/backup");
+		GD.Print("Removed " + path + "/backup");
+		output.Add("Removed " + path + "/backup");
+		return output;
+	}
+	internal static Godot.Collections.Array RestoreFolder(string path, string target)
+	{
+		Godot.Collections.Array output = [];
+		foreach (var file in DirAccess.GetFilesAt(path))
+		{
+			var result = DirAccess.RenameAbsolute(path + "/" + file, target + "/" + file);
+			GD.Print("Renamed " + path + "/" + file + " to " + target + "/" + file);
+			output.Add("Renamed " + path + "/" + file + " to " + target + "/" + file);
+			if (result != Error.Ok)
+			{
+				GD.PushError("Error " + result.ToString() + " happened when renaming " + path + "/" + file + " to " + target + "/" + file);
+				output.Add("Error " + result.ToString() + " happened when renaming " + path + "/" + file + " to " + target + "/" + file);
 			}
 		}
+		foreach (var dir in DirAccess.GetDirectoriesAt(path))
+		{
+			output += RestoreFolder(path + "/" + dir, target + "/" + dir);
+		}
+		return output;
+	}
+	public void _on_unpatch_pressed()
+	{
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
+		{
+			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locNoBakDetected";
+			GetNode<Window>("Popup").Size = new Vector2I(360,120);
+			GetNode<Window>("Popup").Show();
+			return;
+		}
+		RestoreData(path);
+		GetNode<Label>("Popup/ScrollContainer/Label").Text = "locUnpatched";
+		GetNode<Window>("Popup").Size = new Vector2I(360,120);
+		GetNode<Window>("Popup").Show();
 	}
 
 	internal static string GetGameDirPath(string str = "")
