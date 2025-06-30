@@ -246,7 +246,8 @@ public partial class Main : Control
 	}
 	public async void _on_update_pressed()
 	{
-		GetNode<Button>("HBoxContainer/Update").Disabled = true;
+		var updatebutton = GetNode<Button>("HBoxContainer/Update");
+		updatebutton.Disabled = true;
 		var url = "";
 		var file = "";
 		var size = 0;
@@ -283,6 +284,25 @@ public partial class Main : Control
 							totalRead += bytesRead;
 							if (size > 0)
 							{
+								var progress = Math.Round(totalRead/1024d/1024d, 2).ToString();
+								var sizee = Math.Round(size/1024d/1024d, 2).ToString();
+								if (!progress.Contains("."))
+								{
+									progress += ".00";
+								}
+								else if (progress.Split(".")[1].Length == 1)
+								{
+									progress += "0";
+								}
+								if (!sizee.Contains("."))
+								{
+									sizee += ".00";
+								}
+								else if (sizee.Split(".")[1].Length == 1)
+								{
+									sizee += "0";
+								}
+								updatebutton.Text = $"{progress} / {sizee} MiB";
 								GD.Print($"Downloaded: {totalRead} / {size}");
 							}
 							if (totalRead >= size)
@@ -295,7 +315,7 @@ public partial class Main : Control
 			}
 			catch (Exception exc)
 			{
-				GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
+				updatebutton.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
 				GD.PushError("Exception catched when updating patcher: " + exc.ToString() + " (" + exc.Message + ")");
 				return;
 			}
@@ -324,7 +344,8 @@ public partial class Main : Control
 				}
 			}
 			OS.MoveToTrash(GetGameDirPath("UpdateTemp"));
-			GetNode<Button>("HBoxContainer/Update").Text = "locWaiting4Restart";
+			updatebutton.Text = "locWaiting4Restart";
+			updatebutton.TooltipText = "locPleaseRestart";
 		}
 	}
 	public void _on_game_updated_pressed()
@@ -415,7 +436,25 @@ public partial class Main : Control
 							{
 								progressbar.Value = totalRead;
 								//progressbar.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
-								updatepatch.Text = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
+								var progress = Math.Round(totalRead/1024d/1024d, 2).ToString();
+								var sizee = Math.Round(size/1024d/1024d, 2).ToString();
+								if (!progress.Contains("."))
+								{
+									progress += ".00";
+								}
+								else if (progress.Split(".")[1].Length == 1)
+								{
+									progress += "0";
+								}
+								if (!sizee.Contains("."))
+								{
+									sizee += ".00";
+								}
+								else if (sizee.Split(".")[1].Length == 1)
+								{
+									sizee += "0";
+								}
+								updatepatch.Text = $"{progress} / {sizee} MiB";
 								GD.Print($"Downloaded: {totalRead} / {size}");
 							}
 							if (totalRead >= size)
@@ -440,6 +479,7 @@ public partial class Main : Control
 			GD.Print($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
 			output.Add($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
 			updatepatch.Text = "locWaiting4Restart";
+			updatepatch.TooltipText = "locPleaseRestart";
 		}
 	}
 	public void _on_update_patch_browser_pressed()

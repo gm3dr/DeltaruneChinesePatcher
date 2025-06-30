@@ -16,6 +16,7 @@ locUpdate, Newer version detected: {VER} , 检测到新版：{VER} , 偵測到�
 locClickToUpdate,"Click to update\n(Experimental, might won't work)",点击更新\n（实验性，可能不管用）,點擊更新\n（實驗性，可能不管用）
 locDownloadFailed,Download failed: ,下载失败：,下載失敗：
 locWaiting4Restart, Waiting for restart , 等待重启, 等待重啟
+locPleaseRestart,Please restart patcher,请重启安装器,請重啟安裝器
 locTimeout, Connection Timeout , 连接超时, 連線逾時
 locResult,Result,结果,結果
 locPatched,"Patched!\nA .bak was added to the end of original data.win/game.ios\nFor updating in future, please don't delete it.",安装完成！\n已经向原本的 data.win/game.ios 结尾添加了一个 .bak\n为了未来更新所需，请不要删除。,安裝完成！\n已經向原本的 data.win 結尾添加了一個 .bak\n為了未來更新所需，請不要刪除。
