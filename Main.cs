@@ -104,9 +104,23 @@ public partial class Main : Control
 		//HttpClient
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
+		//contributors
+		GetNode<Button>("Info").TooltipText = "locInfo";
+		var json = new Json();
+		json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/contributors"));
+		var names = "";
+		foreach (var contributor in json.Data.AsGodotArray<Godot.Collections.Dictionary<string,string>>())
+		{
+			names += contributor["login"] + ", ";
+		}
+		names = names.TrimSuffix(", ");
+		if (names != "")
+		{
+			GetNode<Button>("Info").TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}",names);
+		}
 		//补丁版本号
 		GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
-		var json = new Json();
+		json = new Json();
 		try
 		{
 			if (!inited)
