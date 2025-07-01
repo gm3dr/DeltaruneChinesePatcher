@@ -714,6 +714,9 @@ public partial class Main : Control
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
 		GetNode<Label>("Log/ScrollContainer/Label").Text = logtext;
+		var gdlog = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
+		logtext = gdlog.GetAsText();
+		gdlog.Close();
 		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
 		log.StoreString(logtext);
 		log.Close();
