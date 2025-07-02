@@ -10,6 +10,7 @@ public partial class Main : Control
 	bool inited = false;
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
+	static string game_path_file= GetGameDirPath("data/game_path.txt");
 	static string patchdir = GetGameDirPath("patch");
 	static string patchver = "locNotFound";
 	static Godot.Collections.Dictionary patcherreleases = new();
@@ -101,6 +102,12 @@ public partial class Main : Control
 			node.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.GetTranslationObject(current).GetMessage("locLanguageName"));
 		}
 		node.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
+		//读取之前的游戏路径
+		var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Read);
+		if (game_path != null){
+			GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text = game_path.GetAsText();
+		}
+		game_path.Close();
 		//HttpClient
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
@@ -813,6 +820,11 @@ public partial class Main : Control
 	{
 		if (what == NotificationWMCloseRequest)
 		{
+			//保存游戏路径
+			var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
+			game_path.StoreString(path);
+			game_path.Close();
 			if (fileStream != null)
 			{
 				fileStream.Dispose();
