@@ -19,7 +19,7 @@ SimSunBDF - 北京中易中标电子信息技术有限公司<br>
 图标 - WhatDamon
 
 ## 开发环境
-Godot Engine 4.1.1 Stable Mono<br>
+Godot Engine 4.4.1 Stable Mono<br>
 .NET 8 SDK<br>
 rcedit（用于修改exe资源）<br>
 UPX（用于压缩可执行档案大小）<br>
