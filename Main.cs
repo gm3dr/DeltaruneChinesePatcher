@@ -107,8 +107,8 @@ public partial class Main : Control
 		if (game_path != null)
 		{
 			GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text = game_path.GetAsText();
+			game_path.Close();
 		}
-		game_path.Close();
 		//HttpClient
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
