@@ -10,7 +10,7 @@ public partial class Main : Control
 	bool inited = false;
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
-	static string game_path_file= GetGameDirPath("data/game_path.txt");
+	static string game_path_file = GetGameDirPath("game_path.txt");
 	static string patchdir = GetGameDirPath("patch");
 	static string patchver = "locNotFound";
 	static Godot.Collections.Dictionary patcherreleases = new();
@@ -104,7 +104,8 @@ public partial class Main : Control
 		node.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
 		//读取之前的游戏路径
 		var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Read);
-		if (game_path != null){
+		if (game_path != null)
+		{
 			GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text = game_path.GetAsText();
 		}
 		game_path.Close();
