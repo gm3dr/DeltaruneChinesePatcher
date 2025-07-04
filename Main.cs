@@ -681,7 +681,7 @@ public partial class Main : Control
 			GetNode<Window>("Popup").Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
-		if (logtext.Contains("cannot find the path specified"))
+		else if (logtext.Contains("cannot find the path specified"))
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedCantFind";
 			GetNode<Window>("Popup").Size = new Vector2I(640,360);
