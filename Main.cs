@@ -715,6 +715,10 @@ public partial class Main : Control
 		{
 			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatched";
 			GetNode<Window>("Popup").Size = new Vector2I(480,240);
+			//保存游戏路径
+			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
+			game_path.StoreString(path);
+			game_path.Close();
 		}
 		logtext = "";
 		foreach (var i in output)
