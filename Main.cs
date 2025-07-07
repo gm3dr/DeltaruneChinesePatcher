@@ -551,7 +551,7 @@ public partial class Main : Control
 				break;
 			}
 		}
-		foreach (var __xdelta in new[]{"zdelta", "xdelta3"})
+		foreach (var __xdelta in new[]{"xdelta", "xdelta3"})
 		{
 			externalcheckoutput = [];
 			OS.Execute(__xdelta, ["-h"], externalcheckoutput);
