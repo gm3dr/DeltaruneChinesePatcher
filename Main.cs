@@ -803,6 +803,23 @@ public partial class Main : Control
 			GetNode<Window>("Popup").Show();
 			return;
 		}
+		bool found = FileAccess.FileExists(path + "/"+dataname+".bak");
+		foreach (var chapter in chapters)
+		{
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
+			{
+				GD.Print("Found: "+path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
+				found = true;
+				break;
+			}
+		}
+		if (found)
+		{
+			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locOldBakDetected";
+			GetNode<Window>("Popup").Size = new Vector2I(360,120);
+			GetNode<Window>("Popup").Show();
+			return;
+		}
 		RestoreData(path);
 		GetNode<Label>("Popup/ScrollContainer/Label").Text = "locUnpatched";
 		GetNode<Window>("Popup").Size = new Vector2I(360,120);
