@@ -45,6 +45,8 @@ public partial class Main : Control
 			{
 				DisplayServer.WindowSetSize((Vector2I)(new Vector2I(640, 480) * window_multiply));
 			}
+			//最大帧率
+			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(GetWindow().GetWindowId()));
 			//根据系统语言切换语言
 			if (OS.GetLocale() == "zh_TW" || OS.GetLocale() == "zh_HK" || OS.GetLocale() == "zh_MO")
 			{
