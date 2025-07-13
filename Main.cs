@@ -26,7 +26,7 @@ public partial class Main : Control
 			GetNode<OptionButton>("OptionButton").Disabled = true;
 			GetNode<AnimationPlayer>("AnimationPlayer").Play("bg_anim");
 			//修改窗口大小
-			var wid = GetWindow().GetWindowId();
+			var wid = GetWindow().CurrentScreen;
 			var window_multiply = Vector2.One;
 			var size = DisplayServer.ScreenGetSize(wid) / (Vector2.One * DisplayServer.ScreenGetScale(wid));
 			if (size > new Vector2I(3840,2400))
@@ -46,7 +46,7 @@ public partial class Main : Control
 				DisplayServer.WindowSetSize((Vector2I)(new Vector2I(640, 480) * window_multiply));
 			}
 			//最大帧率
-			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(GetWindow().GetWindowId()));
+			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(GetWindow().CurrentScreen));
 			//根据系统语言切换语言
 			if (OS.GetLocale() == "zh_TW" || OS.GetLocale() == "zh_HK" || OS.GetLocale() == "zh_MO")
 			{
