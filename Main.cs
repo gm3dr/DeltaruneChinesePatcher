@@ -585,7 +585,7 @@ public partial class Main : Control
 		//hash check
 		foreach (var pathhhhh in externals_hash.Keys)
 		{
-			if ((pathhhhh.Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Contains("xdelta3") && xdelta3 == pathhhhh))
+			if ((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh))
 			{
 				GD.Print($"Checking {pathhhhh}");
 				if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
