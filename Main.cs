@@ -10,6 +10,15 @@ public partial class Main : Control
 	bool inited = false;
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
+	static readonly Godot.Collections.Dictionary<string,string> externals_hash = new()
+	{
+		{GetGameDirPath("externals/7zip/7z"), "9a556170350dafb60a97348b86a94b087d97fd36007760691576cac0d88b132b"},
+		{GetGameDirPath("externals/7zip/7z.exe"), "d2c0045523cf053a6b43f9315e9672fc2535f06aeadd4ffa53c729cd8b2b6dfe"},
+		{GetGameDirPath("externals/7zip/7z_mac"), "bd5765978a541323758d82ad1d30df76a2e3c86341f12d6b0524d837411e9b4a"},
+		{GetGameDirPath("externals/xdelta3/xdelta3"), "709f63ebb9655dc3b5c84f17e11217494eb34cf00c009a026386e4c8617ea903"},
+		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "6855c01cf4a1662ba421e6f95370cf9afa2b3ab6c148473c63efe60d634dfb9a"},
+		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), "714c1680b8fb80052e3851b9007d5d4b9ca0130579b0cdd2fd6135cce041ce6a"}
+	};
 	static string game_path_file = GetGameDirPath("game_path.txt");
 	static string patchdir = GetGameDirPath("patch");
 	static string patchver = "locNotFound";
@@ -573,6 +582,25 @@ public partial class Main : Control
 				break;
 			}
 		}
+		//hash check
+		foreach (var pathhhhh in externals_hash.Keys)
+		{
+			if ((pathhhhh.Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Contains("xdelta3") && xdelta3 == pathhhhh))
+			{
+				GD.Print($"Checking {pathhhhh}");
+				if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
+				{
+					GD.Print(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
+					GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedSha256";
+					GetNode<Window>("Popup").Size = new Vector2I(640,360);
+					GetNode<Window>("Popup").Show();
+					GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+					return;
+				}
+				GD.Print(FileAccess.GetSha256(pathhhhh) + " == " + externals_hash[pathhhhh]);
+			}
+		}
+		GD.Print("Sha256 check all passed.");
 		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		Godot.Collections.Array output = [];
 		Godot.Collections.Array outputtemp = [];
