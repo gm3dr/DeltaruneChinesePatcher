@@ -5,6 +5,50 @@ using System.Net.Http;
 
 public partial class Main : Control
 {
+	[Export]
+	AnimationPlayer nodeBgAnim = null!;
+	[Export]
+	Button nodeBtnInfo = null!;
+	[Export]
+	OptionButton nodeComboLanguage = null!;
+	[Export]
+	Label nodeTextPatcherVersion = null!;
+	[Export]
+	Button nodeBtnUpdatePatcher = null!;
+
+	[Export]
+	Label nodeTextPatchVersion = null!;
+	[Export]
+	Container nodeUpdatePatchRow = null!;
+	[Export]
+	Button nodeBtnUpdatePatch = null!;
+	[Export]
+	ProgressBar nodeProgress = null!;
+	[Export]
+	LineEdit nodeEditGamePath = null!;
+	[Export]
+	Button nodeBtnPatch = null!;
+	[Export]
+	Button nodeBtnUnpatch = null!;
+
+	[Export]
+	FileDialog nodeOpenDialog = null!;
+	[Export]
+	Window nodeWindowReadme = null!;
+	[Export]
+	Label nodeWindowReadmeContent = null!;
+	[Export]
+	Window nodeWindowLog = null!;
+	[Export]
+	Label nodeWindowLogContent = null!;
+	[Export]
+	Window nodeWindowPopup = null!;
+	[Export]
+	Label nodeWindowPopupContent = null!;
+	[Export]
+	Window nodeWindowPatch = null!;
+
+
 	static readonly string[] chapters = ["1", "2", "3", "4"];
 	string[] locales;
 	bool inited = false;
@@ -32,8 +76,9 @@ public partial class Main : Control
 		//首次初始化
 		if (!inited)
 		{
-			GetNode<OptionButton>("OptionButton").Disabled = true;
-			GetNode<AnimationPlayer>("AnimationPlayer").Play("bg_anim");
+			nodeBgAnim.Play("bg_anim");
+			nodeComboLanguage.Disabled = true;
+
 			//修改窗口大小
 			var screenId = GetWindow().CurrentScreen;
 			var screenSize = DisplayServer.ScreenGetSize(screenId);
@@ -79,15 +124,15 @@ public partial class Main : Control
 			{
 				if (file.ToLower().Contains("readme") && !file.EndsWith(".md"))
 				{
-					GetNode<Label>("Readme/ScrollContainer/Label").Text = FileAccess.Open(GetGameDirPath(file), FileAccess.ModeFlags.Read).GetAsText();
-					GetNode<Window>("Readme").Title = file;
-					GetNode<Window>("Readme").Show();
+					nodeWindowReadmeContent.Text = FileAccess.Open(GetGameDirPath(file), FileAccess.ModeFlags.Read).GetAsText();
+					nodeWindowReadme.Title = file;
+					nodeWindowReadme.Show();
 					break;
 				}
 			}
 		}
 		//安装器版本号
-		GetNode<Label>("HBoxContainer/VBoxContainer/Label").Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
+		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
 		//系统特供目录
 		if (OS.GetName() == "Windows")
 		{
@@ -100,26 +145,26 @@ public partial class Main : Control
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
 		}
 		//语言选项
-		var node = GetNode<OptionButton>("OptionButton");
 		locales = TranslationServer.GetLoadedLocales();
-		node.ItemCount = locales.Length;
+		nodeComboLanguage.ItemCount = locales.Length;
 		foreach (var current in locales)
 		{
-			node.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.GetTranslationObject(current).GetMessage("locLanguageName"));
+			nodeComboLanguage.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.GetTranslationObject(current).GetMessage("locLanguageName"));
 		}
-		node.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
+		nodeComboLanguage.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
+
 		//读取之前的游戏路径
 		var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Read);
 		if (game_path != null)
 		{
-			GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text = game_path.GetAsText();
+			nodeEditGamePath.Text = game_path.GetAsText();
 			game_path.Close();
 		}
 		//HttpClient
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 		//contributors
-		GetNode<Button>("Info").TooltipText = "locInfo";
+		nodeBtnInfo.TooltipText = "locInfo";
 		var json = new Json();
 		json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/contributors"));
 		var names = "";
@@ -130,10 +175,10 @@ public partial class Main : Control
 		names = names.TrimSuffix(", ");
 		if (names != "")
 		{
-			GetNode<Button>("Info").TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}",names);
+			nodeBtnInfo.TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}",names);
 		}
 		//补丁版本号
-		GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
+		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
 		json = new Json();
 		try
 		{
@@ -142,12 +187,12 @@ public partial class Main : Control
 				json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinese/releases/latest"));
 				patchreleases = json.Data.AsGodotDictionary();
 			}
-			GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + patchreleases["tag_name"].AsString();
+			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + patchreleases["tag_name"].AsString();
 			if (patchver != patchreleases["tag_name"].AsString())
 			{
-				GetNode<HBoxContainer>("CenterContainer/VBoxContainer/HBoxContainer3").Visible = true;
+				nodeUpdatePatchRow.Visible = true;
 			}
-			if (GetNode<Label>("Readme/ScrollContainer/Label").Text != "")
+			if (nodeWindowReadmeContent.Text != "")
 			{
 				foreach (var asset in patchreleases["assets"].AsGodotArray())
 				{
@@ -155,9 +200,9 @@ public partial class Main : Control
 					{
 						var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
 						FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write).StoreString(text);
-						GetNode<Label>("Readme/ScrollContainer/Label").Text = text;
-						GetNode<Window>("Readme").Title = "readme.txt";
-						GetNode<Window>("Readme").Show();
+						nodeWindowReadmeContent.Text = text;
+						nodeWindowReadme.Title = "readme.txt";
+						nodeWindowReadme.Show();
 						break;
 					}
 				}
@@ -166,7 +211,7 @@ public partial class Main : Control
 		catch (HttpRequestException exc)
 		{
 			GD.PushError("Exception catched when requesting patch latest: " + exc.ToString() + " (" + exc.Message + ")");
-			//GetNode<Label>("CenterContainer/VBoxContainer/Label").Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
+			//nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
 		}
 		//安装器更新
 		if (!OS.HasFeature("editor"))
@@ -181,8 +226,8 @@ public partial class Main : Control
 				}
 				if (patcherreleases["tag_name"].AsString() != "v" + ProjectSettings.GetSetting("application/config/version").AsString())
 				{
-					GetNode<Button>("HBoxContainer/Update").Text = TranslationServer.Translate("locUpdate").ToString().Replace("{VER}", patcherreleases["tag_name"].AsString());
-					GetNode<Button>("HBoxContainer/Update").Visible = true;
+					nodeBtnUpdatePatcher.Text = TranslationServer.Translate("locUpdate").ToString().Replace("{VER}", patcherreleases["tag_name"].AsString());
+					nodeBtnUpdatePatcher.Visible = true;
 				}
 			}
 			catch (HttpRequestException exc)
@@ -194,16 +239,16 @@ public partial class Main : Control
 
 		if (!inited)
 		{
-			GetNode<OptionButton>("OptionButton").Disabled = false;
+			nodeComboLanguage.Disabled = false;
 			inited = true;
 		}
 	}
 
 	public override void _Process(double delta)
 	{
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = (path == "" || patchver == "locNotFound");
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Unpatch").Disabled = (path == "");
+		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		nodeBtnPatch.Disabled = (path == "" || patchver == "locNotFound");
+		nodeBtnUnpatch.Disabled = (path == "");
 	}
 
 	public void _on_language_item_selected(int selected)
@@ -218,20 +263,20 @@ public partial class Main : Control
 	}
 	public void _on_browse_pressed()
 	{
-		GetNode<FileDialog>("FileDialog").Show();
+		nodeOpenDialog.Show();
 	}
 	public void _on_file_dialog_dir_selected(string dir)
 	{
-		GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text = dir;
+		nodeEditGamePath.Text = dir;
 	}
 	public void _on_window_close_requested()
 	{
-		GetNode<Window>("Log").Hide();
+		nodeWindowLog.Hide();
 	}
 	public void _on_patch_pressed()
 	{
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = true;
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		nodeBtnPatch.Disabled = true;
+		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		bool found = FileAccess.FileExists(path + "/"+dataname+".bak") || DirAccess.DirExistsAbsolute(path + "/backup");
 		foreach (var chapter in chapters)
 		{
@@ -244,7 +289,7 @@ public partial class Main : Control
 		}
 		if (found)
 		{
-			GetNode<Window>("Patch").Show();
+			nodeWindowPatch.Show();
 		}
 		else
 		{
@@ -257,21 +302,20 @@ public partial class Main : Control
 	}
 	public void _on_popup_close_requested()
 	{
-		GetNode<Window>("Popup").Hide();
+		nodeWindowPopup.Hide();
 	}
 	public void _on_patch_close_requested()
 	{
-		GetNode<Window>("Patch").Hide();
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+		nodeWindowPatch.Hide();
+		nodeBtnPatch.Disabled = false;
 	}
 	public void _on_readme_close_requested()
 	{
-		GetNode<Window>("Readme").Hide();
+		nodeWindowReadme.Hide();
 	}
 	public async void _on_update_pressed()
 	{
-		var updatebutton = GetNode<Button>("HBoxContainer/Update");
-		updatebutton.Disabled = true;
+		nodeBtnUpdatePatcher.Disabled = true;
 		var url = "";
 		var file = "";
 		var size = 0;
@@ -326,7 +370,7 @@ public partial class Main : Control
 								{
 									sizee += "0";
 								}
-								updatebutton.Text = $"{progress} / {sizee} MiB";
+								nodeBtnUpdatePatcher.Text = $"{progress} / {sizee} MiB";
 								GD.Print($"Downloaded: {totalRead} / {size}");
 							}
 							if (totalRead >= size)
@@ -339,7 +383,7 @@ public partial class Main : Control
 			}
 			catch (Exception exc)
 			{
-				updatebutton.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
+				nodeBtnUpdatePatcher.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
 				GD.PushError("Exception catched when updating patcher: " + exc.ToString() + " (" + exc.Message + ")");
 				return;
 			}
@@ -368,13 +412,13 @@ public partial class Main : Control
 				}
 			}
 			OS.MoveToTrash(GetGameDirPath("UpdateTemp"));
-			updatebutton.Text = "locWaiting4Restart";
-			updatebutton.TooltipText = "locPleaseRestart";
+			nodeBtnUpdatePatcher.Text = "locWaiting4Restart";
+			nodeBtnUpdatePatcher.TooltipText = "locPleaseRestart";
 		}
 	}
 	public void _on_game_updated_pressed()
 	{
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		if (FileAccess.FileExists(path + "/"+dataname+".bak"))
 		{
 			DirAccess.RemoveAbsolute(path + "/"+dataname+".bak");
@@ -389,18 +433,16 @@ public partial class Main : Control
 			}
 		}
 		OS.MoveToTrash(path + "/backup");
-		GetNode<Window>("Patch").Hide();
-		GetNode<Label>("Popup/ScrollContainer/Label").Text = "locVerifyIntegrity";
-		GetNode<Window>("Popup").Size = new Vector2I(640,360);
-		GetNode<Window>("Popup").Show();
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+		nodeWindowPatch.Hide();
+		nodeWindowPopupContent.Text = "locVerifyIntegrity";
+		nodeWindowPopup.Size = new Vector2I(640,360);
+		nodeWindowPopup.Show();
+		nodeBtnPatch.Disabled = false;
 	}
 	public async void _on_update_patch_pressed()
 	{
-		var updatepatch = GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatch");
-		updatepatch.Disabled = true;
-		var progressbar = GetNode<ProgressBar>("CenterContainer/VBoxContainer/ProgressBar");
-		progressbar.Visible = true;
+		nodeBtnUpdatePatch.Disabled = true;
+		nodeProgress.Visible = true;
 		Godot.Collections.Array output = [];
 		//删除旧patch
 		foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
@@ -423,7 +465,7 @@ public partial class Main : Control
 				url = /*(TranslationServer.GetLocale() == "zh_CN" ? "https://ghfast.top/" : "") + */asset.AsGodotDictionary()["browser_download_url"].AsString();
 				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
 				size = asset.AsGodotDictionary()["size"].AsInt32();
-				progressbar.MaxValue = size;
+				nodeProgress.MaxValue = size;
 				break;
 			}
 		}
@@ -449,8 +491,8 @@ public partial class Main : Control
 							totalRead += bytesRead;
 							if (size > 0)
 							{
-								progressbar.Value = totalRead;
-								//progressbar.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
+								nodeProgress.Value = totalRead;
+								//nodeProgress.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
 								var progress = Math.Round(totalRead/1024d/1024d, 2).ToString();
 								var sizee = Math.Round(size/1024d/1024d, 2).ToString();
 								if (!progress.Contains("."))
@@ -469,7 +511,7 @@ public partial class Main : Control
 								{
 									sizee += "0";
 								}
-								updatepatch.Text = $"{progress} / {sizee} MiB";
+								nodeBtnUpdatePatch.Text = $"{progress} / {sizee} MiB";
 								GD.Print($"Downloaded: {totalRead} / {size}");
 							}
 							if (totalRead >= size)
@@ -482,7 +524,7 @@ public partial class Main : Control
 			}
 			catch (Exception exc)
 			{
-				updatepatch.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
+				nodeBtnUpdatePatch.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
 				GD.PushError("Exception catched when updating patch: " + exc.ToString() + " ("+exc.Message+")");
 				return;
 			}
@@ -493,8 +535,8 @@ public partial class Main : Control
 			DirAccess.RenameAbsolute(GetGameDirPath(file), GetGameDirPath(file.TrimPrefix("_downloadingtemp_")));
 			GD.Print($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
 			output.Add($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
-			updatepatch.Text = "locWaiting4Restart";
-			updatepatch.TooltipText = "locPleaseRestart";
+			nodeBtnUpdatePatch.Text = "locWaiting4Restart";
+			nodeBtnUpdatePatch.TooltipText = "locPleaseRestart";
 		}
 	}
 	public void _on_update_patch_browser_pressed()
@@ -519,9 +561,9 @@ public partial class Main : Control
 
 	public void Patch()
 	{
-		GetNode<Window>("Patch").Hide();
-		GetNode<Label>("Log/ScrollContainer/Label").Text = "";
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		nodeWindowPatch.Hide();
+		nodeWindowLogContent.Text = "";
+		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		Godot.Collections.Array output = [];
 		Godot.Collections.Array outputtemp = [];
 		//chmod加权限
@@ -597,23 +639,23 @@ public partial class Main : Control
 				{
 					GD.Print("Unable to find " + pathhhhh);
 					output.Add("Unable to find " + pathhhhh);
-					GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedNotExists";
-					GetNode<Window>("Popup").Size = new Vector2I(640,360);
+					nodeWindowPopupContent.Text = "locPatchFailedNotExists";
+					nodeWindowPopup.Size = new Vector2I(640,360);
 					var logtext1 = "";
 					foreach (var i in output)
 					{
 						logtext1 += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 					}
-					GetNode<Label>("Log/ScrollContainer/Label").Text = logtext1;
+					nodeWindowLogContent.Text = logtext1;
 					var gdlog1 = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
 					logtext1 = gdlog1.GetAsText();
 					gdlog1.Close();
 					var log1 = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
 					log1.StoreString(logtext1);
 					log1.Close();
-					GetNode<Window>("Log").Show();
-					GetNode<Window>("Popup").Show();
-					GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+					nodeWindowLog.Show();
+					nodeWindowPopup.Show();
+					nodeBtnPatch.Disabled = false;
 					return;
 				}
 				GD.Print($"Found {pathhhhh}");
@@ -631,23 +673,23 @@ public partial class Main : Control
 				{
 					GD.Print(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
 					output.Add(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
-					GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedSha256";
-					GetNode<Window>("Popup").Size = new Vector2I(640,360);
+					nodeWindowPopupContent.Text = "locPatchFailedSha256";
+					nodeWindowPopup.Size = new Vector2I(640,360);
 					var logtext1 = "";
 					foreach (var i in output)
 					{
 						logtext1 += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 					}
-					GetNode<Label>("Log/ScrollContainer/Label").Text = logtext1;
+					nodeWindowLogContent.Text = logtext1;
 					var gdlog1 = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
 					logtext1 = gdlog1.GetAsText();
 					gdlog1.Close();
 					var log1 = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
 					log1.StoreString(logtext1);
 					log1.Close();
-					GetNode<Window>("Log").Show();
-					GetNode<Window>("Popup").Show();
-					GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+					nodeWindowLog.Show();
+					nodeWindowPopup.Show();
+					nodeBtnPatch.Disabled = false;
 					return;
 				}
 				GD.Print("Hash matched: " + externals_hash[pathhhhh]);
@@ -759,44 +801,44 @@ public partial class Main : Control
 		}
 		if (logtext.Contains("checksum mismatch"))
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedChecksum";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			nodeWindowPopupContent.Text = "locPatchFailedChecksum";
+			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if (logtext.Contains("cannot find the path specified"))
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedCantFind";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			nodeWindowPopupContent.Text = "locPatchFailedCantFind";
+			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if (logtext.Replace("\r","").Replace("\n","").Replace(" ","") == "Extracting...")
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedExternals";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			nodeWindowPopupContent.Text = "locPatchFailedExternals";
+			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("(required by "))
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedRequired";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			nodeWindowPopupContent.Text = "locPatchFailedRequired";
+			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("permission denied"))
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedDenied";
-			GetNode<Window>("Popup").Size = new Vector2I(640,360);
+			nodeWindowPopupContent.Text = "locPatchFailedDenied";
+			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if (logtext.ToLower().Contains("error") || !logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok"))
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailed";
-			GetNode<Window>("Popup").Size = new Vector2I(480,240);
+			nodeWindowPopupContent.Text = "locPatchFailed";
+			nodeWindowPopup.Size = new Vector2I(480,240);
 			output += RestoreData(path);
 		}
 		else
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatched";
-			GetNode<Window>("Popup").Size = new Vector2I(480,240);
+			nodeWindowPopupContent.Text = "locPatched";
+			nodeWindowPopup.Size = new Vector2I(480,240);
 			//保存游戏路径
 			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
 			game_path.StoreString(path);
@@ -807,16 +849,16 @@ public partial class Main : Control
 		{
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
-		GetNode<Label>("Log/ScrollContainer/Label").Text = logtext;
+		nodeWindowLogContent.Text = logtext;
 		var gdlog = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
 		logtext = gdlog.GetAsText();
 		gdlog.Close();
 		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
 		log.StoreString(logtext);
 		log.Close();
-		GetNode<Window>("Log").Show();
-		GetNode<Window>("Popup").Show();
-		GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+		nodeWindowLog.Show();
+		nodeWindowPopup.Show();
+		nodeBtnPatch.Disabled = false;
 	}
 	internal static Godot.Collections.Array MoveAfterExtracted(string dir, string relative_dir, string drsdir)
 	{
@@ -877,12 +919,12 @@ public partial class Main : Control
 	}
 	public void _on_unpatch_pressed()
 	{
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locNoBakDetected";
-			GetNode<Window>("Popup").Size = new Vector2I(360,120);
-			GetNode<Window>("Popup").Show();
+			nodeWindowPopupContent.Text = "locNoBakDetected";
+			nodeWindowPopup.Size = new Vector2I(360,120);
+			nodeWindowPopup.Show();
 			return;
 		}
 		bool found = FileAccess.FileExists(path + "/"+dataname+".bak");
@@ -897,15 +939,15 @@ public partial class Main : Control
 		}
 		if (found)
 		{
-			GetNode<Label>("Popup/ScrollContainer/Label").Text = "locOldBakDetected";
-			GetNode<Window>("Popup").Size = new Vector2I(360,120);
-			GetNode<Window>("Popup").Show();
+			nodeWindowPopupContent.Text = "locOldBakDetected";
+			nodeWindowPopup.Size = new Vector2I(360,120);
+			nodeWindowPopup.Show();
 			return;
 		}
 		RestoreData(path);
-		GetNode<Label>("Popup/ScrollContainer/Label").Text = "locUnpatched";
-		GetNode<Window>("Popup").Size = new Vector2I(360,120);
-		GetNode<Window>("Popup").Show();
+		nodeWindowPopupContent.Text = "locUnpatched";
+		nodeWindowPopup.Size = new Vector2I(360,120);
+		nodeWindowPopup.Show();
 	}
 
 	internal static string GetGameDirPath(string str = "")
@@ -925,7 +967,7 @@ public partial class Main : Control
 		if (what == NotificationWMCloseRequest)
 		{
 			//保存游戏路径
-			var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+			var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
 			game_path.StoreString(path);
 			game_path.Close();
