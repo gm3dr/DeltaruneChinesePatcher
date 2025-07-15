@@ -35,24 +35,19 @@ public partial class Main : Control
 			GetNode<OptionButton>("OptionButton").Disabled = true;
 			GetNode<AnimationPlayer>("AnimationPlayer").Play("bg_anim");
 			//修改窗口大小
-			var wid = GetWindow().CurrentScreen;
-			var window_multiply = Vector2.One;
-			var size = DisplayServer.ScreenGetSize(wid) / (Vector2.One * DisplayServer.ScreenGetScale(wid));
-			if (size > new Vector2I(3840,2400))
+			var screenId = GetWindow().CurrentScreen;
+			var screenSize = DisplayServer.ScreenGetSize(screenId);
+			var windowDesignSize = new Vector2I(640, 480);
+
+			//计算时将窗口视为更大一点的窗口，防止窗口占满全屏
+			var windowPaddingFactor = 1.15f;
+			int windowScale = (int)Mathf.Floor(screenSize.Y / (windowDesignSize.Y * windowPaddingFactor));
+			if (windowScale > 1)
 			{
-				window_multiply = Vector2.One * 4;
-			}
-			else if (size > new Vector2I(2560,1600))
-			{
-				window_multiply = Vector2.One * 3;
-			}
-			else if (size > new Vector2I(1920,1200))
-			{
-				window_multiply = Vector2.One * 2;
-			}
-			if (window_multiply != Vector2.One)
-			{
-				DisplayServer.WindowSetSize((Vector2I)(new Vector2I(640, 480) * window_multiply));
+				var windowNewSize = windowDesignSize * windowScale;
+				DisplayServer.WindowSetSize(windowNewSize);
+				// 居中窗口
+				DisplayServer.WindowSetPosition(screenSize / 2 - windowNewSize / 2);
 			}
 			//最大帧率
 			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(GetWindow().CurrentScreen));
