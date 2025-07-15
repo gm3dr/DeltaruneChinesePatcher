@@ -526,6 +526,9 @@ public partial class Main : Control
 	{
 		GetNode<Window>("Patch").Hide();
 		GetNode<Label>("Log/ScrollContainer/Label").Text = "";
+		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		Godot.Collections.Array output = [];
+		Godot.Collections.Array outputtemp = [];
 		//chmod加权限
 		if (OS.GetName() == "macOS" || OS.GetName() == "Linux")
 		{
@@ -533,11 +536,13 @@ public partial class Main : Control
 			{
 				OS.Execute("chmod", ["+x", xdelta3]);
 				GD.Print($"chmod +x {xdelta3}");
+				output.Add($"chmod +x {xdelta3}");
 			}
 			if (_7zip.Contains("/"))
 			{
 				OS.Execute("chmod", ["+x", _7zip]);
 				GD.Print($"chmod +x {_7zip}");
+				output.Add($"chmod +x {_7zip}");
 			}
 		}
 		//外部程序检查
@@ -547,6 +552,7 @@ public partial class Main : Control
 			externalcheckoutput = [];
 			OS.Execute(__7z,[], externalcheckoutput);
 			GD.Print("Checking " + __7z);
+			output.Add("Checking " + __7z);
 			GD.Print(externalcheckoutput);
 			foreach (var line in externalcheckoutput)
 			{
@@ -554,6 +560,7 @@ public partial class Main : Control
 				{
 					_7zip = __7z;
 					GD.Print("Found " + __7z);
+					output.Add("Found " + __7z);
 					break;
 				}
 			}
@@ -567,6 +574,7 @@ public partial class Main : Control
 			externalcheckoutput = [];
 			OS.Execute(__xdelta, ["-h"], externalcheckoutput);
 			GD.Print("Checking " + __xdelta);
+			output.Add("Checking " + __xdelta);
 			GD.Print(externalcheckoutput);
 			foreach (var line in externalcheckoutput)
 			{
@@ -574,6 +582,7 @@ public partial class Main : Control
 				{
 					xdelta3 = __xdelta;
 					GD.Print("Found " + __xdelta);
+					output.Add("Found " + __xdelta);
 					break;
 				}
 			}
@@ -588,22 +597,36 @@ public partial class Main : Control
 			if ((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh))
 			{
 				GD.Print($"Checking {pathhhhh}");
+				output.Add($"Checking {pathhhhh}");
 				if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
 				{
 					GD.Print(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
+					output.Add(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
 					GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedSha256";
 					GetNode<Window>("Popup").Size = new Vector2I(640,360);
+					var logtext1 = "";
+					foreach (var i in output)
+					{
+						logtext1 += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
+					}
+					GetNode<Label>("Log/ScrollContainer/Label").Text = logtext1;
+					var gdlog1 = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
+					logtext1 = gdlog1.GetAsText();
+					gdlog1.Close();
+					var log1 = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
+					log1.StoreString(logtext1);
+					log1.Close();
+					GetNode<Window>("Log").Show();
 					GetNode<Window>("Popup").Show();
 					GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
 					return;
 				}
 				GD.Print(FileAccess.GetSha256(pathhhhh) + " == " + externals_hash[pathhhhh]);
+				output.Add(FileAccess.GetSha256(pathhhhh) + " == " + externals_hash[pathhhhh]);
 			}
 		}
 		GD.Print("Sha256 check all passed.");
-		var path = GetNode<LineEdit>("CenterContainer/VBoxContainer/HBoxContainer/LineEdit").Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
-		Godot.Collections.Array output = [];
-		Godot.Collections.Array outputtemp = [];
+		output.Add("Sha256 check all passed.");
 		GD.Print("Extracting...");
 		output.Add("Extracting...");
 		//恢复备份
