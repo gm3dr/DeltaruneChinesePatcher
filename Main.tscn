@@ -14,7 +14,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("TextureRect2:texture")
+tracks/0/path = NodePath("Background/BackgroundBottom:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -30,7 +30,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("TextureRect2:texture")
+tracks/0/path = NodePath("Background/BackgroundBottom:texture")
 tracks/0/interp = 0
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -46,7 +46,7 @@ _data = {
 &"bg_anim": SubResource("Animation_cm0pq")
 }
 
-[node name="Main" type="Control"]
+[node name="Main" type="Control" node_paths=PackedStringArray("nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPatch")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,8 +55,36 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_glv2v")
 script = ExtResource("2_uu6xs")
+nodeBgAnim = NodePath("Background/AnimationPlayer")
+nodeBtnInfo = NodePath("BtnInfo")
+nodeComboLanguage = NodePath("ComboLanguage")
+nodeTextPatcherVersion = NodePath("BottomContainer/Left/TextPatcherVersion")
+nodeBtnUpdatePatcher = NodePath("BottomContainer/Update")
+nodeTextPatchVersion = NodePath("CenterContainer/Container/TextPatchVersion")
+nodeUpdatePatchRow = NodePath("CenterContainer/Container/UpdatePatchRow")
+nodeBtnUpdatePatch = NodePath("CenterContainer/Container/UpdatePatchRow/UpdatePatch")
+nodeProgress = NodePath("CenterContainer/Container/ProgressBar")
+nodeEditGamePath = NodePath("CenterContainer/Container/GamePathRow/EditGamePath")
+nodeBtnPatch = NodePath("CenterContainer/Container/PatchButtonRow/Patch")
+nodeBtnUnpatch = NodePath("CenterContainer/Container/PatchButtonRow/Unpatch")
+nodeOpenDialog = NodePath("FileDialog")
+nodeWindowReadme = NodePath("Readme")
+nodeWindowReadmeContent = NodePath("Readme/ScrollContainer/Label")
+nodeWindowLog = NodePath("Log")
+nodeWindowLogContent = NodePath("Log/ScrollContainer/Label")
+nodeWindowPopup = NodePath("Popup")
+nodeWindowPopupContent = NodePath("Popup/ScrollContainer/Label")
+nodeWindowPatch = NodePath("Patch")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="Background" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="Background"]
 layout_mode = 1
 offset_top = -40.0
 offset_right = 320.0
@@ -64,7 +92,7 @@ offset_bottom = 220.0
 scale = Vector2(2, 2)
 texture = ExtResource("3_r0du0")
 
-[node name="TextureRect2" type="TextureRect" parent="."]
+[node name="BackgroundBottom" type="TextureRect" parent="Background"]
 layout_mode = 1
 offset_top = 340.0
 offset_right = 320.0
@@ -72,12 +100,13 @@ offset_bottom = 410.0
 scale = Vector2(2, 2)
 texture = ExtResource("4_cm0pq")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Background"]
+root_node = NodePath("../..")
 libraries = {
 &"": SubResource("AnimationLibrary_fos0i")
 }
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="Background"]
 modulate = Color(1, 1, 1, 0.501961)
 layout_mode = 1
 anchors_preset = 15
@@ -95,49 +124,49 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="Container" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="TextPatchVersion" type="Label" parent="CenterContainer/Container"]
 layout_mode = 2
 text = "locLocalVer
 locLatestVer"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="UpdatePatchRow" type="HBoxContainer" parent="CenterContainer/Container"]
 visible = false
 layout_mode = 2
 
-[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+[node name="Left" type="Control" parent="CenterContainer/Container/UpdatePatchRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="UpdatePatch" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+[node name="UpdatePatch" type="Button" parent="CenterContainer/Container/UpdatePatchRow"]
 layout_mode = 2
 tooltip_text = "locUpdatePatchInfo"
 text = "locUpdatePatch"
 
-[node name="UpdatePatchBrowser" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+[node name="UpdatePatchBrowser" type="Button" parent="CenterContainer/Container/UpdatePatchRow"]
 layout_mode = 2
 tooltip_text = "locUpdatePatchBrowserInfo"
 text = "locUpdatePatchBrowser"
 
-[node name="Control2" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+[node name="Right" type="Control" parent="CenterContainer/Container/UpdatePatchRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ProgressBar" type="ProgressBar" parent="CenterContainer/VBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="CenterContainer/Container"]
 visible = false
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 27
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="GamePathRow" type="HBoxContainer" parent="CenterContainer/Container"]
 custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="EditGamePath" type="LineEdit" parent="CenterContainer/Container/GamePathRow"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -145,46 +174,30 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 13
 placeholder_text = "locDeltaruneDir"
 
-[node name="Browse" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="BtnBrowse" type="Button" parent="CenterContainer/Container/GamePathRow"]
 layout_mode = 2
 text = "locBrowse"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="PatchButtonRow" type="HBoxContainer" parent="CenterContainer/Container"]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+[node name="Left" type="Control" parent="CenterContainer/Container/PatchButtonRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Patch" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+[node name="Patch" type="Button" parent="CenterContainer/Container/PatchButtonRow"]
 layout_mode = 2
 text = "locPatch"
 
-[node name="Unpatch" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+[node name="Unpatch" type="Button" parent="CenterContainer/Container/PatchButtonRow"]
 layout_mode = 2
 text = "locUnpatch"
 
-[node name="Control2" type="Control" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+[node name="Right" type="Control" parent="CenterContainer/Container/PatchButtonRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="OptionButton" type="OptionButton" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -202.0
-offset_bottom = 42.0
-grow_horizontal = 0
-item_count = 3
-popup/item_0/text = "English"
-popup/item_0/id = 0
-popup/item_1/text = "中文（简体）"
-popup/item_1/id = 1
-popup/item_2/text = "中文（繁體）"
-popup/item_2/id = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="BottomContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -194,33 +207,49 @@ offset_top = -60.0
 offset_right = 640.0
 grow_vertical = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="Left" type="VBoxContainer" parent="BottomContainer"]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="HBoxContainer/VBoxContainer"]
+[node name="Top" type="Control" parent="BottomContainer/Left"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
+[node name="TextPatcherVersion" type="Label" parent="BottomContainer/Left"]
 layout_mode = 2
 text = "v0.0.0"
 
-[node name="Control" type="Control" parent="HBoxContainer"]
+[node name="Center" type="Control" parent="BottomContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Update" type="Button" parent="HBoxContainer"]
+[node name="Update" type="Button" parent="BottomContainer"]
 visible = false
 layout_mode = 2
 tooltip_text = "locClickToUpdate"
 text = "locUpdate"
 
-[node name="Info" type="Button" parent="."]
+[node name="BtnInfo" type="Button" parent="."]
 layout_mode = 1
-offset_right = 40.0
-offset_bottom = 42.0
+offset_right = 60.0
+offset_bottom = 60.0
 tooltip_text = "locInfo"
 text = "  !  "
+
+[node name="ComboLanguage" type="OptionButton" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -212.0
+offset_bottom = 60.0
+grow_horizontal = 0
+item_count = 3
+popup/item_0/text = "English"
+popup/item_0/id = 0
+popup/item_1/text = "中文（简体）"
+popup/item_1/id = 1
+popup/item_2/text = "中文（繁體）"
+popup/item_2/id = 2
 
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a Directory"
@@ -345,14 +374,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatch" to="." method="_on_update_patch_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer3/UpdatePatchBrowser" to="." method="_on_update_patch_browser_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer/Browse" to="." method="_on_browse_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer2/Patch" to="." method="_on_patch_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer2/Unpatch" to="." method="_on_unpatch_pressed"]
-[connection signal="item_selected" from="OptionButton" to="." method="_on_language_item_selected"]
-[connection signal="pressed" from="HBoxContainer/Update" to="." method="_on_update_pressed"]
-[connection signal="pressed" from="Info" to="." method="_on_info_pressed"]
+[connection signal="pressed" from="CenterContainer/Container/UpdatePatchRow/UpdatePatch" to="." method="_on_update_patch_pressed"]
+[connection signal="pressed" from="CenterContainer/Container/UpdatePatchRow/UpdatePatchBrowser" to="." method="_on_update_patch_browser_pressed"]
+[connection signal="pressed" from="CenterContainer/Container/GamePathRow/BtnBrowse" to="." method="_on_browse_pressed"]
+[connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Patch" to="." method="_on_patch_pressed"]
+[connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Unpatch" to="." method="_on_unpatch_pressed"]
+[connection signal="pressed" from="BottomContainer/Update" to="." method="_on_update_pressed"]
+[connection signal="pressed" from="BtnInfo" to="." method="_on_info_pressed"]
+[connection signal="item_selected" from="ComboLanguage" to="." method="_on_language_item_selected"]
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="close_requested" from="Log" to="." method="_on_window_close_requested"]
 [connection signal="close_requested" from="Popup" to="." method="_on_popup_close_requested"]
