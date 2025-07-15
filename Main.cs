@@ -591,13 +591,47 @@ public partial class Main : Control
 				break;
 			}
 		}
-		//hash check
+		//existence check
 		foreach (var pathhhhh in externals_hash.Keys)
 		{
 			if ((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh))
 			{
-				GD.Print($"Checking {pathhhhh}");
-				output.Add($"Checking {pathhhhh}");
+				GD.Print($"Checking existence of {pathhhhh}");
+				output.Add($"Checking existence of {pathhhhh}");
+				if (!FileAccess.FileExists(pathhhhh))
+				{
+					GD.Print("Unable to find " + pathhhhh);
+					output.Add("Unable to find " + pathhhhh);
+					GetNode<Label>("Popup/ScrollContainer/Label").Text = "locPatchFailedNotExists";
+					GetNode<Window>("Popup").Size = new Vector2I(640,360);
+					var logtext1 = "";
+					foreach (var i in output)
+					{
+						logtext1 += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
+					}
+					GetNode<Label>("Log/ScrollContainer/Label").Text = logtext1;
+					var gdlog1 = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
+					logtext1 = gdlog1.GetAsText();
+					gdlog1.Close();
+					var log1 = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
+					log1.StoreString(logtext1);
+					log1.Close();
+					GetNode<Window>("Log").Show();
+					GetNode<Window>("Popup").Show();
+					GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
+					return;
+				}
+				GD.Print($"Found {pathhhhh}");
+				output.Add($"Found {pathhhhh}");
+			}
+		}
+		//hash check
+		foreach (var pathhhhh in externals_hash.Keys)
+		{
+			if (((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh)) && FileAccess.FileExists(pathhhhh))
+			{
+				GD.Print($"Checking hash of {pathhhhh}");
+				output.Add($"Checking hash of {pathhhhh}");
 				if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
 				{
 					GD.Print(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
