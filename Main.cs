@@ -82,7 +82,7 @@ public partial class Main : Control
 			//自动显示readme
 			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("")))
 			{
-				if (file.ToLower().Contains("readme"))
+				if (file.ToLower().Contains("readme") && !file.EndsWith(".md"))
 				{
 					GetNode<Label>("Readme/ScrollContainer/Label").Text = FileAccess.Open(GetGameDirPath(file), FileAccess.ModeFlags.Read).GetAsText();
 					GetNode<Window>("Readme").Title = file;
