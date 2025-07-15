@@ -655,8 +655,8 @@ public partial class Main : Control
 					GetNode<Button>("CenterContainer/VBoxContainer/HBoxContainer2/Patch").Disabled = false;
 					return;
 				}
-				GD.Print(FileAccess.GetSha256(pathhhhh) + " == " + externals_hash[pathhhhh]);
-				output.Add(FileAccess.GetSha256(pathhhhh) + " == " + externals_hash[pathhhhh]);
+				GD.Print("Hash matched: " + externals_hash[pathhhhh]);
+				output.Add("Hash matched: " + externals_hash[pathhhhh]);
 			}
 		}
 		GD.Print("Sha256 check all passed.");
