@@ -1,7 +1,10 @@
 # DELTARUNE 汉化安装器
-<img src="patcher_icon.png" width="15%">
+<img src="patcher_icon.png" width="10%">
 
 在线下载并一键安装 [DELTARUNE 汉化补丁](https://github.com/gm3dr/DeltaruneChinese/releases)
+
+## 截图
+<img src="screenshot.png" width="80%">
 
 ## 开源协议
 MIT License
