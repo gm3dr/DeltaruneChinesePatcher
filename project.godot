@@ -50,6 +50,9 @@ locale/translations=PackedStringArray("res://Locale/loc.en.translation", "res://
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+gl_compatibility/driver.windows="opengl3_angle"
+gl_compatibility/driver.linuxbsd="opengl3_es"
+gl_compatibility/driver.macos="opengl3_angle"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
