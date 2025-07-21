@@ -230,10 +230,18 @@ text = "locUpdate"
 
 [node name="BtnInfo" type="Button" parent="."]
 layout_mode = 1
-offset_right = 60.0
+offset_left = 65.0
+offset_right = 127.0
 offset_bottom = 60.0
 tooltip_text = "locInfo"
 text = "  !  "
+
+[node name="BtnRun" type="Button" parent="."]
+offset_left = 1.0
+offset_right = 63.0
+offset_bottom = 60.0
+tooltip_text = "locRungame"
+text = "  >  "
 
 [node name="ComboLanguage" type="OptionButton" parent="."]
 layout_mode = 1
@@ -381,6 +389,7 @@ autowrap_mode = 3
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Unpatch" to="." method="_on_unpatch_pressed"]
 [connection signal="pressed" from="BottomContainer/Update" to="." method="_on_update_pressed"]
 [connection signal="pressed" from="BtnInfo" to="." method="_on_info_pressed"]
+[connection signal="pressed" from="BtnRun" to="." method="_on_rungame_pressed"]
 [connection signal="item_selected" from="ComboLanguage" to="." method="_on_language_item_selected"]
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="close_requested" from="Log" to="." method="_on_window_close_requested"]

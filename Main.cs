@@ -300,6 +300,11 @@ public partial class Main : Control
 	{
 		OS.ShellOpen("https://github.com/gm3dr/DeltaruneChinesePatcher");
 	}
+
+	public void _on_rungame_pressed()
+	{
+		OS.ShellOpen("steam://run/1671210");
+	}
 	public void _on_popup_close_requested()
 	{
 		nodeWindowPopup.Hide();
