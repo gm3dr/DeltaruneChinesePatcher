@@ -2,7 +2,9 @@
 
 # DELTARUNE 汉化安装器
 
-**在线下载并一键安装 [DELTARUNE 汉化补丁](https://github.com/gm3dr/DeltaruneChinese/releases)**
+**下载安装器：[GitHub Release](https://github.com/gm3dr/DeltaruneChinesePatcher/releases/latest)**
+
+在线下载并一键安装 [DELTARUNE 汉化补丁](https://github.com/gm3dr/DeltaruneChinese/releases)
 
 > [!NOTE]
 > 如果无法正常使用安装器安装补丁<br>
