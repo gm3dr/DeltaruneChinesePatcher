@@ -2,10 +2,12 @@
 
 # DELTARUNE 汉化安装器
 
-**下载安装器：[GitHub Release](https://github.com/gm3dr/DeltaruneChinesePatcher/releases)**
+**在线下载并一键安装 [DELTARUNE 汉化补丁](https://github.com/gm3dr/DeltaruneChinese/releases)**
 
 > [!NOTE]
-> 如果使用本安装器在安装补丁的时候失败, 请手动打补丁!
+> 如果无法正常使用安装器安装补丁<br>
+> 可以通过手动方法来进行安装<br>
+> 安装方式见 **[此处](https://github.com/gm3dr/DeltaruneChinese/blob/main/README.md)**
 
 ## 截图
 
@@ -13,13 +15,13 @@
 
 ## 开发工具
 
-- [Godot Engine 4.1.1 Stable Mono](https://godotengine.org/download/archive/4.1.1-stable/)
+- [Godot Engine 4.1.1 Stable Mono](https://godotengine.org)
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)
+- [.NET 8 SDK](https://dotnet.microsoft.com)
 
-- [rcedit](https://github.com/electron/rcedit/releases/latest) *(非必须, 用于 Windows 平台导出时修改 exe 资源)*
+- [rcedit](https://github.com/electron/rcedit) *(非必须, 用于 Windows 平台导出时修改 exe 资源)*
 
-- [UPX](https://github.com/upx/upx/releases/latest) *(非必须, 用于压缩可执行文件大小)*
+- [UPX](https://github.com/upx/upx/releases) *(非必须, 用于压缩可执行文件大小)*
 
 ## 路线图
 
@@ -31,8 +33,8 @@
  - [x] \[v2.0.0\] 检测目录下Readme并弹出窗口
  - [ ] \[v2.1.0\] 调用本地安装的 XDelta3 与 7-Zip
  - [ ] \[v2.1.0\] Linux 与 macOS 自动`chmod +x`外部程序
+ - [ ] \[v2.1.0\] 删除汉化补丁 (将被覆盖的内容存储到Backup目录用于还原)
  - [ ] macOS 平台支持
- - [ ] 删除汉化补丁 (将被覆盖的内容存储到Backup目录用于还原)
  - [ ] 修复安装失败且只含有Extracting... ([#4](https://github.com/gm3dr/DeltaruneChinesePatcher/issues/4))
 
 ## 借物
