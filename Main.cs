@@ -129,6 +129,8 @@ public partial class Main : Control
 				}
 			}
 		}
+		nodeBtnUpdatePatcher.Visible = false;
+		nodeBtnUpdatePatcher.Disabled = false;
 		//安装器版本号
 		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
 		//系统特供目录
