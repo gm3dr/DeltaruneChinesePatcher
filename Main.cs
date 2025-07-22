@@ -166,16 +166,23 @@ public partial class Main : Control
 		//contributors
 		nodeBtnInfo.TooltipText = "locInfo";
 		var json = new Json();
-		json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/contributors"));
-		var names = "";
-		foreach (var contributor in json.Data.AsGodotArray<Godot.Collections.Dictionary<string,string>>())
+		try
 		{
-			names += contributor["login"] + ", ";
+			json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/contributors"));
+			var names = "";
+			foreach (var contributor in json.Data.AsGodotArray<Godot.Collections.Dictionary<string,string>>())
+			{
+				names += contributor["login"] + ", ";
+			}
+			names = names.TrimSuffix(", ");
+			if (names != "")
+			{
+				nodeBtnInfo.TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}",names);
+			}
 		}
-		names = names.TrimSuffix(", ");
-		if (names != "")
+		catch (Exception exc)
 		{
-			nodeBtnInfo.TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}",names);
+			GD.PushError("Exception catched when requesting contributors: " + exc.ToString() + " (" + exc.Message + ")");
 		}
 		//补丁版本号
 		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
