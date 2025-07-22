@@ -81,18 +81,16 @@ public partial class Main : Control
 
 			//修改窗口大小
 			var screenId = GetWindow().CurrentScreen;
-			var screenSize = DisplayServer.ScreenGetSize(screenId);
-			var windowDesignSize = new Vector2I(640, 480);
+			var screenSize = DisplayServer.ScreenGetUsableRect(screenId);
+			var windowDesignSize = new Vector2(640, 480) * 1.5f;
 
-			//计算时将窗口视为更大一点的窗口，防止窗口占满全屏
-			var windowPaddingFactor = 1.15f;
-			int windowScale = (int)Mathf.Floor(screenSize.Y / (windowDesignSize.Y * windowPaddingFactor));
+			int windowScale = (int)Mathf.Floor((screenSize.Size.Y-screenSize.Position.Y) / windowDesignSize.Y);
 			if (windowScale > 1)
 			{
-				var windowNewSize = windowDesignSize * windowScale;
-				DisplayServer.WindowSetSize(windowNewSize);
+				var windowNewSize = (Vector2I)((windowDesignSize * windowScale).Round());
+				DisplayServer.WindowSetSize(windowNewSize, GetWindow().GetWindowId());
 				// 居中窗口
-				DisplayServer.WindowSetPosition(screenSize / 2 - windowNewSize / 2);
+				GetWindow().MoveToCenter();
 			}
 			//最大帧率
 			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(GetWindow().CurrentScreen));
