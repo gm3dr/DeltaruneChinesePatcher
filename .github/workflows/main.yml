@@ -6,8 +6,13 @@ jobs:
     runs-on: ubuntu-22.04
     permissions: write-all
     name: Export
+    env:
+      GODOT_SOURCE_PATH: ${{ github.workspace }}/godot
+      GODOT_EDITOR_PATH: ${{ github.workspace }}/godot/bin/godot.linuxbsd.editor.x86_64.mono
+      LOCAL_NUGET_PATH: ${{ github.workspace }}/local-nuget
+
     steps:
-    - name: Checkout
+    - name: Checkout Project
       uses: actions/checkout@v4
 
     - name: Setup .NET 8
@@ -15,46 +20,110 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
-    
+          
+    - name: Install Godot Build Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          scons \
+          pkg-config \
+          libx11-dev \
+          libxcursor-dev \
+          libxinerama-dev \
+          libgl1-mesa-dev \
+          libglu1-mesa-dev \
+          libasound2-dev \
+          libpulse-dev \
+          libudev-dev \
+          libxi-dev \
+          libxrandr-dev \
+          libwayland-dev
+
+    - name: Clone Godot Engine
+      uses: actions/checkout@v4
+      with:
+        repository: godotengine/godot
+        path: ${{ env.GODOT_SOURCE_PATH }}
+        ref: '4.4'
+      
+    - name: Cache Godot Build Artifacts
+      id: godot-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ env.GODOT_SOURCE_PATH }}/bin
+          ${{ env.GODOT_SOURCE_PATH }}/modules/mono/glue
+          ${{ env.LOCAL_NUGET_PATH }}
+        key: godot-build-${{ runner.os }}-4.4-${{ steps.godot_commit.outputs.hash }}
+        restore-keys: |
+          godot-build-${{ runner.os }}-4.4-
+
+    - name: Build Godot
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      working-directory: ${{ env.GODOT_SOURCE_PATH }}
+      run: |
+        scons platform=linuxbsd arch=x86_64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes -j$(nproc)
+        scons platform=linuxbsd arch=x86_64 target=template_release module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes -j$(nproc)
+
+    - name: Generate Mono Glue & Build Assemblies
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      working-directory: ${{ env.GODOT_SOURCE_PATH }}
+      run: |
+        mkdir -p ${{ env.LOCAL_NUGET_PATH }}
+        ${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
+        python3 ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
+        
+    - name: Configure Local NuGet Source
+      run: |
+        mkdir -p ${{ env.LOCAL_NUGET_PATH }}
+        cat > nuget.config << EOL
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <packageSources>
+            <clear />
+            <add key="local-godot" value="${{ env.LOCAL_NUGET_PATH }}" />
+            <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+          </packageSources>
+          <packageSourceMapping>
+            <packageSource key="nuget.org">
+              <package pattern="*" />
+            </packageSource>
+            <packageSource key="local-godot">
+              <package pattern="Godot.SourceGenerators" />
+              <package pattern="GodotSharp" />
+              <package pattern="GodotSharpEditor" />
+            </packageSource>
+          </packageSourceMapping>
+        </configuration>
+        EOL
+
     - name: .NET Restore
-      uses: zyactions/dotnet-restore@v1
+      run: dotnet restore
 
     - name: Build Solution
       run: dotnet build
+      
+    - name: Install Custom Export Template
+      run: |
+        GODOT_VERSION=$(${{ env.GODOT_EDITOR_PATH }} --version)
+        TEMPLATE_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+        mkdir -p "$TEMPLATE_DIR"
+        cp ${{ env.GODOT_SOURCE_PATH }}/bin/linux_template_release.x86_64.mono "${TEMPLATE_DIR}/linux_release.x86_64"
 
-    - name: Install Wine
-      id: wine_install
-      run: |
-        sudo apt update
-        sudo apt install wine64
-        echo "WINE_PATH=$(which wine64)" >> $GITHUB_OUTPUT
-  
-    - name: Download rcedit
-      run: |
-        mkdir -p ~/rcedit
-        wget -O ~/rcedit/rcedit.exe https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
-
-    - name: Setup Godot Editor Settings
-      run: |
-        mkdir -p ~/.config/godot/
-        cat << EOF > ~/.config/godot/editor_settings-4.4.1.tres
-        [resource]
-        export/windows/rcedit = "wine $HOME/rcedit/rcedit.exe"
-        EOF
-  
     - name: Export Project
-      id: export
-      uses: firebelley/godot-export@v6.0.0
-      with:
-        godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_linux_x86_64.zip
-        godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_mono_export_templates.tpz
-        relative_project_path: ./
-        archive_output: true
-        wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
-        presets_to_export: "Linux"
+      run: |
+        mkdir -p ${{ github.workspace }}/build/linux
+        ${{ env.GODOT_EDITOR_PATH }} --headless --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
 
-    - name: Upload artifacts (Linux)
+    - name: Archive and Upload Artifact (Linux)
+      run: |
+        cd ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux
+        zip -r ../DeltaruneChinesePatcher_Linux.zip .
+        cd ${{ github.workspace }}
+        
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Linux
-        path: ${{ steps.export.outputs.archive_directory }}/Linux.zip
+        path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux.zip
