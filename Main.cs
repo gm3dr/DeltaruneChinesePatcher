@@ -888,14 +888,19 @@ public partial class Main : Control
 		{
 			//保存游戏路径
 			var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
-			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
-			game_path.StoreString(path);
-			game_path.Close();
+			if (path != "")
+			{
+				var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
+				game_path.StoreString(path);
+				game_path.Close();
+			}
+			//Dispose掉文件流
 			if (fileStream != null)
 			{
 				fileStream.Dispose();
 				fileStream = null;
 			}
+			//删除未清理的下载缓存
 			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
 			{
 				if (file.StartsWith("_downloadingtemp_"))
