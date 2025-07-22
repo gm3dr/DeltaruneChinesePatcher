@@ -325,107 +325,15 @@ public partial class Main : Control
 	{
 		nodeWindowReadme.Hide();
 	}
-	public async void _on_update_pressed()
+	public void _on_update_pressed()
 	{
-		nodeBtnUpdatePatcher.Disabled = true;
-		var url = "";
-		var file = "";
-		var size = 0;
 		foreach (var asset in patcherreleases["assets"].AsGodotArray())
 		{
 			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(OS.GetName().ToLower()))
 			{
-				url = asset.AsGodotDictionary()["browser_download_url"].AsString();
-				file = asset.AsGodotDictionary()["name"].AsString();
-				size = asset.AsGodotDictionary()["size"].AsInt32();
+				OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
 				break;
 			}
-		}
-		if (url != "")
-		{
-			Godot.Collections.Array output = [];
-			GD.Print("Downloading " + url + " to " + GetGameDirPath("UpdateTemp/" + file));
-			output.Add("Downloading " + url + " to " + GetGameDirPath("UpdateTemp/" + file));
-			try
-			{
-				using (var httpClient = new System.Net.Http.HttpClient())
-				{
-					using (var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
-					{
-						response.EnsureSuccessStatusCode();
-						using var bodyStream = await response.Content.ReadAsStreamAsync();
-						fileStream = new System.IO.FileStream(GetGameDirPath("UpdateTemp/" + file), System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None);
-						var buffer = new byte[4096];
-						double totalRead = 0;
-						int bytesRead;
-						while ((bytesRead = await bodyStream.ReadAsync(buffer)) > 0)
-						{
-							await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-							totalRead += bytesRead;
-							if (size > 0)
-							{
-								var progress = Math.Round(totalRead/1024d/1024d, 2).ToString();
-								var sizee = Math.Round(size/1024d/1024d, 2).ToString();
-								if (!progress.Contains("."))
-								{
-									progress += ".00";
-								}
-								else if (progress.Split(".")[1].Length == 1)
-								{
-									progress += "0";
-								}
-								if (!sizee.Contains("."))
-								{
-									sizee += ".00";
-								}
-								else if (sizee.Split(".")[1].Length == 1)
-								{
-									sizee += "0";
-								}
-								nodeBtnUpdatePatcher.Text = $"{progress} / {sizee} MiB";
-								GD.Print($"Downloaded: {totalRead} / {size}");
-							}
-							if (totalRead >= size)
-							{
-								break;
-							}
-						}
-					}
-				}
-			}
-			catch (Exception exc)
-			{
-				nodeBtnUpdatePatcher.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
-				GD.PushError("Exception catched when updating patcher: " + exc.ToString() + " (" + exc.Message + ")");
-				return;
-			}
-			fileStream.Dispose();
-			fileStream = null;
-			GD.Print("Extracting " + GetGameDirPath("UpdateTemp/" + file));
-			output.Add("Extracting " + GetGameDirPath("UpdateTemp/" + file));
-			OS.Execute(_7zip, ["x", GetGameDirPath("UpdateTemp/" + file), "-o" + GetGameDirPath(), "-aoa", "-y"], output, true, true);
-			GD.Print($"{_7zip} x {GetGameDirPath("UpdateTemp/" + file)} -o{GetGameDirPath()} -aoa -y");
-			foreach (var ff in DirAccess.GetFilesAt(GetGameDirPath()))
-			{
-				if (ff.EndsWith(".pck") && ff != "DELTARUNE Chinese Patcher.pck")
-				{
-					DirAccess.RemoveAbsolute(GetGameDirPath(ff));
-					DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.pck"), GetGameDirPath(ff));
-				}
-				if (OS.GetName() == "Windows" && ff.EndsWith(".exe") && ff != "DELTARUNE Chinese Patcher.exe")
-				{
-					DirAccess.RemoveAbsolute(GetGameDirPath(ff));
-					DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.exe"), GetGameDirPath(ff));
-				}
-				if (OS.GetName() == "Linux" && ff.EndsWith(".x86_64") && ff != "DELTARUNE Chinese Patcher.x86_64")
-				{
-					DirAccess.RemoveAbsolute(GetGameDirPath(ff));
-					DirAccess.RenameAbsolute(GetGameDirPath("DELTARUNE Chinese Patcher.x86_64"), GetGameDirPath(ff));
-				}
-			}
-			OS.MoveToTrash(GetGameDirPath("UpdateTemp"));
-			nodeBtnUpdatePatcher.Text = "locWaiting4Restart";
-			nodeBtnUpdatePatcher.TooltipText = "locPleaseRestart";
 		}
 	}
 	public void _on_game_updated_pressed()
