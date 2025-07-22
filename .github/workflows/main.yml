@@ -7,6 +7,7 @@ jobs:
     permissions: write-all
     name: Export
     env:
+      SOURCE_PATH: ${{ github.workspace }}/DeltaruneChinesePatcher
       GODOT_SOURCE_PATH: ${{ github.workspace }}/godot
       GODOT_EDITOR_PATH: ${{ github.workspace }}/godot/bin/godot.linuxbsd.editor.x86_64.mono
       LOCAL_NUGET_PATH: ${{ github.workspace }}/local-nuget
@@ -14,6 +15,8 @@ jobs:
     steps:
     - name: Checkout Project
       uses: actions/checkout@v4
+      with:
+        path: ${{ env.SOURCE_PATH }}
 
     - name: Setup .NET 8
       uses: actions/setup-dotnet@v3
@@ -38,7 +41,8 @@ jobs:
           libudev-dev \
           libxi-dev \
           libxrandr-dev \
-          libwayland-dev
+          libwayland-dev \
+          xz-utils
 
     - name: Clone Godot Engine
       uses: actions/checkout@v4
@@ -46,6 +50,13 @@ jobs:
         repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
         ref: '4.4'
+
+    - name: Download UPX
+      run: |
+        mkdir -p ${{ github.workspace }}/upx
+        wget -O ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v5.0.2/upx-5.0.2-amd64_linux.tar.xz
+        xz -d ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar.xz
+        tar -xvf ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar -C ${{ github.workspace }}/upx
       
     - name: Cache Godot Build Artifacts
       id: godot-cache
@@ -86,13 +97,14 @@ jobs:
             <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
           </packageSources>
           <packageSourceMapping>
-            <packageSource key="nuget.org">
-              <package pattern="*" />
-            </packageSource>
             <packageSource key="local-godot">
+              <package pattern="Godot.NET.Sdk" />
               <package pattern="Godot.SourceGenerators" />
               <package pattern="GodotSharp" />
               <package pattern="GodotSharpEditor" />
+            </packageSource>
+            <packageSource key="nuget.org">
+              <package pattern="*" />
             </packageSource>
           </packageSourceMapping>
         </configuration>
@@ -100,27 +112,30 @@ jobs:
 
     - name: .NET Restore
       run: dotnet restore
+      working-directory: ${{ env.SOURCE_PATH }}
 
     - name: Build Solution
       run: dotnet build
+      working-directory: ${{ env.SOURCE_PATH }}
       
     - name: Install Custom Export Template
       run: |
-        GODOT_VERSION=$(${{ env.GODOT_EDITOR_PATH }} --version)
-        TEMPLATE_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.4.2.rc.mono"
         mkdir -p "$TEMPLATE_DIR"
-        cp ${{ env.GODOT_SOURCE_PATH }}/bin/linux_template_release.x86_64.mono "${TEMPLATE_DIR}/linux_release.x86_64"
+        cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot.linuxbsd.template_release.x86_64.mono "${TEMPLATE_DIR}/linux_release.x86_64"
 
     - name: Export Project
       run: |
-        mkdir -p ${{ github.workspace }}/build/linux
-        ${{ env.GODOT_EDITOR_PATH }} --headless --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
+        mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux
+        ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
+
+    - name: UPX Compressing
+      run: ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
 
     - name: Archive and Upload Artifact (Linux)
       run: |
         cd ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux
         zip -r ../DeltaruneChinesePatcher_Linux.zip .
-        cd ${{ github.workspace }}
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
