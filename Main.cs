@@ -161,8 +161,9 @@ public partial class Main : Control
 		//HttpClient
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
-		//contributors
 		nodeBtnInfo.TooltipText = "locInfo";
+		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
+		//contributors
 		var json = new Json();
 		try
 		{
@@ -183,7 +184,6 @@ public partial class Main : Control
 			GD.PushError("Exception catched when requesting contributors: " + exc.ToString() + " (" + exc.Message + ")");
 		}
 		//补丁版本号
-		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
 		json = new Json();
 		try
 		{
