@@ -17,7 +17,7 @@
 
 ## 开发工具
 
-- [Godot Engine 4.1.1 Stable Mono](https://godotengine.org)
+- [Godot Engine](https://godotengine.org) *(修改只需要使用 4.4.1 Stable Mono，文件中的 4.4.2-rc 是用于压缩文件大小的自定义导出模板)*
 
 - [.NET 8 SDK](https://dotnet.microsoft.com)
 
