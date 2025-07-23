@@ -131,6 +131,19 @@ public partial class Main : Control
 				}
 			}
 		}
+		var wid = GetWindow().GetWindowId();
+		switch (TranslationServer.GetLocale())
+		{
+			default:
+				DisplayServer.WindowSetTitle("DELTARUNE Chinese Patcher", wid);
+				break;
+			case "zh_CN":
+				DisplayServer.WindowSetTitle("DELTARUNE 汉化安装器", wid);
+				break;
+			case "zh_TW":
+				DisplayServer.WindowSetTitle("DELTARUNE 漢化安裝器", wid);
+				break;
+		}
 		nodeBtnUpdatePatcher.Visible = false;
 		nodeBtnUpdatePatcher.Disabled = false;
 		//安装器版本号
