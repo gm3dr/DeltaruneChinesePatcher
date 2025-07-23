@@ -504,7 +504,7 @@ public partial class Main : Control
 		nodeWindowPatch.Hide();
 		nodeWindowLogContent.Text = "";
 		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
-		Godot.Collections.Array output = [];
+		Godot.Collections.Array output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
 		Godot.Collections.Array outputtemp = [];
 		//chmod加权限
 		if (OS.GetName() == "macOS" || OS.GetName() == "Linux")
@@ -796,6 +796,7 @@ public partial class Main : Control
 			game_path.StoreString(path);
 			game_path.Close();
 		}
+		output.Add("Patched at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]);
 		logtext = "";
 		foreach (var i in output)
 		{
