@@ -46,7 +46,7 @@ _data = {
 &"bg_anim": SubResource("Animation_cm0pq")
 }
 
-[node name="Main" type="Control" node_paths=PackedStringArray("nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPatch")]
+[node name="Main" type="Control" node_paths=PackedStringArray("nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPatch", "nodeWindowPatchContent")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,7 +62,7 @@ nodeTextPatcherVersion = NodePath("BottomContainer/Left/TextPatcherVersion")
 nodeBtnUpdatePatcher = NodePath("BottomContainer/Update")
 nodeTextPatchVersion = NodePath("CenterContainer/Container/TextPatchVersion")
 nodeUpdatePatchRow = NodePath("CenterContainer/Container/UpdatePatchRow")
-nodeBtnUpdatePatch = NodePath("CenterContainer/Container/UpdatePatchRow/UpdatePatch")
+nodeBtnUpdatePatch = NodePath("CenterContainer/Container/UpdatePatchRow/OptionButton")
 nodeProgress = NodePath("CenterContainer/Container/ProgressBar")
 nodeEditGamePath = NodePath("CenterContainer/Container/GamePathRow/EditGamePath")
 nodeBtnPatch = NodePath("CenterContainer/Container/PatchButtonRow/Patch")
@@ -75,6 +75,7 @@ nodeWindowLogContent = NodePath("Log/ScrollContainer/Label")
 nodeWindowPopup = NodePath("Popup")
 nodeWindowPopupContent = NodePath("Popup/ScrollContainer/Label")
 nodeWindowPatch = NodePath("Patch")
+nodeWindowPatchContent = NodePath("Patch/CenterContainer/VBoxContainer/Label")
 
 [node name="Background" type="Control" parent="."]
 layout_mode = 1
@@ -121,6 +122,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -16.0
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -142,15 +145,19 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="UpdatePatch" type="Button" parent="CenterContainer/Container/UpdatePatchRow"]
+[node name="OptionButton" type="OptionButton" parent="CenterContainer/Container/UpdatePatchRow"]
 layout_mode = 2
 tooltip_text = "locUpdatePatchInfo"
-text = "locUpdatePatch"
-
-[node name="UpdatePatchBrowser" type="Button" parent="CenterContainer/Container/UpdatePatchRow"]
-layout_mode = 2
-tooltip_text = "locUpdatePatchBrowserInfo"
-text = "locUpdatePatchBrowser"
+selected = 0
+fit_to_longest_item = false
+item_count = 3
+popup/item_0/text = "locUpdatePatch"
+popup/item_0/id = 0
+popup/item_0/disabled = true
+popup/item_1/text = "locUpdatePatchAuto"
+popup/item_1/id = 1
+popup/item_2/text = "locUpdatePatchBrowser"
+popup/item_2/id = 2
 
 [node name="Right" type="Control" parent="CenterContainer/Container/UpdatePatchRow"]
 layout_mode = 2
@@ -262,6 +269,7 @@ title = "Open a Directory"
 ok_button_text = "Select Current Folder"
 file_mode = 2
 access = 2
+show_hidden_files = true
 use_native_dialog = true
 
 [node name="Log" type="Window" parent="."]
@@ -310,7 +318,7 @@ autowrap_mode = 3
 [node name="Patch" type="Window" parent="."]
 title = "locPatch"
 initial_position = 2
-size = Vector2i(480, 240)
+size = Vector2i(480, 320)
 visible = false
 
 [node name="CenterContainer" type="CenterContainer" parent="Patch"]
@@ -339,7 +347,7 @@ size_flags_horizontal = 3
 
 [node name="PatchUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "locPatchUpdated"
+text = "locPatchBackup"
 
 [node name="Control2" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -354,7 +362,7 @@ size_flags_horizontal = 3
 
 [node name="GameUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-text = "locGameUpdated"
+text = "locPatchDirecyly"
 
 [node name="Control2" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
@@ -380,8 +388,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 
-[connection signal="pressed" from="CenterContainer/Container/UpdatePatchRow/UpdatePatch" to="." method="_on_update_patch_pressed"]
-[connection signal="pressed" from="CenterContainer/Container/UpdatePatchRow/UpdatePatchBrowser" to="." method="_on_update_patch_browser_pressed"]
+[connection signal="item_selected" from="CenterContainer/Container/UpdatePatchRow/OptionButton" to="." method="_on_option_button_item_selected"]
 [connection signal="pressed" from="CenterContainer/Container/GamePathRow/BtnBrowse" to="." method="_on_browse_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Patch" to="." method="_on_patch_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/BtnRun" to="." method="_on_rungame_pressed"]
@@ -393,6 +400,6 @@ autowrap_mode = 3
 [connection signal="close_requested" from="Log" to="." method="_on_window_close_requested"]
 [connection signal="close_requested" from="Popup" to="." method="_on_popup_close_requested"]
 [connection signal="close_requested" from="Patch" to="." method="_on_patch_close_requested"]
-[connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="Patch"]
+[connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="_on_patch_updated_pressed"]
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer2/GameUpdated" to="." method="_on_game_updated_pressed"]
 [connection signal="close_requested" from="Readme" to="." method="_on_readme_close_requested"]

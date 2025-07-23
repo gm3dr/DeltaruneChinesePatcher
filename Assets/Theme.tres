@@ -111,6 +111,7 @@ Label/fonts/font = ExtResource("1_yd3fu")
 LineEdit/styles/focus = SubResource("StyleBoxEmpty_c6xh3")
 LineEdit/styles/normal = SubResource("StyleBoxTexture_23v3e")
 LineEdit/styles/read_only = SubResource("StyleBoxTexture_7yw46")
+OptionButton/constants/arrow_margin = 12
 PopupMenu/font_sizes/font_separator_size = 27
 PopupMenu/font_sizes/font_size = 27
 PopupMenu/font_sizes/title_font_size = 27

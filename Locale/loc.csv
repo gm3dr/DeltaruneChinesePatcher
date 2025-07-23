@@ -3,15 +3,16 @@ locLanguageName,English,中文（简体）,中文（繁體）
 locBrowse, Browse , 浏览, 瀏覽
 locLocalVer,Local patch version: ,本地补丁版本：,本地補丁版本：
 locLatestVer,Latest patch version: ,最新补丁版本：,最新補丁版本：
+locInstalledVer,Installed patch version: ,已安装补丁版本：,已安裝補丁版本：
 locPatch, Patch , 安装补丁, 安裝補丁
 locLog,Log,日志,日誌
 locDeltaruneDir,Installtion Directory of the Steam version of DELTARUNE,DELTARUNE Steam 版安装目录,DELTARUNE Steam 版安裝目錄
 locRequesting,Requesting...,获取中...,獲取中...
 locNotFound,Not found,未找到,未找到
-locUpdatePatch, Update patch (Auto) , 更新补丁包（自动）, 更新補丁包（自動）
-locUpdatePatchInfo,"Automatically download latest patch\nOnly single thread supported, might be slow",自动下载最新的补丁包\n仅支持单线程，可能会很慢,自動下載最新的補丁包\n僅支援單執行緒，可能會很慢
-locUpdatePatchBrowser, Update patch (Browser) , 更新补丁包（浏览器）, 更新補丁包（瀏覽器）
-locUpdatePatchBrowserInfo,"Download latest patch with your browser, faster speed\nYou need to move it into the patcher's directory after download finished\n(No need for extracting it)\nPlease restart patcher after you finished",通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要自行将其移动到安装器目录\n（不需要解压）\n请在完成后重启安装器,透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要自行將其移動到安裝器目錄\n（不需要提取壓縮包）\n請在完成後重啟安裝器
+locUpdatePatch, Download latest patch , 下载最新补丁包, 下載最新補丁包
+locUpdatePatchAuto,Auto download,自动下载,自動下載
+locUpdatePatchBrowser,Download with Browser,通过浏览器下载,透過瀏覽器下載
+locUpdatePatchInfo,"< Auto download >\nAutomatically download latest patch\nOnly single thread supported, might be slow\n\n< Download with Browser >\nDownload latest patch with your browser, faster speed\nYou need to move it into the patcher's directory after download finished\n(No need for extracting it)\n\nPlease restart patcher after you finished",< 自动下载>\n自动下载最新的补丁包\n仅支持单线程，可能会很慢\n\n< 通过浏览器下載>\n通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要自行将其移动到安装器目录\n（不需要解压）\n\n请在完成后重启安装器,< 自動下載>\n自動下載最新的補丁包\n僅支援單執行緒，可能會很慢\n\n< 透過瀏覽器下載>\n透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要自行將其移動到安裝器目錄\n（不需要提取壓縮包）\n\n請在完成後重啟安裝器
 locUpdate, Newer version detected: {VER} , 检测到新版：{VER} , 偵測到新版：{VER} 
 locClickToUpdate,Click to download latest version with browser,点击使用浏览器下载最新版本,點擊使用瀏覽器下載最新版本
 locDownloadFailed,Download failed: ,下载失败：,下載失敗：
@@ -28,10 +29,10 @@ locPatchFailedExternals,"Patch failed (external programs error)\nExternals progr
 locPatchFailedRequired,Patch failed (dependence missing)\nPlease try to install 7-Zip and XDelta3 in your system manually,补丁安装失败（依赖缺失）\n请尝试手动在系统中安装 7-Zip 与 XDelta3,補丁安裝失敗（依賴缺失）\n請嘗試手動在系統中安裝 7-Zip 與 XDelta3
 locPatchFailedDenied,Patch failed (permission denied)\nPlease try to manually execute\nchmod +x ./externals/7zip/7z(_mac)\nand\nchmod +x ./externals/xdelta3/xdelta3(_mac),补丁安装失败（权限拒绝）\n请尝试手动执行\nchmod +x ./externals/7zip/7z\n和\nchmod +x ./externals/xdelta3/xdelta3,補丁安裝失敗（權限拒絕）\n請嘗試手動執行\nchmod +x ./externals/7zip/7z(_mac)\n和\nchmod +x ./externals/xdelta3/xdelta3(_mac)
 locPatchFailedCantFind,Patch failed (cannot find file)\nYour game file might be incomplete\nPlease go to Steam library right click DELTARUNE\nProperties...→Installed Files→Verify integrity of game files,补丁安装失败（无法找到文件）\n你的游戏文件可能不完整\n请前往 Steam 库右键 DELTARUNE\n属性...→已安装文件→验证游戏文件的完整性,補丁安裝失敗（無法找到檔案）\n你的遊戲檔案可能不完整\n請前往 Steam 收藏庫右鍵 DELTARUNE\n內容...→已安裝檔案→驗證遊戲檔案的完整性
-locBakDetected,"Backup files after patching detected.\nIs game updated?",检测到打过补丁留下的备份文件。\n是游戏更新了吗？,偵測到打過補丁留下的備份檔案。\n是遊戲更新了嗎？
-locPatchUpdated, Only patch updated / Just re-patch , 只是补丁更新了 /  只是重新装, 只是補丁更新了 /  只是重新裝
-locGameUpdated, Game updated , 游戏更新了, 遊戲更新了
-locVerifyIntegrity,Removed backup files after last patching\nRecommend first go to Steam and right click DELTARUNE in your game library\nProperties...→Installed Files→Verify integrity of game files\nThen back to here for patch after verified.,已经删除了上次安装备份的文件\n推荐先打开 Steam 并在你的库中右键 DELTARUNE\n属性...→已安装文件→验证游戏文件的完整性\n等待验证完成后再回来安装补丁,已經刪除了上次安裝備份的檔案\n推薦先打開 Steam 並在你的收藏庫中右鍵 DELTARUNE\n內容...→已安裝檔案→驗證遊戲檔案的完整性\n等待驗證完成后再回來安裝補丁
+locBakDetected,"Backup files after patching detected.\nUse backup files to patch\nor patch directly?",检测到打过补丁留下的备份文件。\n使用备份文件安装还是直接安装？,偵測到打過補丁留下的備份檔案。\n使用備份檔案安裝還是直接安裝？
+locBakVerDetected,"Backup files of patch\nversion {VER} was detected.\nUse backup files to patch or patch　directly?",检测到补丁版本 {VER}\n留下的备份文件。\n使用备份文件安装还是直接安装？,偵測到補丁版本 {VER}\n留下的備份檔案。\n使用備份檔案安裝還是直接安裝？
+locPatchBackup, Backup files , 使用备份文件, 使用備份檔案
+locPatchDirecyly, Patch directly , 直接安裝, 直接安裝
 locUnpatch, Unpatch , 卸载补丁, 解除安裝補丁
 locNoBakDetected,No backup files detected,未检测到备份文件,未檢測到備份檔案
 locOldBakDetected,Old backup files detected\nUnpatching is not supported,检测到旧版备份文件\n不支持卸载补丁,檢測到舊版備份檔案\n不支援卸載補丁

@@ -21,7 +21,7 @@ public partial class Main : Control
 	[Export]
 	Container nodeUpdatePatchRow = null!;
 	[Export]
-	Button nodeBtnUpdatePatch = null!;
+	OptionButton nodeBtnUpdatePatch = null!;
 	[Export]
 	ProgressBar nodeProgress = null!;
 	[Export]
@@ -47,6 +47,8 @@ public partial class Main : Control
 	Label nodeWindowPopupContent = null!;
 	[Export]
 	Window nodeWindowPatch = null!;
+	[Export]
+	Label nodeWindowPatchContent = null!;
 
 
 	static readonly string[] chapters = ["1", "2", "3", "4"];
@@ -195,6 +197,13 @@ public partial class Main : Control
 				patchreleases = json.Data.AsGodotDictionary();
 			}
 			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + patchreleases["tag_name"].AsString();
+			var gamepath = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+			if (gamepath != "" && FileAccess.FileExists(gamepath + "/backup/version"))
+			{
+				var ver = FileAccess.Open(gamepath + "/backup/version", FileAccess.ModeFlags.Read);
+				nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locInstalledVer") + ver.GetAsText();
+				ver.Close();
+			}
 			if (patchver != patchreleases["tag_name"].AsString())
 			{
 				nodeUpdatePatchRow.Visible = true;
@@ -296,6 +305,16 @@ public partial class Main : Control
 		}
 		if (found)
 		{
+			if (path != "" && FileAccess.FileExists(path + "/backup/version"))
+			{
+				var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Read);
+				nodeWindowPatchContent.Text = TranslationServer.Translate("locBakVerDetected").ToString().Replace("{VER}", ver.GetAsText());
+				ver.Close();
+			}
+			else
+			{
+				nodeWindowPatchContent.Text = "locBakDetected";
+			}
 			nodeWindowPatch.Show();
 		}
 		else
@@ -336,28 +355,26 @@ public partial class Main : Control
 			}
 		}
 	}
+	public void _on_patch_updated_pressed()
+	{
+		Patch(true);
+	}
 	public void _on_game_updated_pressed()
 	{
-		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
-		if (FileAccess.FileExists(path + "/"+dataname+".bak"))
+		Patch(false);
+	}
+	public void _on_option_button_item_selected(int selected)
+	{
+		switch (selected)
 		{
-			DirAccess.RemoveAbsolute(path + "/"+dataname+".bak");
-			GD.Print("Removed " + path + "/"+dataname+".bak");
+			case 1:
+				_on_update_patch_pressed();
+				break;
+			case 2:
+				_on_update_patch_browser_pressed();
+				nodeBtnUpdatePatch.Selected = 0;
+				break;
 		}
-		foreach (var chapter in chapters)
-		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
-			{
-				DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
-				GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
-			}
-		}
-		OS.MoveToTrash(path + "/backup");
-		nodeWindowPatch.Hide();
-		nodeWindowPopupContent.Text = "locVerifyIntegrity";
-		nodeWindowPopup.Size = new Vector2I(640,360);
-		nodeWindowPopup.Show();
-		nodeBtnPatch.Disabled = false;
 	}
 	public async void _on_update_patch_pressed()
 	{
@@ -432,7 +449,10 @@ public partial class Main : Control
 									sizee += "0";
 								}
 								nodeBtnUpdatePatch.Text = $"{progress} / {sizee} MiB";
-								GD.Print($"Downloaded: {totalRead} / {size}");
+								if (OS.IsStdOutVerbose())
+								{
+									GD.Print($"Downloaded: {totalRead} / {size}");
+								}
 							}
 							if (totalRead >= size)
 							{
@@ -479,7 +499,7 @@ public partial class Main : Control
 		}
 	}
 
-	public void Patch()
+	public void Patch(bool use_backup = true)
 	{
 		nodeWindowPatch.Hide();
 		nodeWindowLogContent.Text = "";
@@ -620,26 +640,35 @@ public partial class Main : Control
 		output.Add("Sha256 check all passed.");
 		GD.Print("Extracting...");
 		output.Add("Extracting...");
-		//恢复备份
-		if (DirAccess.DirExistsAbsolute(path + "/backup"))
+		if (use_backup)
 		{
-			output += RestoreData(path);
-		}
-		//兼容v2.1.0以前版本的bak备份
-		if (FileAccess.FileExists(path + "/" + dataname + ".bak"))
-		{
-			DirAccess.RenameAbsolute(path + "/" + dataname + ".bak", path + "/" + dataname);
-			GD.Print("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
-			output.Add("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
-		}
-		foreach (var chapter in chapters)
-		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak"))
+			//恢复备份
+			if (DirAccess.DirExistsAbsolute(path + "/backup"))
 			{
-				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak", path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak to " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-				output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak to " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+				output += RestoreData(path);
 			}
+			//兼容v2.1.0以前版本的bak备份
+			if (FileAccess.FileExists(path + "/" + dataname + ".bak"))
+			{
+				DirAccess.RenameAbsolute(path + "/" + dataname + ".bak", path + "/" + dataname);
+				GD.Print("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
+				output.Add("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
+			}
+			foreach (var chapter in chapters)
+			{
+				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak"))
+				{
+					DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak", path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak to " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak to " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+				}
+			}
+		}
+		else
+		{
+			OS.MoveToTrash(path + "/backup");
+			GD.Print("Removed " + path + "/backup");
+			output.Add("Removed " + path + "/backup");
 		}
 		//解压
 		OS.Execute(_7zip, ["x", patchdir, "-o" + GetGameDirPath("ExtractTemp/"), "-aoa", "-y"], outputtemp, true, true);
@@ -651,6 +680,9 @@ public partial class Main : Control
 		output += outputtemp;
 		output += MoveAfterExtracted(GetGameDirPath("ExtractTemp"), "", path);
 		OS.MoveToTrash(GetGameDirPath("ExtractTemp/"));
+		var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Write);
+		ver.StoreString(patchver);
+		ver.Close();
 		//备份data
 		if (FileAccess.FileExists(path + "/" + dataname))
 		{
@@ -808,13 +840,20 @@ public partial class Main : Control
 	internal static Godot.Collections.Array RestoreData(string path)
 	{
 		Godot.Collections.Array output = [];
-		if (DirAccess.DirExistsAbsolute(path + "/backup"))
+		if (path != "")
 		{
-			output += RestoreFolder(path + "/backup" , path);
+			if (FileAccess.FileExists(path + "/backup/version"))
+			{
+				DirAccess.RemoveAbsolute(path + "/backup/version");
+			}
+			if (DirAccess.DirExistsAbsolute(path + "/backup"))
+			{
+				output += RestoreFolder(path + "/backup" , path);
+			}
+			OS.MoveToTrash(path + "/backup");
+			GD.Print("Removed " + path + "/backup");
+			output.Add("Removed " + path + "/backup");
 		}
-		OS.MoveToTrash(path + "/backup");
-		GD.Print("Removed " + path + "/backup");
-		output.Add("Removed " + path + "/backup");
 		return output;
 	}
 	internal static Godot.Collections.Array RestoreFolder(string path, string target)
