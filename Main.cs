@@ -546,7 +546,7 @@ public partial class Main : Control
 			GD.Print(externalcheckoutput);
 			foreach (var line in externalcheckoutput)
 			{
-				if (line.AsString().Contains("7-Zip (r) "))
+				if (line.AsString().Contains("7-Zip "))
 				{
 					_7zip = __7z;
 					GD.Print("Found " + __7z);
