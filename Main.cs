@@ -697,7 +697,7 @@ public partial class Main : Control
 		ver.StoreString(patchver);
 		ver.Close();
 		//备份data
-		if (FileAccess.FileExists(path + "/" + dataname))
+		if (FileAccess.FileExists(path + "/main.xdelta") && FileAccess.FileExists(path + "/" + dataname))
 		{
 			DirAccess.RenameAbsolute(path + "/" + dataname, path + "/backup/" + dataname);
 			GD.Print("Renamed " + path + "/" + dataname + " to " + path + "/backup/" + dataname);
@@ -705,7 +705,7 @@ public partial class Main : Control
 		}
 		foreach (var chapter in chapters)
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta") && FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
 			{
 				if (!DirAccess.DirExistsAbsolute(path + "/backup/chapter" + chapter + "_" + osname))
 				{
