@@ -707,6 +707,10 @@ public partial class Main : Control
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
 			{
+				if (!DirAccess.DirExistsAbsolute(path + "/backup/chapter" + chapter + "_" + osname))
+				{
+					DirAccess.MakeDirAbsolute(path + "/backup/chapter" + chapter + "_" + osname);
+				}
 				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname, path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
 				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + " to " + path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
 				output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + " to " + path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
@@ -816,10 +820,13 @@ public partial class Main : Control
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
 		nodeWindowLogContent.Text = logtext;
-		var gdlog = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
-		logtext = gdlog.GetAsText();
-		gdlog.Close();
-		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
+		var log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
+		log.StoreString(logtext);
+		log.Close();
+		log = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
+		logtext = log.GetAsText();
+		log.Close();
+		log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
 		log.StoreString(logtext);
 		log.Close();
 		nodeWindowLog.Show();
