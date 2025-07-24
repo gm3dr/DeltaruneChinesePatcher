@@ -15,7 +15,7 @@ config/name_localized={
 "zh_CN": "DELTARUNE 汉化安装器",
 "zh_TW": "DELTARUNE 漢化安裝器"
 }
-config/version="2.1.0"
+config/version="2.1.0a"
 run/main_scene="uid://hv4jki47g85q"
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
 run/max_fps=60
