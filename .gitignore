@@ -4,4 +4,5 @@
 
 patch_*
 log.txt
+godot.log
 game_path.txt
