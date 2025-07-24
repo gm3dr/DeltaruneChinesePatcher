@@ -33,11 +33,10 @@
  - [x] \[v2.0.0\] 设计界面外观
  - [x] \[v2.0.0\] 在线获取并一键下载最新汉化补丁
  - [x] \[v2.0.0\] 检测目录下Readme并弹出窗口
- - [ ] \[v2.1.0\] 调用本地安装的 XDelta3 与 7-Zip
- - [ ] \[v2.1.0\] Linux 与 macOS 自动`chmod +x`外部程序
- - [ ] \[v2.1.0\] 删除汉化补丁 (将被覆盖的内容存储到Backup目录用于还原)
+ - [x] \[v2.1.0\] 调用本地安装的 XDelta3 与 7-Zip
+ - [x] \[v2.1.0\] Linux 与 macOS 自动`chmod +x`外部程序
+ - [x] \[v2.1.0\] 删除汉化补丁 (将被覆盖的内容存储到Backup目录用于还原)
  - [ ] macOS 平台支持
- - [ ] 修复安装失败且只含有Extracting... ([#4](https://github.com/gm3dr/DeltaruneChinesePatcher/issues/4))
 
 ## 借物
 
