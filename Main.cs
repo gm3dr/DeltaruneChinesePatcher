@@ -820,13 +820,13 @@ public partial class Main : Control
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
 		nodeWindowLogContent.Text = logtext;
-		var log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
+		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
 		log.StoreString(logtext);
 		log.Close();
 		log = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
 		logtext = log.GetAsText();
 		log.Close();
-		log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
+		log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
 		log.StoreString(logtext);
 		log.Close();
 		nodeWindowLog.Show();
