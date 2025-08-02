@@ -798,7 +798,7 @@ public partial class Main : Control
 			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
-		else if (logtext.ToLower().Contains("error") || !logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok"))
+		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
 		{
 			nodeWindowPopupContent.Text = "locPatchFailed";
 			nodeWindowPopup.Size = new Vector2I(480,240);
