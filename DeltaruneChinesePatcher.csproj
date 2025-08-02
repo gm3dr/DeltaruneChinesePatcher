@@ -8,4 +8,7 @@
     <TrimmerRootAssembly Include="GodotSharp" />
     <TrimmerRootAssembly Include="$(TargetName)" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Gameloop.Vdf" Version="0.6.2" />
+  </ItemGroup>
 </Project>
