@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Linq;
 using System.Net.Http;
+using Gameloop.Vdf;
+using Gameloop.Vdf.Linq;
 
 public partial class Main : Control
 {
@@ -64,6 +66,23 @@ public partial class Main : Control
 		{GetGameDirPath("externals/xdelta3/xdelta3"), "709f63ebb9655dc3b5c84f17e11217494eb34cf00c009a026386e4c8617ea903"},
 		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "6855c01cf4a1662ba421e6f95370cf9afa2b3ab6c148473c63efe60d634dfb9a"},
 		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), "714c1680b8fb80052e3851b9007d5d4b9ca0130579b0cdd2fd6135cce041ce6a"}
+	};
+	static readonly Godot.Collections.Dictionary<string,Godot.Collections.Dictionary<string,string>> default_paths = new()
+	{
+		{"libraryfolders", new()
+			{
+				{"Windows", System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam/steamapps/libraryfolders.vdf"},
+				{"macOS", "~/Library/Application Support/Steam/steamapps/libraryfolders.vdf"},
+				{"Linux", "~/.local/share/Steam/steamapps/libraryfolders.vdf"}
+			}
+		},
+		{"deltarune", new()
+			{
+				{"Windows", System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam/steamapps/common/DELTARUNE"},
+				{"macOS", "~/Library/Application Support/Steam/steamapps/common/DELTARUNE.app/Contents/Resources"},
+				{"Linux", "~/.local/share/Steam/steamapps/common/DELTARUNE"}
+			}
+		}
 	};
 	static string game_path_file = GetGameDirPath("game_path.txt");
 	static string patchdir = GetGameDirPath("patch");
@@ -167,14 +186,54 @@ public partial class Main : Control
 			nodeComboLanguage.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.GetTranslationObject(current).GetMessage("locLanguageName"));
 		}
 		nodeComboLanguage.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
-
 		//读取之前的游戏路径
-		var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Read);
-		if (game_path != null)
+		var game_path_f = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Read);
+		var game_path = "";
+		if (game_path_f != null)
 		{
-			nodeEditGamePath.Text = game_path.GetAsText();
-			game_path.Close();
+			game_path = game_path_f.GetAsText();
+			game_path_f.Close();
 		}
+		else
+		{
+			//寻找游戏路径
+			game_path = default_paths["deltarune"][OS.GetName()];
+			if (DirAccess.DirExistsAbsolute(game_path))
+			{
+				GD.Print("Found " + game_path);
+			}
+			else
+			{
+				game_path = "";
+				if (FileAccess.FileExists(default_paths["libraryfolders"][OS.GetName()]))
+				{
+					var lff = FileAccess.Open(default_paths["libraryfolders"][OS.GetName()], FileAccess.ModeFlags.Read);
+					if (lff != null)
+					{
+						VObject vdfc = (VObject)VdfConvert.Deserialize(lff.GetAsText()).Value;
+						lff.Close();
+						foreach (VProperty i in vdfc.Properties())
+						{
+							VObject ii = (VObject)i.Value;
+							VObject apps = (VObject)ii["apps"];
+							if (apps.ContainsKey("1671210"))
+							{
+								game_path = ii["path"].ToString().Replace("\\","/") + "/steamapps/common/DELTARUNE" + (OS.GetName() == "macOS" ? ".app/Contents/Resources" : "");
+								if (DirAccess.DirExistsAbsolute(game_path))
+								{
+									GD.Print("Found " + game_path);
+								}
+								else
+								{
+									game_path = "";
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		nodeEditGamePath.Text = game_path;
 		//HttpClient
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");

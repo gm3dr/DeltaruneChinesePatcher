@@ -81,6 +81,10 @@
         <td>electron 开源贡献者</td>
     </tr>
     </tr>
+        <td>Gameloop.Vdf</td>
+        <td>Shravan Rajinikanth</td>
+    </tr>
+    </tr>
         <td>SimSunBDF</td>
         <td>北京中易中标电子信息技术有限公司</td>
     </tr>
