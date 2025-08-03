@@ -7,9 +7,10 @@
 在线下载并一键安装 [DELTARUNE 汉化补丁](https://github.com/gm3dr/DeltaruneChinese/releases)
 
 > [!NOTE]
+> 补丁安装方法见 **[此处](https://github.com/gm3dr/DeltaruneChinese/blob/main/README.md#%E8%A1%A5%E4%B8%81%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95)**
 > 如果无法正常使用安装器安装补丁<br>
 > 可以通过手动方法来进行安装<br>
-> 安装方式见 **[此处](https://github.com/gm3dr/DeltaruneChinese/blob/main/README.md)**
+> 手动安装方式见 **[此处](https://github.com/gm3dr/DeltaruneChinese/blob/main/README.md#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85)**
 
 ## 截图
 
@@ -34,6 +35,7 @@
  - [x] \[v2.1.0\] 调用本地安装的 XDelta3 与 7-Zip
  - [x] \[v2.1.0\] Linux 与 macOS 自动`chmod +x`外部程序
  - [x] \[v2.1.0\] 删除汉化补丁 (将被覆盖的内容存储到Backup目录用于还原)
+ - [ ] 安装后显示安装用时
  - [ ] macOS 平台支持
 
 ## 借物
