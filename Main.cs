@@ -573,6 +573,7 @@ public partial class Main : Control
 
 	public void Patch(bool use_backup = true)
 	{
+		var starttime = DateTime.Now;
 		nodeWindowPatch.Hide();
 		nodeWindowLogContent.Text = "";
 		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
@@ -821,6 +822,7 @@ public partial class Main : Control
 				output.Add("Removed " + path + "/" + file);
 			}
 		}
+		var usedtime = DateTime.Now.Subtract(starttime).TotalSeconds.ToString();
 		//end
 		var logtext = "";
 		foreach (var i in output)
@@ -829,43 +831,43 @@ public partial class Main : Control
 		}
 		if (logtext.Contains("checksum mismatch"))
 		{
-			nodeWindowPopupContent.Text = "locPatchFailedChecksum";
-			nodeWindowPopup.Size = new Vector2I(640,360);
+			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedChecksum").ToString().Replace("{USEDTIME}",usedtime);
+			nodeWindowPopup.Size = new Vector2I(640,480);
 			output += RestoreData(path);
 		}
 		else if (logtext.Contains("cannot find the path specified"))
 		{
-			nodeWindowPopupContent.Text = "locPatchFailedCantFind";
+			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedCantFind").ToString().Replace("{USEDTIME}",usedtime);
 			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if (logtext.Replace("\r","").Replace("\n","").Replace(" ","") == "Extracting...")
 		{
-			nodeWindowPopupContent.Text = "locPatchFailedExternals";
+			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedExternals").ToString().Replace("{USEDTIME}",usedtime);
 			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("(required by "))
 		{
-			nodeWindowPopupContent.Text = "locPatchFailedRequired";
+			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedRequired").ToString().Replace("{USEDTIME}",usedtime);
 			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("permission denied"))
 		{
-			nodeWindowPopupContent.Text = "locPatchFailedDenied";
+			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedDenied").ToString().Replace("{USEDTIME}",usedtime);
 			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
 		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
 		{
-			nodeWindowPopupContent.Text = "locPatchFailed";
+			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailed").ToString().Replace("{USEDTIME}",usedtime);
 			nodeWindowPopup.Size = new Vector2I(480,240);
 			output += RestoreData(path);
 		}
 		else
 		{
-			nodeWindowPopupContent.Text = "locPatched";
+			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatched").ToString().Replace("{USEDTIME}",usedtime);
 			nodeWindowPopup.Size = new Vector2I(480,240);
 			//保存游戏路径
 			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
