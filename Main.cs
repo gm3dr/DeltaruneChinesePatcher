@@ -140,6 +140,7 @@ public partial class Main : Control
 				TranslationServer.SetLocale(OS.GetLocale());
 			}
 			//寻找patch档案
+			GD.Print(DirAccess.GetFilesAt(GetGameDirPath()));
 			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
 			{
 				if (file.StartsWith("patch_"))
@@ -638,22 +639,30 @@ public partial class Main : Control
 		}
 		//外部程序检查
 		Godot.Collections.Array externalcheckoutput;
+		int external_check_return;
 		foreach (var __7z in new[]{"7z", "7zip", "7-zip", "7zr", "7za"})
 		{
 			externalcheckoutput = [];
-			OS.Execute(__7z,[], externalcheckoutput);
 			GD.Print("Checking " + __7z);
 			output.Add("Checking " + __7z);
-			GD.Print(externalcheckoutput);
-			foreach (var line in externalcheckoutput)
+			if(OS.GetName() == "macOS" || OS.GetName() == "Linux")
 			{
-				if (line.AsString().Contains("7-Zip "))
-				{
-					_7zip = __7z;
-					GD.Print("Found " + __7z);
-					output.Add("Found " + __7z);
-					break;
-				}
+				external_check_return = OS.Execute("command", ["-v",__7z], externalcheckoutput);
+			}
+			else
+			{
+				external_check_return = OS.Execute("where", [__7z], externalcheckoutput);
+			}
+			GD.Print(external_check_return);
+			output.Add(external_check_return);
+			GD.Print(externalcheckoutput);
+			output.Add(externalcheckoutput);
+			if (external_check_return == 0)
+			{
+				_7zip = __7z;
+				GD.Print("Found " + __7z);
+				output.Add("Found " + __7z);
+				break;
 			}
 			if (_7zip == __7z)
 			{
@@ -663,19 +672,26 @@ public partial class Main : Control
 		foreach (var __xdelta in new[]{"xdelta", "xdelta3"})
 		{
 			externalcheckoutput = [];
-			OS.Execute(__xdelta, ["-h"], externalcheckoutput);
 			GD.Print("Checking " + __xdelta);
 			output.Add("Checking " + __xdelta);
-			GD.Print(externalcheckoutput);
-			foreach (var line in externalcheckoutput)
+			if(OS.GetName() == "macOS" || OS.GetName() == "Linux")
 			{
-				if (line.AsString().Contains("Xdelta version "))
-				{
-					xdelta3 = __xdelta;
-					GD.Print("Found " + __xdelta);
-					output.Add("Found " + __xdelta);
-					break;
-				}
+				external_check_return = OS.Execute("command", ["-v",__xdelta], externalcheckoutput);
+			}
+			else
+			{
+				external_check_return = OS.Execute("where", [__xdelta], externalcheckoutput);
+			}
+			GD.Print(external_check_return);
+			output.Add(external_check_return);
+			GD.Print(externalcheckoutput);
+			output.Add(externalcheckoutput);
+			if (external_check_return == 0)
+			{
+				xdelta3 = __xdelta;
+				GD.Print("Found " + __xdelta);
+				output.Add("Found " + __xdelta);
+				break;
 			}
 			if (xdelta3 == __xdelta)
 			{
