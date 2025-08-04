@@ -143,9 +143,14 @@ public partial class Main : Control
 			{
 				if (file.ToLower().Contains("readme") && !file.EndsWith(".md"))
 				{
-					nodeWindowReadmeContent.Text = FileAccess.Open(GetGameDirPath(file), FileAccess.ModeFlags.Read).GetAsText();
-					nodeWindowReadme.Title = file;
-					nodeWindowReadme.Show();
+					var readme = FileAccess.Open(GetGameDirPath(file), FileAccess.ModeFlags.Read);
+					if (readme != null)
+					{
+						nodeWindowReadmeContent.Text = readme.GetAsText();
+						nodeWindowReadme.Title = file;
+						nodeWindowReadme.Show();
+						readme.Close();
+					}
 					break;
 				}
 			}
@@ -273,8 +278,11 @@ public partial class Main : Control
 			if (gamepath != "" && FileAccess.FileExists(gamepath + "/backup/version"))
 			{
 				var ver = FileAccess.Open(gamepath + "/backup/version", FileAccess.ModeFlags.Read);
-				nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locInstalledVer") + ver.GetAsText();
-				ver.Close();
+				if (ver != null)
+				{
+					nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locInstalledVer") + ver.GetAsText();
+					ver.Close();
+				}
 			}
 			if (patchver != patchreleases["tag_name"].AsString())
 			{
@@ -287,10 +295,15 @@ public partial class Main : Control
 					if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains("readme"))
 					{
 						var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
-						FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write).StoreString(text);
-						nodeWindowReadmeContent.Text = text;
-						nodeWindowReadme.Title = "readme.txt";
-						nodeWindowReadme.Show();
+						var readme = FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write);
+						if (readme != null)
+						{
+							readme.StoreString(text);
+							nodeWindowReadmeContent.Text = text;
+							nodeWindowReadme.Title = "readme.txt";
+							nodeWindowReadme.Show();
+							readme.Close();
+						}
 						break;
 					}
 				}
@@ -380,8 +393,15 @@ public partial class Main : Control
 			if (path != "" && FileAccess.FileExists(path + "/backup/version"))
 			{
 				var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Read);
-				nodeWindowPatchContent.Text = TranslationServer.Translate("locBakVerDetected").ToString().Replace("{VER}", ver.GetAsText());
-				ver.Close();
+				if (ver != null)
+				{
+					nodeWindowPatchContent.Text = TranslationServer.Translate("locBakVerDetected").ToString().Replace("{VER}", ver.GetAsText());
+					ver.Close();
+				}
+				else
+				{
+					nodeWindowPatchContent.Text = "locBakDetected";
+				}
 			}
 			else
 			{
@@ -660,12 +680,11 @@ public partial class Main : Control
 						logtext1 += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 					}
 					nodeWindowLogContent.Text = logtext1;
-					var gdlog1 = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
-					logtext1 = gdlog1.GetAsText();
-					gdlog1.Close();
 					var log1 = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
-					log1.StoreString(logtext1);
-					log1.Close();
+					{
+						log1.StoreString(logtext1);
+						log1.Close();
+					}
 					nodeWindowLog.Show();
 					nodeWindowPopup.Show();
 					nodeBtnPatch.Disabled = false;
@@ -694,12 +713,12 @@ public partial class Main : Control
 						logtext1 += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 					}
 					nodeWindowLogContent.Text = logtext1;
-					var gdlog1 = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
-					logtext1 = gdlog1.GetAsText();
-					gdlog1.Close();
 					var log1 = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
-					log1.StoreString(logtext1);
-					log1.Close();
+					if (log1 != null)
+					{
+						log1.StoreString(logtext1);
+						log1.Close();
+					}
 					nodeWindowLog.Show();
 					nodeWindowPopup.Show();
 					nodeBtnPatch.Disabled = false;
@@ -754,8 +773,11 @@ public partial class Main : Control
 		output += MoveAfterExtracted(GetGameDirPath("ExtractTemp"), "", path);
 		OS.MoveToTrash(GetGameDirPath("ExtractTemp/"));
 		var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Write);
-		ver.StoreString(patchver);
-		ver.Close();
+		if (ver != null)
+		{
+			ver.StoreString(patchver);
+			ver.Close();
+		}
 		//备份data
 		if (FileAccess.FileExists(path + "/main.xdelta") && FileAccess.FileExists(path + "/" + dataname))
 		{
@@ -871,8 +893,11 @@ public partial class Main : Control
 			nodeWindowPopup.Size = new Vector2I(480,240);
 			//保存游戏路径
 			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
-			game_path.StoreString(path);
-			game_path.Close();
+			if (game_path != null)
+			{
+				game_path.StoreString(path);
+				game_path.Close();
+			}
 		}
 		output.Add("Patched at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]);
 		logtext = "";
@@ -882,14 +907,23 @@ public partial class Main : Control
 		}
 		nodeWindowLogContent.Text = logtext;
 		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
-		log.StoreString(logtext);
-		log.Close();
+		if (log != null)
+		{
+			log.StoreString(logtext);
+			log.Close();
+		}
 		log = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
-		logtext = log.GetAsText();
-		log.Close();
-		log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
-		log.StoreString(logtext);
-		log.Close();
+		if (log != null)
+		{
+			logtext = log.GetAsText();
+			log.Close();
+			log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
+			if (log != null)
+			{
+				log.StoreString(logtext);
+				log.Close();
+			}
+		}
 		nodeWindowLog.Show();
 		nodeWindowPopup.Show();
 		nodeBtnPatch.Disabled = false;
@@ -1012,8 +1046,11 @@ public partial class Main : Control
 			if (path != "")
 			{
 				var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
-				game_path.StoreString(path);
-				game_path.Close();
+				if (game_path != null)
+				{
+					game_path.StoreString(path);
+					game_path.Close();
+				}
 			}
 			//Dispose掉文件流
 			if (fileStream != null)
