@@ -214,15 +214,16 @@ public partial class Main : Control
 				//Windows读取注册表获取Steam目录
 				if (OS.GetName() == "Windows")
 				{
+					string[] paths = [default_paths["deltarune"][OS.GetName()], default_paths["libraryfolders"][OS.GetName()]];
 					var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
+					var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam"
 					if (regkey != null)
 					{
-						var steampath = regkey.GetValue("SteamPath").ToString().Replace("\\","/");
-						string[] paths = [default_paths["deltarune"][OS.GetName()], default_paths["libraryfolders"][OS.GetName()]];
-						default_paths["deltarune"][OS.GetName()] = paths[0].Replace("{STEAMPATH}", steampath);
-						default_paths["libraryfolders"][OS.GetName()] = paths[1].Replace("{STEAMPATH}", steampath);
+						steampath = regkey.GetValue("SteamPath").ToString().Replace("\\","/");
 						regkey.Close();
 					}
+					default_paths["deltarune"][OS.GetName()] = paths[0].Replace("{STEAMPATH}", steampath);
+					default_paths["libraryfolders"][OS.GetName()] = paths[1].Replace("{STEAMPATH}", steampath);
 				}
 				if (FileAccess.FileExists(default_paths["libraryfolders"][OS.GetName()]))
 				{
