@@ -46,7 +46,7 @@ _data = {
 &"bg_anim": SubResource("Animation_cm0pq")
 }
 
-[node name="Main" type="Control" node_paths=PackedStringArray("nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPatch", "nodeWindowPatchContent")]
+[node name="Main" type="Control" node_paths=PackedStringArray("nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPatch", "nodeWindowPatchContent")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -65,6 +65,7 @@ nodeUpdatePatchRow = NodePath("CenterContainer/Container/UpdatePatchRow")
 nodeBtnUpdatePatch = NodePath("CenterContainer/Container/UpdatePatchRow/OptionButton")
 nodeProgress = NodePath("CenterContainer/Container/ProgressBar")
 nodeEditGamePath = NodePath("CenterContainer/Container/GamePathRow/EditGamePath")
+nodeBtnBrowse = NodePath("CenterContainer/Container/GamePathRow/BtnBrowse")
 nodeBtnPatch = NodePath("CenterContainer/Container/PatchButtonRow/Patch")
 nodeBtnUnpatch = NodePath("CenterContainer/Container/PatchButtonRow/Unpatch")
 nodeOpenDialog = NodePath("FileDialog")
@@ -378,6 +379,7 @@ size_flags_horizontal = 3
 autowrap_mode = 3
 
 [connection signal="item_selected" from="CenterContainer/Container/UpdatePatchRow/OptionButton" to="." method="_on_option_button_item_selected"]
+[connection signal="text_changed" from="CenterContainer/Container/GamePathRow/EditGamePath" to="." method="_on_edit_game_path_text_changed"]
 [connection signal="pressed" from="CenterContainer/Container/GamePathRow/BtnBrowse" to="." method="_on_browse_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Patch" to="." method="_on_patch_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/BtnRun" to="." method="_on_rungame_pressed"]
