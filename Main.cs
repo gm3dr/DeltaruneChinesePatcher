@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.Win32;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
 
@@ -71,14 +72,14 @@ public partial class Main : Control
 	{
 		{"libraryfolders", new()
 			{
-				{"Windows", System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam/steamapps/libraryfolders.vdf"},
+				{"Windows", "{STEAMPATH}/steamapps/libraryfolders.vdf"},
 				{"macOS", "~/Library/Application Support/Steam/steamapps/libraryfolders.vdf"},
 				{"Linux", "~/.local/share/Steam/steamapps/libraryfolders.vdf"}
 			}
 		},
 		{"deltarune", new()
 			{
-				{"Windows", System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam/steamapps/common/DELTARUNE"},
+				{"Windows", "{STEAMPATH}/steamapps/common/DELTARUNE"},
 				{"macOS", "~/Library/Application Support/Steam/steamapps/common/DELTARUNE.app/Contents/Resources"},
 				{"Linux", "~/.local/share/Steam/steamapps/common/DELTARUNE"}
 			}
@@ -210,6 +211,19 @@ public partial class Main : Control
 			else
 			{
 				game_path = "";
+				//Windows读取注册表获取Steam目录
+				if (OS.GetName() == "Windows")
+				{
+					var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
+					if (regkey != null)
+					{
+						var steampath = regkey.GetValue("SteamPath").ToString().Replace("\\","/");
+						string[] paths = [default_paths["deltarune"][OS.GetName()], default_paths["libraryfolders"][OS.GetName()]];
+						default_paths["deltarune"][OS.GetName()] = paths[0].Replace("{STEAMPATH}", steampath);
+						default_paths["libraryfolders"][OS.GetName()] = paths[1].Replace("{STEAMPATH}", steampath);
+						regkey.Close();
+					}
+				}
 				if (FileAccess.FileExists(default_paths["libraryfolders"][OS.GetName()]))
 				{
 					var lff = FileAccess.Open(default_paths["libraryfolders"][OS.GetName()], FileAccess.ModeFlags.Read);

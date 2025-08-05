@@ -46,7 +46,9 @@ python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./b
  - [x] \[v2.1.0\] 调用本地安装的 XDelta3 与 7-Zip
  - [x] \[v2.1.0\] Linux 与 macOS 自动`chmod +x`外部程序
  - [x] \[v2.1.0\] 删除汉化补丁 (将被覆盖的内容存储到Backup目录用于还原)
- - [ ] \[v2.1.2\] 默认 DELTARUNE 路径与读取 libraryfolders.vdf 来获取 DR 安装路径
+ - [ ] \[v2.1.2\] 默认 DELTARUNE 路径
+ - [ ] \[v2.1.2\] 从默认 Steam 路径读取 libraryfolders.vdf 来获取 DR 安装路径
+ - [ ] \[v2.1.2\] Windows 从注册表获取 Steam 路径后读取 libraryfolders.vdf 来获取 DR 安装路径
  - [ ] \[v2.1.2\] 安装后显示安装用时
  - [ ] macOS 平台支持
 
