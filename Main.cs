@@ -216,7 +216,7 @@ public partial class Main : Control
 				{
 					string[] paths = [default_paths["deltarune"][OS.GetName()], default_paths["libraryfolders"][OS.GetName()]];
 					var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
-					var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam"
+					var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
 					if (regkey != null)
 					{
 						steampath = regkey.GetValue("SteamPath").ToString().Replace("\\","/");
