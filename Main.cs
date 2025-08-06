@@ -92,8 +92,9 @@ public partial class Main : Control
 	static string patchver = "locNotFound";
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
-	static readonly string osname = (OS.GetName() == "macOS" ? "mac" : "windows");
-	static readonly string dataname = (OS.GetName() == "macOS" ? "game.ios" : "data.win");
+	static readonly string os_name = OS.GetName();
+	static readonly string osname = (os_name == "macOS" ? "mac" : "windows");
+	static readonly string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
 	bool inited = false;
 	System.IO.FileStream fileStream = null;
@@ -102,6 +103,8 @@ public partial class Main : Control
 	DateTime starttime = DateTime.MinValue;
 	public override async void _Ready()
 	{
+		var window = GetWindow();
+		var wid = window.GetWindowId();
 		//首次初始化
 		if (!inited)
 		{
@@ -109,7 +112,7 @@ public partial class Main : Control
 			nodeComboLanguage.Disabled = true;
 
 			//修改窗口大小
-			var screenId = GetWindow().CurrentScreen;
+			var screenId = window.CurrentScreen;
 			var screenSize = DisplayServer.ScreenGetUsableRect(screenId);
 			var windowDesignSize = new Vector2(640, 480) * 1.5f;
 
@@ -117,12 +120,12 @@ public partial class Main : Control
 			if (windowScale > 1)
 			{
 				var windowNewSize = (Vector2I)((windowDesignSize * windowScale).Round());
-				DisplayServer.WindowSetSize(windowNewSize, GetWindow().GetWindowId());
+				DisplayServer.WindowSetSize(windowNewSize, wid);
 				// 居中窗口
-				GetWindow().MoveToCenter();
+				window.MoveToCenter();
 			}
 			//最大帧率
-			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(GetWindow().CurrentScreen));
+			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(window.CurrentScreen));
 			//根据系统语言切换语言
 			if (OS.GetLocale() == "zh_TW" || OS.GetLocale() == "zh_HK" || OS.GetLocale() == "zh_MO")
 			{
@@ -163,7 +166,6 @@ public partial class Main : Control
 				}
 			}
 		}
-		var wid = GetWindow().GetWindowId();
 		switch (TranslationServer.GetLocale())
 		{
 			default:
@@ -181,12 +183,12 @@ public partial class Main : Control
 		//安装器版本号
 		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
 		//系统特供目录
-		if (OS.GetName() == "Windows")
+		if (os_name == "Windows")
 		{
 			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3.exe");
 			_7zip = GetGameDirPath("externals/7zip/7z.exe");
 		}
-		else if (OS.GetName() == "macOS")
+		else if (os_name == "macOS")
 		{
 			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3_mac");
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
@@ -210,7 +212,7 @@ public partial class Main : Control
 		else
 		{
 			//寻找游戏路径
-			game_path = default_paths["deltarune"][OS.GetName()];
+			game_path = default_paths["deltarune"][os_name];
 			if (DirAccess.DirExistsAbsolute(game_path))
 			{
 				GD.Print("Found " + game_path);
@@ -221,7 +223,7 @@ public partial class Main : Control
 				//Windows读取注册表获取Steam目录
 				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 				{
-					string[] paths = [default_paths["deltarune"][OS.GetName()], default_paths["libraryfolders"][OS.GetName()]];
+					string[] paths = [default_paths["deltarune"][os_name], default_paths["libraryfolders"][os_name]];
 					var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
 					var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
 					if (regkey != null)
@@ -229,12 +231,12 @@ public partial class Main : Control
 						steampath = regkey.GetValue("SteamPath").ToString().Replace("\\","/");
 						regkey.Close();
 					}
-					default_paths["deltarune"][OS.GetName()] = paths[0].Replace("{STEAMPATH}", steampath);
-					default_paths["libraryfolders"][OS.GetName()] = paths[1].Replace("{STEAMPATH}", steampath);
+					default_paths["deltarune"][os_name] = paths[0].Replace("{STEAMPATH}", steampath);
+					default_paths["libraryfolders"][os_name] = paths[1].Replace("{STEAMPATH}", steampath);
 				}
-				if (FileAccess.FileExists(default_paths["libraryfolders"][OS.GetName()]))
+				if (FileAccess.FileExists(default_paths["libraryfolders"][os_name]))
 				{
-					var lff = FileAccess.Open(default_paths["libraryfolders"][OS.GetName()], FileAccess.ModeFlags.Read);
+					var lff = FileAccess.Open(default_paths["libraryfolders"][os_name], FileAccess.ModeFlags.Read);
 					if (lff != null)
 					{
 						VObject vdfc = (VObject)VdfConvert.Deserialize(lff.GetAsText()).Value;
@@ -245,7 +247,7 @@ public partial class Main : Control
 							VObject apps = (VObject)ii["apps"];
 							if (apps.ContainsKey("1671210"))
 							{
-								game_path = ii["path"].ToString().Replace("\\","/") + "/steamapps/common/DELTARUNE" + (OS.GetName() == "macOS" ? ".app/Contents/Resources" : "");
+								game_path = ii["path"].ToString().Replace("\\","/") + "/steamapps/common/DELTARUNE" + (os_name == "macOS" ? ".app/Contents/Resources" : "");
 								if (DirAccess.DirExistsAbsolute(game_path))
 								{
 									GD.Print("Found " + game_path);
@@ -619,7 +621,7 @@ public partial class Main : Control
 		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
 		//chmod加权限
-		if (OS.GetName() == "macOS" || OS.GetName() == "Linux")
+		if (os_name == "macOS" || os_name == "Linux")
 		{
 			if (xdelta3.Contains("/"))
 			{
@@ -1074,13 +1076,13 @@ public partial class Main : Control
 			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
-		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("(required by "))
+		else if ((os_name == "macOS" || os_name == "Linux") && logtext.ToLower().Contains("(required by "))
 		{
 			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedRequired").ToString().Replace("{USEDTIME}",usedtime);
 			nodeWindowPopup.Size = new Vector2I(640,360);
 			output += RestoreData(path);
 		}
-		else if ((OS.GetName() == "macOS" || OS.GetName() == "Linux") && logtext.ToLower().Contains("permission denied"))
+		else if ((os_name == "macOS" || os_name == "Linux") && logtext.ToLower().Contains("permission denied"))
 		{
 			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedDenied").ToString().Replace("{USEDTIME}",usedtime);
 			nodeWindowPopup.Size = new Vector2I(640,360);
