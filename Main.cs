@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
@@ -218,7 +219,7 @@ public partial class Main : Control
 			{
 				game_path = "";
 				//Windows读取注册表获取Steam目录
-				if (OS.GetName() == "Windows")
+				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 				{
 					string[] paths = [default_paths["deltarune"][OS.GetName()], default_paths["libraryfolders"][OS.GetName()]];
 					var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
