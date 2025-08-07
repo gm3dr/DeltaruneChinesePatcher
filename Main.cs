@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
+using System.Threading.Tasks;
 
 public partial class Main : Control
 {
@@ -61,6 +62,11 @@ public partial class Main : Control
 	static readonly string[] chapters = ["1", "2", "3", "4"];
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
+	static readonly Godot.Collections.Dictionary<string,Godot.Collections.Array<string>> available_externals = new()
+	{
+		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za"]},
+		{"xdelta", ["xdelta", "xdelta3"]}
+	};
 	static readonly Godot.Collections.Dictionary<string,string> externals_hash = new()
 	{
 		{GetGameDirPath("externals/7zip/7z"), "9a556170350dafb60a97348b86a94b087d97fd36007760691576cac0d88b132b"},
@@ -612,7 +618,7 @@ public partial class Main : Control
 		}
 	}
 
-	public void Patch(bool use_backup = true)
+	public async void Patch(bool use_backup = true)
 	{
 		starttime = DateTime.Now;
 		patched_count = 0;
@@ -639,7 +645,7 @@ public partial class Main : Control
 		//外部程序检查
 		Godot.Collections.Array externalcheckoutput;
 		int external_check_return;
-		foreach (var __7z in new[]{"7z", "7zip", "7-zip", "7zr", "7za"})
+		foreach (var __7z in available_externals["7z"])
 		{
 			externalcheckoutput = [];
 			GD.Print("Checking " + __7z);
@@ -664,7 +670,7 @@ public partial class Main : Control
 				break;
 			}
 		}
-		foreach (var __xdelta in new[]{"xdelta", "xdelta3"})
+		foreach (var __xdelta in available_externals["xdelta"])
 		{
 			externalcheckoutput = [];
 			GD.Print("Checking " + __xdelta);
@@ -700,24 +706,7 @@ public partial class Main : Control
 				{
 					GD.Print("Unable to find " + pathhhhh);
 					output.Add("Unable to find " + pathhhhh);
-					nodeWindowPopupContent.Text = "locPatchFailedNotExists";
-					nodeWindowPopup.Size = new Vector2I(640,360);
-					var logtext1 = "";
-					foreach (var i in output)
-					{
-						logtext1 += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
-					}
-					nodeWindowLogContent.Text = logtext1;
-					var log1 = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
-					{
-						log1.StoreString(logtext1);
-						log1.Close();
-					}
-					nodeWindowLog.Show();
-					nodeWindowPopup.Show();
-					nodeBtnPatch.Disabled = false;
-					nodeEditGamePath.Editable = true;
-					nodeBtnBrowse.Disabled = false;
+					PatchResultHandler(false, "locPatchFailedNotExists", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 360));
 					return;
 				}
 				GD.Print($"Found {pathhhhh}");
@@ -735,25 +724,7 @@ public partial class Main : Control
 				{
 					GD.Print(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
 					output.Add(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
-					nodeWindowPopupContent.Text = "locPatchFailedSha256";
-					nodeWindowPopup.Size = new Vector2I(640,360);
-					var logtext1 = "";
-					foreach (var i in output)
-					{
-						logtext1 += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
-					}
-					nodeWindowLogContent.Text = logtext1;
-					var log1 = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
-					if (log1 != null)
-					{
-						log1.StoreString(logtext1);
-						log1.Close();
-					}
-					nodeWindowLog.Show();
-					nodeWindowPopup.Show();
-					nodeBtnPatch.Disabled = false;
-					nodeEditGamePath.Editable = true;
-					nodeBtnBrowse.Disabled = false;
+					PatchResultHandler(false, "locPatchFailedSha256", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 360));
 					return;
 				}
 				GD.Print("Hash matched: " + externals_hash[pathhhhh]);
@@ -899,6 +870,35 @@ public partial class Main : Control
 				//xdelta3_process.WaitForExit();
 			}
 		}
+		while (patched_count < chapters.Length + 1 && (DateTime.Now - starttime).TotalSeconds < 20)
+		{
+			await Task.Delay(100);
+		}
+		if (patched_count >= chapters.Length + 1)
+		{
+			CallDeferred("Ending");
+			return;
+		}
+		if ((DateTime.Now - starttime).TotalSeconds >= 20)
+		{
+			Godot.Collections.Array<string> externals = [];
+			foreach (var programs in available_externals.Values)
+			{
+				externals += programs;
+			}
+			foreach (var external in externals)
+			{
+				if (os_name == "Windows")
+				{
+					OS.Execute("taskkill", ["/f","/im", external + ".exe"]);
+				}
+				else
+				{
+					OS.Execute("killall", [external]);
+				}
+			}
+			CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "20", new Vector2I(480, 240));
+		}
 	}
 	internal static Godot.Collections.Array MoveAfterExtracted(string dir, string relative_dir, string drsdir)
 	{
@@ -1034,16 +1034,76 @@ public partial class Main : Control
 	{
 		if (sender is Process process)
 		{
-			GD.Print($"{process.ProcessName} elapsed {(process.ExitTime - process.StartTime).TotalSeconds}s");
-			output.Add($"{process.ProcessName} elapsed {(process.ExitTime - process.StartTime).TotalSeconds}s");
+			try
+			{
+				GD.Print($"{process.ProcessName} elapsed {(process.ExitTime - process.StartTime).TotalSeconds}s");
+				output.Add($"{process.ProcessName} elapsed {(process.ExitTime - process.StartTime).TotalSeconds}s");
+			}
+			catch (Exception ee)
+			{
+				GD.PushError("Error happened when getting process ID & Name: " + ee.ToString() + " (" + ee.Message + ")");
+			}
 		}
 		patched_count += 1;
 		GD.Print($"patched_count = {patched_count - 1} + 1 = {patched_count}");
 		output.Add($"patched_count = {patched_count - 1} + 1 = {patched_count}");
-		if (patched_count >= chapters.Length + 1)
+		// if (patched_count >= chapters.Length + 1)
+		// {
+		// 	CallDeferred("Ending");
+		// }
+	}
+	internal async void PatchResultHandler(bool success, string information, string usedtime, Vector2I popup_size)
+	{
+		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}",usedtime);
+		nodeWindowPopup.Size = popup_size;
+		if (success)
 		{
-			CallDeferred("Ending");
+			//保存游戏路径
+			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
+			if (game_path != null)
+			{
+				game_path.StoreString(path);
+				game_path.Close();
+			}
 		}
+		else
+		{
+			//回退安装
+			output += RestoreData(path);
+		}
+		output.Add("Patched at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]);
+		var logtext = "";
+		foreach (var i in output)
+		{
+			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
+		}
+		nodeWindowLogContent.Text = logtext;
+		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
+		if (log != null)
+		{
+			log.StoreString(logtext);
+			log.Close();
+		}
+		//等待0.1秒给godot.log更新时间
+		await Task.Delay(100);
+		log = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
+		if (log != null)
+		{
+			logtext = log.GetAsText();
+			log.Close();
+			log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
+			if (log != null)
+			{
+				log.StoreString(logtext);
+				log.Close();
+			}
+		}
+		nodeWindowLog.Show();
+		nodeWindowPopup.Show();
+		nodeBtnPatch.Disabled = false;
+		nodeEditGamePath.Editable = true;
+		nodeBtnBrowse.Disabled = false;
 	}
 	internal void Ending()
 	{
@@ -1068,82 +1128,32 @@ public partial class Main : Control
 		}
 		if (logtext.Contains("checksum mismatch"))
 		{
-			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedChecksum").ToString().Replace("{USEDTIME}",usedtime);
-			nodeWindowPopup.Size = new Vector2I(640,480);
-			output += RestoreData(path);
+			PatchResultHandler(false, "locPatchFailedChecksum", usedtime, new Vector2I(640, 480));
 		}
 		else if (logtext.Contains("cannot find the path specified"))
 		{
-			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedCantFind").ToString().Replace("{USEDTIME}",usedtime);
-			nodeWindowPopup.Size = new Vector2I(640,360);
-			output += RestoreData(path);
+			PatchResultHandler(false, "locPatchFailedCantFind", usedtime, new Vector2I(640, 360));
 		}
 		else if (logtext.Replace("\r","").Replace("\n","").Replace(" ","") == "Extracting...")
 		{
-			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedExternals").ToString().Replace("{USEDTIME}",usedtime);
-			nodeWindowPopup.Size = new Vector2I(640,360);
-			output += RestoreData(path);
+			PatchResultHandler(false, "locPatchFailedExternals", usedtime, new Vector2I(640, 360));
 		}
 		else if ((os_name == "macOS" || os_name == "Linux") && logtext.ToLower().Contains("(required by "))
 		{
-			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedRequired").ToString().Replace("{USEDTIME}",usedtime);
-			nodeWindowPopup.Size = new Vector2I(640,360);
-			output += RestoreData(path);
+			PatchResultHandler(false, "locPatchFailedRequired", usedtime, new Vector2I(640, 360));
 		}
 		else if ((os_name == "macOS" || os_name == "Linux") && logtext.ToLower().Contains("permission denied"))
 		{
-			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailedDenied").ToString().Replace("{USEDTIME}",usedtime);
-			nodeWindowPopup.Size = new Vector2I(640,360);
-			output += RestoreData(path);
+			PatchResultHandler(false, "locPatchFailedDenied", usedtime, new Vector2I(640, 360));
 		}
 		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
 		{
-			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatchFailed").ToString().Replace("{USEDTIME}",usedtime);
-			nodeWindowPopup.Size = new Vector2I(480,240);
-			output += RestoreData(path);
+			PatchResultHandler(false, "locPatchFailed", usedtime, new Vector2I(480, 240));
 		}
 		else
 		{
-			nodeWindowPopupContent.Text = TranslationServer.Translate("locPatched").ToString().Replace("{USEDTIME}",usedtime);
-			nodeWindowPopup.Size = new Vector2I(480,240);
-			//保存游戏路径
-			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
-			if (game_path != null)
-			{
-				game_path.StoreString(path);
-				game_path.Close();
-			}
+			PatchResultHandler(true, "locPatched", usedtime, new Vector2I(480, 240));
 		}
-		output.Add("Patched at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]);
-		logtext = "";
-		foreach (var i in output)
-		{
-			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
-		}
-		nodeWindowLogContent.Text = logtext;
-		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
-		if (log != null)
-		{
-			log.StoreString(logtext);
-			log.Close();
-		}
-		log = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
-		if (log != null)
-		{
-			logtext = log.GetAsText();
-			log.Close();
-			log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
-			if (log != null)
-			{
-				log.StoreString(logtext);
-				log.Close();
-			}
-		}
-		nodeWindowLog.Show();
-		nodeWindowPopup.Show();
-		nodeBtnPatch.Disabled = false;
-		nodeEditGamePath.Editable = true;
-		nodeBtnBrowse.Disabled = false;
 	}
 
 	internal static string GetGameDirPath(string str = "")
