@@ -870,7 +870,7 @@ public partial class Main : Control
 				//xdelta3_process.WaitForExit();
 			}
 		}
-		while (patched_count < chapters.Length + 1 && (DateTime.Now - starttime).TotalSeconds < 20)
+		while (patched_count < chapters.Length + 1 && (DateTime.Now - starttime).TotalSeconds < 30)
 		{
 			await Task.Delay(100);
 		}
@@ -879,7 +879,7 @@ public partial class Main : Control
 			CallDeferred("Ending");
 			return;
 		}
-		if ((DateTime.Now - starttime).TotalSeconds >= 20)
+		if ((DateTime.Now - starttime).TotalSeconds >= 30)
 		{
 			Godot.Collections.Array<string> externals = [];
 			foreach (var programs in available_externals.Values)
@@ -897,7 +897,7 @@ public partial class Main : Control
 					OS.Execute("killall", [external]);
 				}
 			}
-			CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "20", new Vector2I(480, 240));
+			CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "30", new Vector2I(480, 240));
 		}
 	}
 	internal static Godot.Collections.Array MoveAfterExtracted(string dir, string relative_dir, string drsdir)
