@@ -140,7 +140,6 @@ public partial class Main : Control
 				TranslationServer.SetLocale(OS.GetLocale());
 			}
 			//寻找patch档案
-			GD.Print(DirAccess.GetFilesAt(GetGameDirPath()));
 			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
 			{
 				if (file.StartsWith("patch_"))
@@ -462,7 +461,7 @@ public partial class Main : Control
 	{
 		foreach (var asset in patcherreleases["assets"].AsGodotArray())
 		{
-			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(OS.GetName().ToLower()))
+			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
 			{
 				OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
 				break;
@@ -511,7 +510,7 @@ public partial class Main : Control
 		var size = 0;
 		foreach (var asset in patchreleases["assets"].AsGodotArray())
 		{
-			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(OS.GetName().ToLower()))
+			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
 			{
 				url = /*(TranslationServer.GetLocale() == "zh_CN" ? "https://ghfast.top/" : "") + */asset.AsGodotDictionary()["browser_download_url"].AsString();
 				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
@@ -605,7 +604,7 @@ public partial class Main : Control
 		}
 		foreach (var asset in patchreleases["assets"].AsGodotArray())
 		{
-			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(OS.GetName().ToLower()))
+			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
 			{
 				OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
 				break;
@@ -645,16 +644,16 @@ public partial class Main : Control
 			externalcheckoutput = [];
 			GD.Print("Checking " + __7z);
 			output.Add("Checking " + __7z);
-			if(OS.GetName() == "macOS" || OS.GetName() == "Linux")
-			{
-				external_check_return = OS.Execute("command", ["-v",__7z], externalcheckoutput);
-			}
-			else
+			if (os_name == "Windows")
 			{
 				external_check_return = OS.Execute("where", [__7z], externalcheckoutput);
 			}
-			GD.Print(external_check_return);
-			output.Add(external_check_return);
+			else
+			{
+				external_check_return = OS.Execute("command", ["-v",__7z], externalcheckoutput);
+			}
+			GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
+			output.Add($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
 			GD.Print(externalcheckoutput);
 			output.Add(externalcheckoutput);
 			if (external_check_return == 0)
@@ -664,26 +663,22 @@ public partial class Main : Control
 				output.Add("Found " + __7z);
 				break;
 			}
-			if (_7zip == __7z)
-			{
-				break;
-			}
 		}
 		foreach (var __xdelta in new[]{"xdelta", "xdelta3"})
 		{
 			externalcheckoutput = [];
 			GD.Print("Checking " + __xdelta);
 			output.Add("Checking " + __xdelta);
-			if(OS.GetName() == "macOS" || OS.GetName() == "Linux")
-			{
-				external_check_return = OS.Execute("command", ["-v",__xdelta], externalcheckoutput);
-			}
-			else
+			if (os_name == "Windows")
 			{
 				external_check_return = OS.Execute("where", [__xdelta], externalcheckoutput);
 			}
-			GD.Print(external_check_return);
-			output.Add(external_check_return);
+			else
+			{
+				external_check_return = OS.Execute("command", ["-v",__xdelta], externalcheckoutput);
+			}
+			GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
+			output.Add($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
 			GD.Print(externalcheckoutput);
 			output.Add(externalcheckoutput);
 			if (external_check_return == 0)
@@ -691,10 +686,6 @@ public partial class Main : Control
 				xdelta3 = __xdelta;
 				GD.Print("Found " + __xdelta);
 				output.Add("Found " + __xdelta);
-				break;
-			}
-			if (xdelta3 == __xdelta)
-			{
 				break;
 			}
 		}
