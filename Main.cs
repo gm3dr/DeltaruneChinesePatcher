@@ -1059,6 +1059,7 @@ public partial class Main : Control
 			}
 		}
 		var usedtime = DateTime.Now.Subtract(starttime).TotalSeconds.ToString();
+		output.Add("Total elapsed " + usedtime + "s");
 		//end
 		var logtext = "";
 		foreach (var i in output)
