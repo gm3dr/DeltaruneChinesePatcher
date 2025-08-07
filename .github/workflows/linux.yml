@@ -2,10 +2,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  export:
+  export_linux:
     runs-on: ubuntu-22.04
     permissions: write-all
-    name: Export
+    name: Export Linux
     env:
       SOURCE_PATH: ${{ github.workspace }}/DeltaruneChinesePatcher
       GODOT_SOURCE_PATH: ${{ github.workspace }}/godot

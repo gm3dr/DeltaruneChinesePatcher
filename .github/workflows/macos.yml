@@ -1,0 +1,121 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  export_macos:
+    runs-on: macos-14
+    permissions: write-all
+    name: Export macOS
+    env:
+      SOURCE_PATH: ${{ github.workspace }}/DeltaruneChinesePatcher
+      GODOT_SOURCE_PATH: ${{ github.workspace }}/godot
+      GODOT_EDITOR_PATH: ${{ github.workspace }}/godot/bin/godot.macos.editor.arm64.mono
+      LOCAL_NUGET_PATH: ${{ github.workspace }}/local-nuget
+
+    steps:
+    - name: Checkout Project
+      uses: actions/checkout@v4
+      with:
+        path: ${{ env.SOURCE_PATH }}
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: |
+          8.0.x
+
+    - name: Clone Godot Engine
+      uses: actions/checkout@v4
+      with:
+        repository: godotengine/godot
+        path: ${{ env.GODOT_SOURCE_PATH }}
+        ref: '4.4'
+          
+    - name: Install Godot Build Dependencies
+      run: |
+        brew install scons
+        chmod +x ${{ env.GODOT_SOURCE_PATH }}/misc/scripts/install_vulkan_sdk_macos.sh
+        bash ${{ env.GODOT_SOURCE_PATH }}/misc/scripts/install_vulkan_sdk_macos.sh
+      
+    - name: Cache Godot Build Artifacts
+      id: godot-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ env.GODOT_SOURCE_PATH }}/bin
+          ${{ env.GODOT_SOURCE_PATH }}/modules/mono/glue
+          ${{ env.LOCAL_NUGET_PATH }}
+        key: godot-build-${{ runner.os }}-4.4-${{ steps.godot_commit.outputs.hash }}
+        restore-keys: |
+          godot-build-${{ runner.os }}-4.4-
+
+    - name: Build Godot
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      working-directory: ${{ env.GODOT_SOURCE_PATH }}
+      run: |
+        scons platform=macos arch=arm64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes -j$(nproc)
+        scons platform=macos target=template_release arch=arm64  module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes -j$(nproc)
+        scons platform=macos target=template_release arch=x86_64 generate_bundle=yes  module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes -j$(nproc)
+
+    - name: Generate Mono Glue & Build Assemblies
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      working-directory: ${{ env.GODOT_SOURCE_PATH }}
+      run: |
+        mkdir -p ${{ env.LOCAL_NUGET_PATH }}
+        ${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
+        python3 ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
+        
+    - name: Configure Local NuGet Source
+      run: |
+        mkdir -p ${{ env.LOCAL_NUGET_PATH }}
+        cat > nuget.config << EOL
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <packageSources>
+            <clear />
+            <add key="local-godot" value="${{ env.LOCAL_NUGET_PATH }}" />
+            <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+          </packageSources>
+          <packageSourceMapping>
+            <packageSource key="local-godot">
+              <package pattern="Godot.NET.Sdk" />
+              <package pattern="Godot.SourceGenerators" />
+              <package pattern="GodotSharp" />
+              <package pattern="GodotSharpEditor" />
+            </packageSource>
+            <packageSource key="nuget.org">
+              <package pattern="*" />
+            </packageSource>
+          </packageSourceMapping>
+        </configuration>
+        EOL
+
+    - name: .NET Restore
+      run: dotnet restore
+      working-directory: ${{ env.SOURCE_PATH }}
+
+    - name: Build Solution
+      run: dotnet build
+      working-directory: ${{ env.SOURCE_PATH }}
+      
+    - name: Install Custom Export Template
+      run: |
+        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.4.2.rc.mono"
+        mkdir -p "$TEMPLATE_DIR"
+        cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot.macos.template_release.arm64.mono "${TEMPLATE_DIR}/macos.zip"
+
+    - name: Export Project
+      run: |
+        mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
+        ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "macOS" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
+
+    - name: Archive and Upload Artifact (macOS)
+      run: |
+        cd ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
+        zip -r ../DeltaruneChinesePatcher_macOS.zip .
+        
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: macOS
+        path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS.zip
