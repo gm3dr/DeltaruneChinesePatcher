@@ -11,6 +11,7 @@ jobs:
       GODOT_SOURCE_PATH: ${{ github.workspace }}/godot
       GODOT_EDITOR_PATH: ${{ github.workspace }}/godot/bin/godot.macos.editor.arm64.mono
       LOCAL_NUGET_PATH: ${{ github.workspace }}/local-nuget
+      DOTNET_DOWNLOAD_PATH: ${{ github.workspace }}/dotnet-download
 
     steps:
     - name: Checkout Project
@@ -18,11 +19,18 @@ jobs:
       with:
         path: ${{ env.SOURCE_PATH }}
 
+    - name: Setup .NET Download DIR
+      run: mkdir ${{ env.DOTNET_DOWNLOAD_PATH }}
+
     - name: Setup .NET 8
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: |
-          8.0.x
+      working-directory: ${{ env.DOTNET_DOWNLOAD_PATH }}
+      run: |
+        brew install wget
+        wget https://dot.net/v1/dotnet-install.sh
+        chmod +x dotnet-install.sh
+        ./dotnet-install.sh
+        echo "~/.dotnet" >> $GITHUB_PATH
+        echo "DOTNET_ROOT=\"~/.dotnet\"" >> $GITHUB_ENV
 
     - name: Clone Godot Engine
       uses: actions/checkout@v4
@@ -53,9 +61,9 @@ jobs:
       if: steps.godot-cache.outputs.cache-hit != 'true'
       working-directory: ${{ env.GODOT_SOURCE_PATH }}
       run: |
-        scons platform=macos arch=arm64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes -j$(nproc)
-        scons platform=macos target=template_release arch=arm64  module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes -j$(nproc)
-        scons platform=macos target=template_release arch=x86_64 generate_bundle=yes  module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes -j$(nproc)
+        scons platform=macos arch=arm64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+        scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+        scons platform=macos target=template_release arch=x86_64 generate_bundle=yes  module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
 
     - name: Generate Mono Glue & Build Assemblies
       if: steps.godot-cache.outputs.cache-hit != 'true'
