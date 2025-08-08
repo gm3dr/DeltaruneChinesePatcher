@@ -25,7 +25,6 @@ jobs:
     - name: Setup .NET 8
       working-directory: ${{ env.DOTNET_DOWNLOAD_PATH }}
       run: |
-        brew install wget
         wget https://dot.net/v1/dotnet-install.sh
         chmod +x dotnet-install.sh
         ./dotnet-install.sh
