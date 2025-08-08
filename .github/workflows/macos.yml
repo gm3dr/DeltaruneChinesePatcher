@@ -60,9 +60,9 @@ jobs:
       if: steps.godot-cache.outputs.cache-hit != 'true'
       working-directory: ${{ env.GODOT_SOURCE_PATH }}
       run: |
-        scons platform=macos arch=arm64 target=editor module_mono_enabled=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-        scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-        scons platform=macos target=template_release arch=x86_64 generate_bundle=yes  module_mono_enabled=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+        scons platform=macos arch=arm64 target=editor module_mono_enabled=yes debug_symbols=no module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+        scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes debug_symbols=no disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+        scons platform=macos target=template_release arch=x86_64 generate_bundle=yes  module_mono_enabled=yes debug_symbols=no disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
 
     - name: Generate Mono Glue & Build Assemblies
       if: steps.godot-cache.outputs.cache-hit != 'true'
