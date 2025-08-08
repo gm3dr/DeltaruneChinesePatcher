@@ -19,8 +19,10 @@ jobs:
       with:
         path: ${{ env.SOURCE_PATH }}
 
-    - name: Setup .NET Download DIR
-      run: mkdir ${{ env.DOTNET_DOWNLOAD_PATH }}
+    - name: Setup .NET Download DIR & Change XCode Version
+      run: |
+        mkdir ${{ env.DOTNET_DOWNLOAD_PATH }}
+        sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
 
     - name: Setup .NET 8
       working-directory: ${{ env.DOTNET_DOWNLOAD_PATH }}
@@ -60,9 +62,9 @@ jobs:
       if: steps.godot-cache.outputs.cache-hit != 'true'
       working-directory: ${{ env.GODOT_SOURCE_PATH }}
       run: |
-        scons platform=macos arch=arm64 target=editor module_mono_enabled=yes debug_symbols=no module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-        scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes debug_symbols=no disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-        scons platform=macos target=template_release arch=x86_64 generate_bundle=yes  module_mono_enabled=yes debug_symbols=no disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+        scons platform=macos arch=arm64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+        scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+        scons platform=macos target=template_release arch=x86_64 generate_bundle=yes production=yes module_mono_enabled=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
 
     - name: Generate Mono Glue & Build Assemblies
       if: steps.godot-cache.outputs.cache-hit != 'true'
@@ -107,9 +109,9 @@ jobs:
       
     - name: Install Custom Export Template
       run: |
-        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.4.2.rc.mono"
+        TEMPLATE_DIR="/Users/runner/Library/Application Support/Godot/export_templates/4.4.2.rc.mono"
         mkdir -p "$TEMPLATE_DIR"
-        cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot.macos.template_release.arm64.mono "${TEMPLATE_DIR}/macos.zip"
+        cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot_macos_mono.zip "${TEMPLATE_DIR}/macos.zip"
 
     - name: Export Project
       run: |
