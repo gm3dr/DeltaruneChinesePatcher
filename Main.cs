@@ -64,7 +64,7 @@ public partial class Main : Control
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
 	static readonly Godot.Collections.Dictionary<string,Godot.Collections.Array<string>> available_externals = new()
 	{
-		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za"]},
+		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za", "7zz"]},
 		{"xdelta", ["xdelta", "xdelta3"]}
 	};
 	static readonly Godot.Collections.Dictionary<string,string> externals_hash = new()
@@ -99,7 +99,7 @@ public partial class Main : Control
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
 	static readonly string os_name = OS.GetName();
-	static readonly string os_arch = RuntimeInformation.ProcessArchitecture.ToString();
+	//static readonly string os_arch = RuntimeInformation.ProcessArchitecture.ToString(); //未来可能会有用
 	static readonly string osname = (os_name == "macOS" ? "mac" : "windows");
 	static readonly string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
@@ -147,7 +147,7 @@ public partial class Main : Control
 				TranslationServer.SetLocale(OS.GetLocale());
 			}
 			//寻找patch档案
-			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
+			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(os_name == "macOS" ? "/../.." : "")))
 			{
 				if (file.StartsWith("patch_"))
 				{
@@ -195,15 +195,10 @@ public partial class Main : Control
 			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3.exe");
 			_7zip = GetGameDirPath("externals/7zip/7z.exe");
 		}
-		else if (os_name == "macOS" && os_arch == "Arm64") //arm64 Mac
+		else if (os_name == "macOS")
 		{
 			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3_mac");
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
-		}
-		else if (os_name == "macOS") //x86 Mac
-		{
-			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3_mac_x86");
-			_7zip = GetGameDirPath("externals/7zip/7z_mac_x86");
 		}
 		//语言选项
 			locales = TranslationServer.GetLoadedLocales();
@@ -809,8 +804,8 @@ public partial class Main : Control
 		extract_process.WaitForExit();
 		GD.Print($"{pname} elapsed {(DateTime.Now - stime7z).TotalSeconds}s");
 		output.Add($"{pname} elapsed {(DateTime.Now - stime7z).TotalSeconds}s");
-		output += MoveAfterExtracted(GetGameDirPath("ExtractTemp"), "", path);
-		OS.MoveToTrash(GetGameDirPath("ExtractTemp/"));
+		output += MoveAfterExtracted(GetGameDirPath(tempPath), "", path);
+		OS.MoveToTrash(GetGameDirPath(tempPath));
 		var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Write);
 		if (ver != null)
 		{
@@ -1117,7 +1112,7 @@ public partial class Main : Control
 		{
 			logtext = log.GetAsText();
 			log.Close();
-			log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
+			log = FileAccess.Open(GetGameDirPath(os_name == "macOS" ? "../../godot.log" : "godot.log"), FileAccess.ModeFlags.Write);
 			if (log != null)
 			{
 				log.StoreString(logtext);
@@ -1215,7 +1210,7 @@ public partial class Main : Control
 				fileStream = null;
 			}
 			//删除未清理的下载缓存
-			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
+			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(os_name == "macOS" ? "/../.." : "")))
 			{
 				if (file.StartsWith("_downloadingtemp_"))
 				{
