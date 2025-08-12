@@ -789,12 +789,14 @@ public partial class Main : Control
 			output.Add("Removed " + path + "/backup");
 		}
 		//解压
-		GD.Print($"{_7zip} x \"{patchdir}\" -o\"{GetGameDirPath("ExtractTemp/")}\" -aoa -y");
+		string tempPath = os_name == "macOS" ? "../../ExtractTemp/" : "ExtractTemp/";
+		string extractArgs = $"x \"{patchdir}\" -o\"" + GetGameDirPath(tempPath) + "\" -aoa -y";
+		GD.Print($"{_7zip} {extractArgs}");
 		var stime7z = DateTime.Now;
 		var extract_process = new Process();
 		var starti = new ProcessStartInfo();
 		starti.FileName = _7zip;
-		starti.Arguments = $"x \"{patchdir}\" -o\"" + GetGameDirPath("ExtractTemp/") + "\" -aoa -y";
+		starti.Arguments = extractArgs;
 		starti.RedirectStandardOutput = true;
 		starti.RedirectStandardError = true;
 		extract_process.StartInfo = starti;
