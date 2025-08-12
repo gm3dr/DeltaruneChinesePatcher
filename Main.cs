@@ -88,17 +88,18 @@ public partial class Main : Control
 		{"deltarune", new()
 			{
 				{"Windows", "{STEAMPATH}/steamapps/common/DELTARUNE"},
-				{"macOS", "~/Library/Application Support/Steam/steamapps/common/DELTARUNE.app/Contents/Resources"},
+				{"macOS", "~/Library/Application Support/Steam/steamapps/common/DELTARUNE/DELTARUNE.app/Contents/Resources"},
 				{"Linux", "~/.local/share/Steam/steamapps/common/DELTARUNE"}
 			}
 		}
 	};
-	static string game_path_file = GetGameDirPath("game_path.txt");
-	static string patchdir = GetGameDirPath("patch");
+	static string game_path_file = GetGameDirPath("game_path.txt") + (os_name == "macOS" ? "/../.." : "");
+	static string patchdir = GetGameDirPath("patch") + (os_name == "macOS" ? "/../.." : "");
 	static string patchver = "locNotFound";
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
 	static readonly string os_name = OS.GetName();
+	static readonly string os_arch = RuntimeInformation.ProcessArchitecture.ToString();
 	static readonly string osname = (os_name == "macOS" ? "mac" : "windows");
 	static readonly string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
@@ -194,13 +195,18 @@ public partial class Main : Control
 			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3.exe");
 			_7zip = GetGameDirPath("externals/7zip/7z.exe");
 		}
-		else if (os_name == "macOS")
+		else if (os_name == "macOS" && os_arch == "Arm64") //arm64 Mac
 		{
 			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3_mac");
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
 		}
+		else if (os_name == "macOS") //x86 Mac
+		{
+			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3_mac_x86");
+			_7zip = GetGameDirPath("externals/7zip/7z_mac_x86");
+		}
 		//语言选项
-		locales = TranslationServer.GetLoadedLocales();
+			locales = TranslationServer.GetLoadedLocales();
 		nodeComboLanguage.ItemCount = locales.Length;
 		foreach (var current in locales)
 		{
@@ -403,6 +409,23 @@ public partial class Main : Control
 		nodeEditGamePath.Editable = false;
 		nodeBtnBrowse.Disabled = true;
 		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		if (os_name == "macOS")
+		{
+			string EnsureTrailingSlash(string p) => p.EndsWith("/") ? p : p + "/";
+
+			if (path.Substring(Math.Max(0, path.Length - 10)).Contains("DELTARUNE"))
+			{
+				path = EnsureTrailingSlash(path) + "DELTARUNE.app/Contents/Resources";
+			}
+			else if (path.Substring(Math.Max(0, path.Length - 4)).Contains(".app"))
+			{
+				path = EnsureTrailingSlash(path) + "Contents/Resources";
+			}
+			else if (path.Substring(Math.Max(0, path.Length - 9)).Contains("/Contents"))
+			{
+				path = EnsureTrailingSlash(path) + "Resources";
+			}
+		}
 		bool found = FileAccess.FileExists(path + "/"+dataname+".bak") || DirAccess.DirExistsAbsolute(path + "/backup");
 		foreach (var chapter in chapters)
 		{

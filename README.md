@@ -51,7 +51,7 @@ python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./b
  - [x] \[v2.1.2\] Windows 从注册表获取 Steam 路径后读取 libraryfolders.vdf 来获取 DR 安装路径
  - [x] \[v2.1.2\] 安装后显示安装用时
  - [x] \[v2.1.2\] 多线程安装
- - [ ] macOS 平台支持
+ - [ ] macOS 平台支持 (#14)
 
 ## 借物
 
