@@ -93,8 +93,8 @@ public partial class Main : Control
 			}
 		}
 	};
-	static string game_path_file = GetGameDirPath("game_path.txt") + (os_name == "macOS" ? "/../.." : "");
-	static string patchdir = GetGameDirPath("patch") + (os_name == "macOS" ? "/../.." : "");
+	static string game_path_file = GetGameDirPath("game_path.txt");
+	static string patchdir = GetGameDirPath("patch");
 	static string patchver = "locNotFound";
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
@@ -147,15 +147,33 @@ public partial class Main : Control
 				TranslationServer.SetLocale(OS.GetLocale());
 			}
 			//寻找patch档案
-			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(os_name == "macOS" ? "/../.." : "")))
+			if (os_name == "macOS")
 			{
-				if (file.StartsWith("patch_"))
+				foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("../../")))
 				{
-					patchdir = GetGameDirPath(file);
-					patchver = file.Substring(0, file.LastIndexOf(".")).Split("_")[^1];
-					GD.Print("Found patch file " + patchdir);
+					if (file.StartsWith("patch_"))
+					{
+						patchdir = GetGameDirPath(file);
+						patchver = file.Substring(0, file.LastIndexOf(".")).Split("_")[^1];
+						GD.Print("Found patch file " + patchdir);
+						break;
+					}
 				}
 			}
+			if (patchdir == GetGameDirPath("patch") || os_name != "macOS")
+			{
+				foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
+				{
+					if (file.StartsWith("patch_"))
+					{
+						patchdir = GetGameDirPath(file);
+						patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
+						GD.Print("Found patch file " + patchdir);
+						break;
+					}
+				}
+			}
+			
 			//自动显示readme
 			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("")))
 			{
@@ -537,7 +555,7 @@ public partial class Main : Control
 			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
 			{
 				url = /*(TranslationServer.GetLocale() == "zh_CN" ? "https://ghfast.top/" : "") + */asset.AsGodotDictionary()["browser_download_url"].AsString();
-				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
+				file =  "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
 				size = asset.AsGodotDictionary()["size"].AsInt32();
 				nodeProgress.MaxValue = size;
 				break;
@@ -784,7 +802,7 @@ public partial class Main : Control
 			output.Add("Removed " + path + "/backup");
 		}
 		//解压
-		string tempPath = os_name == "macOS" ? "../../ExtractTemp/" : "ExtractTemp/";
+		string tempPath = "ExtractTemp/";
 		string extractArgs = $"x \"{patchdir}\" -o\"" + GetGameDirPath(tempPath) + "\" -aoa -y";
 		GD.Print($"{_7zip} {extractArgs}");
 		var stime7z = DateTime.Now;
@@ -1112,7 +1130,7 @@ public partial class Main : Control
 		{
 			logtext = log.GetAsText();
 			log.Close();
-			log = FileAccess.Open(GetGameDirPath(os_name == "macOS" ? "../../godot.log" : "godot.log"), FileAccess.ModeFlags.Write);
+			log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
 			if (log != null)
 			{
 				log.StoreString(logtext);
@@ -1210,7 +1228,7 @@ public partial class Main : Control
 				fileStream = null;
 			}
 			//删除未清理的下载缓存
-			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(os_name == "macOS" ? "/../.." : "")))
+			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
 			{
 				if (file.StartsWith("_downloadingtemp_"))
 				{
