@@ -100,7 +100,7 @@ public partial class Main : Control
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
 	static readonly string os_name = OS.GetName();
-	static readonly string os_arch = RuntimeInformation.ProcessArchitecture.ToString();
+	static readonly Architecture os_arch = RuntimeInformation.ProcessArchitecture;
 	static readonly string osname = (os_name == "macOS" ? "mac" : "windows");
 	static readonly string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
@@ -200,7 +200,7 @@ public partial class Main : Control
 		}
 		else if (os_name == "macOS")
 		{
-			xdelta3 = GetGameDirPath(os_arch == "Arm64" ? "externals/xdelta3/xdelta3_mac_arm" : "externals/xdelta3/xdelta3_mac");
+			xdelta3 = GetGameDirPath(os_arch == Architecture.Arm64 ? "externals/xdelta3/xdelta3_mac_arm" : "externals/xdelta3/xdelta3_mac");
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
 		}
 		//语言选项
@@ -415,19 +415,17 @@ public partial class Main : Control
 		}
 		if (os_name == "macOS")
 		{
-			string EnsureTrailingSlash(string p) => p.EndsWith("/") ? p : p + "/";
-
-			if (path.Substring(Math.Max(0, path.Length - 10)).Contains("DELTARUNE"))
+			if (path.EndsWith("/DELTARUNE"))
 			{
-				path = EnsureTrailingSlash(path) + "DELTARUNE.app/Contents/Resources";
+				path += "/DELTARUNE.app/Contents/Resources";
 			}
-			else if (path.Substring(Math.Max(0, path.Length - 4)).Contains(".app"))
+			else if (path.EndsWith(".app"))
 			{
-				path = EnsureTrailingSlash(path) + "Contents/Resources";
+				path += "/Contents/Resources";
 			}
-			else if (path.Substring(Math.Max(0, path.Length - 9)).Contains("/Contents"))
+			else if (path.EndsWith("/Contents"))
 			{
-				path = EnsureTrailingSlash(path) + "Resources";
+				path += "/Resources";
 			}
 		}
 		GD.Print($"Final game path: {path}");
