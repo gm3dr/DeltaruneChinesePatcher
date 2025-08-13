@@ -7,6 +7,7 @@ log.txt
 godot.log
 game_path.txt
 DELTARUNE Chinese Patcher.command
+*.app/
 
 # macOS's fucking files
 __MACOSX/

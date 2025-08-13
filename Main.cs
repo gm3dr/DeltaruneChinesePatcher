@@ -148,30 +148,14 @@ public partial class Main : Control
 				TranslationServer.SetLocale(OS.GetLocale());
 			}
 			//寻找patch档案
-			if (os_name == "macOS")
+			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
 			{
-				foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("../../")))
+				if (file.StartsWith("patch_"))
 				{
-					if (file.StartsWith("patch_"))
-					{
-						patchdir = GetGameDirPath(file);
-						patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
-						GD.Print("Found patch file " + patchdir);
-						break;
-					}
-				}
-			}
-			if (patchdir == GetGameDirPath("patch") || os_name != "macOS")
-			{
-				foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
-				{
-					if (file.StartsWith("patch_"))
-					{
-						patchdir = GetGameDirPath(file);
-						patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
-						GD.Print("Found patch file " + patchdir);
-						break;
-					}
+					patchdir = GetGameDirPath(file);
+					patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
+					GD.Print("Found patch file " + patchdir);
+					break;
 				}
 			}
 			
