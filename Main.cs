@@ -550,7 +550,7 @@ public partial class Main : Control
 		{
 			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
 			{
-				url = /*(TranslationServer.GetLocale() == "zh_CN" ? "https://ghfast.top/" : "") + */asset.AsGodotDictionary()["browser_download_url"].AsString();
+				url = asset.AsGodotDictionary()["browser_download_url"].AsString();
 				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
 				size = asset.AsGodotDictionary()["size"].AsInt32();
 				nodeProgress.MaxValue = size;
