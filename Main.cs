@@ -81,15 +81,15 @@ public partial class Main : Control
 		{"libraryfolders", new()
 			{
 				{"Windows", "{STEAMPATH}/steamapps/libraryfolders.vdf"},
-				{"macOS", "~/Library/Application Support/Steam/steamapps/libraryfolders.vdf"},
-				{"Linux", "~/.local/share/Steam/steamapps/libraryfolders.vdf"}
+				{"macOS", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/Library/Application Support/Steam/steamapps/libraryfolders.vdf"},
+				{"Linux", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/.local/share/Steam/steamapps/libraryfolders.vdf"}
 			}
 		},
 		{"deltarune", new()
 			{
 				{"Windows", "{STEAMPATH}/steamapps/common/DELTARUNE"},
-				{"macOS", "~/Library/Application Support/Steam/steamapps/common/DELTARUNE/DELTARUNE.app/Contents/Resources"},
-				{"Linux", "~/.local/share/Steam/steamapps/common/DELTARUNE"}
+				{"macOS", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/Library/Application Support/Steam/steamapps/common/DELTARUNE/DELTARUNE.app/Contents/Resources"},
+				{"Linux", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/.local/share/Steam/steamapps/common/DELTARUNE"}
 			}
 		}
 	};
@@ -154,7 +154,7 @@ public partial class Main : Control
 					if (file.StartsWith("patch_"))
 					{
 						patchdir = GetGameDirPath(file);
-						patchver = file.Substring(0, file.LastIndexOf(".")).Split("_")[^1];
+						patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
 						GD.Print("Found patch file " + patchdir);
 						break;
 					}
@@ -272,7 +272,7 @@ public partial class Main : Control
 							VObject apps = (VObject)ii["apps"];
 							if (apps.ContainsKey("1671210"))
 							{
-								game_path = ii["path"].ToString().Replace("\\","/") + "/steamapps/common/DELTARUNE" + (os_name == "macOS" ? ".app/Contents/Resources" : "");
+								game_path = ii["path"].ToString().Replace("\\","/") + "/steamapps/common/DELTARUNE" + (os_name == "macOS" ? "/DELTARUNE.app/Contents/Resources" : "");
 								if (DirAccess.DirExistsAbsolute(game_path))
 								{
 									GD.Print("Found " + game_path);
