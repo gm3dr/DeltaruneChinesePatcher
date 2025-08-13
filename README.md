@@ -23,12 +23,18 @@
 Windows 自定义导出模板构建脚本
 scons platform=windows arch=x86_64 target=template_release module_mono_enabled=yes production=yes d3d12=yes angle_libs=${{ env.ANGLE_LIB_PATH }} debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
 ${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
-python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./bin  --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
+python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
 Linux 编辑器与自定义导出模板构建脚本
 scons platform=linuxbsd arch=x86_64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
 scons platform=linuxbsd arch=x86_64 target=template_release module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
 ${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
 python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
+macOS 编辑器与自定义导出模板构建脚本
+scons platform=macos arch=arm64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+scons platform=macos target=template_release arch=x86_64 generate_bundle=yes production=yes module_mono_enabled=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
+${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
+python ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
 ```
 - [.NET 8 SDK](https://dotnet.microsoft.com)
 - [Gameloop.Vdf](https://www.nuget.org/packages/Gameloop.Vdf)
