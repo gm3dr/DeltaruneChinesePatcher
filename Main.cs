@@ -201,7 +201,7 @@ public partial class Main : Control
 		}
 		else if (os_name == "macOS")
 		{
-			xdelta3 = GetGameDirPath(os_arch == Architecture.Arm64 ? "externals/xdelta3/xdelta3_mac_arm" : "externals/xdelta3/xdelta3_mac");
+			xdelta3 = GetGameDirPath(os_arch == Architecture.Arm64 ? "externals/xdelta3/xdelta3_mac_arm" : "externals/xdelta3/xdelta3_mac_x86");
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
 		}
 		//语言选项
