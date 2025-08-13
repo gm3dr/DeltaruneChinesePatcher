@@ -51,7 +51,7 @@ python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./b
  - [x] \[v2.1.2\] Windows 从注册表获取 Steam 路径后读取 libraryfolders.vdf 来获取 DR 安装路径
  - [x] \[v2.1.2\] 安装后显示安装用时
  - [x] \[v2.1.2\] 多线程安装
- - [ ] macOS 平台支持
+ - [ ] macOS 平台支持 (#14)
 
 ## 借物
 
@@ -68,45 +68,45 @@ python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./b
 	<tr>
 		<td>Determination Sans</td>
 	</tr>
-    <tr>
-        <td>Godot Engine</td>
-        <td>Juan Linietsky, Ariel Manzur 与贡献者们</td>
-    </tr>
-    <tr>
-        <td>.NET 8</td>
-        <td rowspan="2">Microsoft 与贡献者们</td>
-    </tr>
-    <tr>
-        <td>Visual Studio Code</td>
-    </tr>
-    </tr>
-        <td>7-Zip</td>
-        <td>Igor Pavlov</td>
-    </tr>
-    </tr>
-        <td>XDelta</td>
-        <td>Joshua MacDonald</td>
-    </tr>
-    </tr>
-        <td>UPX</td>
-        <td>Markus & Laszlo & John</td>
-    </tr>
-    </tr>
-        <td>rcedit</td>
-        <td>electron 开源贡献者</td>
-    </tr>
-    </tr>
-        <td>Gameloop.Vdf</td>
-        <td>Shravan Rajinikanth</td>
-    </tr>
-    </tr>
-        <td>SimSunBDF</td>
-        <td>北京中易中标电子信息技术有限公司</td>
-    </tr>
-    </tr>
-        <td>应用图标</td>
-        <td>WhatDamon</td>
-    </tr>
+	<tr>
+		<td>Godot Engine</td>
+		<td>Juan Linietsky, Ariel Manzur 与贡献者们</td>
+	</tr>
+	<tr>
+		<td>.NET 8</td>
+		<td rowspan="2">Microsoft 与贡献者们</td>
+	</tr>
+	<tr>
+		<td>Visual Studio Code</td>
+	</tr>
+	</tr>
+		<td>7-Zip</td>
+		<td>Igor Pavlov</td>
+	</tr>
+	</tr>
+		<td>XDelta</td>
+		<td>Joshua MacDonald</td>
+	</tr>
+	</tr>
+		<td>UPX</td>
+		<td>Markus & Laszlo & John</td>
+	</tr>
+	</tr>
+		<td>rcedit</td>
+		<td>electron 开源贡献者</td>
+	</tr>
+	</tr>
+		<td>Gameloop.Vdf</td>
+		<td>Shravan Rajinikanth</td>
+	</tr>
+	</tr>
+		<td>SimSunBDF</td>
+		<td>北京中易中标电子信息技术有限公司</td>
+	</tr>
+	</tr>
+		<td>应用图标</td>
+		<td>WhatDamon</td>
+	</tr>
 </table>
 
  ## 开源协议
