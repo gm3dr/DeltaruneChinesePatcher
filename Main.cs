@@ -62,12 +62,12 @@ public partial class Main : Control
 	static readonly string[] chapters = ["1", "2", "3", "4"];
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
-	static readonly Godot.Collections.Dictionary<string,Godot.Collections.Array<string>> available_externals = new()
+	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
 	{
 		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za", "7zz"]},
 		{"xdelta", ["xdelta", "xdelta3"]}
 	};
-	static readonly Godot.Collections.Dictionary<string,string> externals_hash = new()
+	static readonly Godot.Collections.Dictionary<string, string> externals_hash = new()
 	{
 		{GetGameDirPath("externals/7zip/7z"), "9a556170350dafb60a97348b86a94b087d97fd36007760691576cac0d88b132b"},
 		{GetGameDirPath("externals/7zip/7z.exe"), "d2c0045523cf053a6b43f9315e9672fc2535f06aeadd4ffa53c729cd8b2b6dfe"},
@@ -77,7 +77,7 @@ public partial class Main : Control
 		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), "714c1680b8fb80052e3851b9007d5d4b9ca0130579b0cdd2fd6135cce041ce6a"},
 		{GetGameDirPath("externals/xdelta3/xdelta3_mac_arm"), "688f6054647109e31590e792042da461e056c2726505ad4400f60b8802eb5f19"}
 	};
-	static readonly Godot.Collections.Dictionary<string,Godot.Collections.Dictionary<string,string>> default_paths = new()
+	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Dictionary<string, string>> default_paths = new()
 	{
 		{"libraryfolders", new()
 			{
@@ -124,7 +124,7 @@ public partial class Main : Control
 			var screenSize = DisplayServer.ScreenGetUsableRect(screenId);
 			var windowDesignSize = new Vector2(640, 480) * 1.5f;
 
-			int windowScale = (int)Mathf.Floor((screenSize.Size.Y-screenSize.Position.Y) / windowDesignSize.Y);
+			int windowScale = (int)Mathf.Floor((screenSize.Size.Y - screenSize.Position.Y) / windowDesignSize.Y);
 			if (windowScale > 1)
 			{
 				var windowNewSize = (Vector2I)((windowDesignSize * windowScale).Round());
@@ -158,7 +158,7 @@ public partial class Main : Control
 					break;
 				}
 			}
-			
+
 			//自动显示readme
 			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("")))
 			{
@@ -204,7 +204,7 @@ public partial class Main : Control
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
 		}
 		//语言选项
-			locales = TranslationServer.GetLoadedLocales();
+		locales = TranslationServer.GetLoadedLocales();
 		nodeComboLanguage.ItemCount = locales.Length;
 		foreach (var current in locales)
 		{
@@ -238,7 +238,7 @@ public partial class Main : Control
 					var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
 					if (regkey != null)
 					{
-						steampath = regkey.GetValue("SteamPath").ToString().Replace("\\","/");
+						steampath = regkey.GetValue("SteamPath").ToString().Replace("\\", "/");
 						regkey.Close();
 					}
 					default_paths["deltarune"][os_name] = paths[0].Replace("{STEAMPATH}", steampath);
@@ -257,7 +257,7 @@ public partial class Main : Control
 							VObject apps = (VObject)ii["apps"];
 							if (apps.ContainsKey("1671210"))
 							{
-								game_path = ii["path"].ToString().Replace("\\","/") + "/steamapps/common/DELTARUNE" + (os_name == "macOS" ? "/DELTARUNE.app/Contents/Resources" : "");
+								game_path = ii["path"].ToString().Replace("\\", "/") + "/steamapps/common/DELTARUNE" + (os_name == "macOS" ? "/DELTARUNE.app/Contents/Resources" : "");
 								if (DirAccess.DirExistsAbsolute(game_path))
 								{
 									GD.Print("Found " + game_path);
@@ -284,14 +284,14 @@ public partial class Main : Control
 		{
 			json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/contributors"));
 			var names = "";
-			foreach (var contributor in json.Data.AsGodotArray<Godot.Collections.Dictionary<string,string>>())
+			foreach (var contributor in json.Data.AsGodotArray<Godot.Collections.Dictionary<string, string>>())
 			{
 				names += contributor["login"] + ", ";
 			}
 			names = names.TrimSuffix(", ");
 			if (names != "")
 			{
-				nodeBtnInfo.TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}",names);
+				nodeBtnInfo.TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}", names);
 			}
 		}
 		catch (Exception exc)
@@ -412,7 +412,7 @@ public partial class Main : Control
 			GD.Print("Non-Windows Home Directory Processing");
 			string homePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
 			path = homePath + path.Substring(1);
-		} 
+		}
 		if (os_name == "macOS")
 		{
 			string EnsureTrailingSlash(string p) => p.EndsWith("/") ? p : p + "/";
@@ -432,12 +432,12 @@ public partial class Main : Control
 		}
 		GD.Print($"Final game path: {path}");
 		nodeEditGamePath.Text = path;
-		bool found = FileAccess.FileExists(path + "/"+dataname+".bak") || DirAccess.DirExistsAbsolute(path + "/backup");
+		bool found = FileAccess.FileExists(path + "/" + dataname + ".bak") || DirAccess.DirExistsAbsolute(path + "/backup");
 		foreach (var chapter in chapters)
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak"))
 			{
-				GD.Print("Found: "+path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
+				GD.Print("Found: " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak");
 				found = true;
 				break;
 			}
@@ -548,7 +548,7 @@ public partial class Main : Control
 			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
 			{
 				url = /*(TranslationServer.GetLocale() == "zh_CN" ? "https://ghfast.top/" : "") + */asset.AsGodotDictionary()["browser_download_url"].AsString();
-				file =  "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
+				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
 				size = asset.AsGodotDictionary()["size"].AsInt32();
 				nodeProgress.MaxValue = size;
 				break;
@@ -578,8 +578,8 @@ public partial class Main : Control
 							{
 								nodeProgress.Value = totalRead;
 								//nodeProgress.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
-								var progress = Math.Round(totalRead/1024d/1024d, 2).ToString();
-								var sizee = Math.Round(size/1024d/1024d, 2).ToString();
+								var progress = Math.Round(totalRead / 1024d / 1024d, 2).ToString();
+								var sizee = Math.Round(size / 1024d / 1024d, 2).ToString();
 								if (!progress.Contains("."))
 								{
 									progress += ".00";
@@ -613,7 +613,7 @@ public partial class Main : Control
 			catch (Exception exc)
 			{
 				nodeBtnUpdatePatch.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
-				GD.PushError("Exception catched when updating patch: " + exc.ToString() + " ("+exc.Message+")");
+				GD.PushError("Exception catched when updating patch: " + exc.ToString() + " (" + exc.Message + ")");
 				return;
 			}
 			fileStream.Dispose();
@@ -685,7 +685,7 @@ public partial class Main : Control
 			}
 			else
 			{
-				external_check_return = OS.Execute("command", ["-v",__7z], externalcheckoutput);
+				external_check_return = OS.Execute("command", ["-v", __7z], externalcheckoutput);
 			}
 			GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
 			output.Add($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
@@ -710,7 +710,7 @@ public partial class Main : Control
 			}
 			else
 			{
-				external_check_return = OS.Execute("command", ["-v",__xdelta], externalcheckoutput);
+				external_check_return = OS.Execute("command", ["-v", __xdelta], externalcheckoutput);
 			}
 			GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
 			output.Add($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
@@ -921,7 +921,7 @@ public partial class Main : Control
 			{
 				if (os_name == "Windows")
 				{
-					OS.Execute("taskkill", ["/f","/im", external + ".exe"]);
+					OS.Execute("taskkill", ["/f", "/im", external + ".exe"]);
 				}
 				else
 				{
@@ -967,7 +967,7 @@ public partial class Main : Control
 			}
 			if (DirAccess.DirExistsAbsolute(path + "/backup"))
 			{
-				output += RestoreFolder(path + "/backup" , path);
+				output += RestoreFolder(path + "/backup", path);
 			}
 			OS.MoveToTrash(path + "/backup");
 			GD.Print("Removed " + path + "/backup");
@@ -1001,16 +1001,16 @@ public partial class Main : Control
 		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
 			nodeWindowPopupContent.Text = "locNoBakDetected";
-			nodeWindowPopup.Size = new Vector2I(360,120);
+			nodeWindowPopup.Size = new Vector2I(360, 120);
 			nodeWindowPopup.Show();
 			return;
 		}
-		bool found = FileAccess.FileExists(path + "/"+dataname+".bak");
+		bool found = FileAccess.FileExists(path + "/" + dataname + ".bak");
 		foreach (var chapter in chapters)
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak"))
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak"))
 			{
-				GD.Print("Found: "+path + "/chapter" + chapter + "_" + osname + "/"+dataname+".bak");
+				GD.Print("Found: " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak");
 				found = true;
 				break;
 			}
@@ -1018,13 +1018,13 @@ public partial class Main : Control
 		if (found)
 		{
 			nodeWindowPopupContent.Text = "locOldBakDetected";
-			nodeWindowPopup.Size = new Vector2I(360,120);
+			nodeWindowPopup.Size = new Vector2I(360, 120);
 			nodeWindowPopup.Show();
 			return;
 		}
 		RestoreData(path);
 		nodeWindowPopupContent.Text = "locUnpatched";
-		nodeWindowPopup.Size = new Vector2I(360,120);
+		nodeWindowPopup.Size = new Vector2I(360, 120);
 		nodeWindowPopup.Show();
 	}
 
@@ -1086,7 +1086,7 @@ public partial class Main : Control
 	internal async void PatchResultHandler(bool success, string information, string usedtime, Vector2I popup_size)
 	{
 		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
-		nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}",usedtime);
+		nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}", usedtime);
 		nodeWindowPopup.Size = popup_size;
 		if (success)
 		{
@@ -1165,7 +1165,7 @@ public partial class Main : Control
 		{
 			PatchResultHandler(false, "locPatchFailedCantFind", usedtime, new Vector2I(640, 360));
 		}
-		else if (logtext.Replace("\r","").Replace("\n","").Replace(" ","") == "Extracting...")
+		else if (logtext.Replace("\r", "").Replace("\n", "").Replace(" ", "") == "Extracting...")
 		{
 			PatchResultHandler(false, "locPatchFailedExternals", usedtime, new Vector2I(640, 360));
 		}
