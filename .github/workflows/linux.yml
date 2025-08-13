@@ -23,8 +23,28 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
-          
+
+    - name: Download UPX
+      run: |
+        mkdir -p ${{ github.workspace }}/upx
+        wget -O ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v5.0.2/upx-5.0.2-amd64_linux.tar.xz
+        xz -d ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar.xz
+        tar -xvf ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar -C ${{ github.workspace }}/upx
+      
+    - name: Cache Godot Build Artifacts
+      id: godot-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ env.GODOT_SOURCE_PATH }}/bin
+          ${{ env.GODOT_SOURCE_PATH }}/modules/mono/glue
+          ${{ env.LOCAL_NUGET_PATH }}
+        key: godot-build-${{ runner.os }}-4.4-${{ steps.godot_commit.outputs.hash }}
+        restore-keys: |
+          godot-build-${{ runner.os }}-4.4-
+
     - name: Install Godot Build Dependencies
+      if: steps.godot-cache.outputs.cache-hit != 'true'
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -45,30 +65,12 @@ jobs:
           xz-utils
 
     - name: Clone Godot Engine
+      if: steps.godot-cache.outputs.cache-hit != 'true'
       uses: actions/checkout@v4
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
         ref: '4.4'
-
-    - name: Download UPX
-      run: |
-        mkdir -p ${{ github.workspace }}/upx
-        wget -O ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v5.0.2/upx-5.0.2-amd64_linux.tar.xz
-        xz -d ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar.xz
-        tar -xvf ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar -C ${{ github.workspace }}/upx
-      
-    - name: Cache Godot Build Artifacts
-      id: godot-cache
-      uses: actions/cache@v4
-      with:
-        path: |
-          ${{ env.GODOT_SOURCE_PATH }}/bin
-          ${{ env.GODOT_SOURCE_PATH }}/modules/mono/glue
-          ${{ env.LOCAL_NUGET_PATH }}
-        key: godot-build-${{ runner.os }}-4.4-${{ steps.godot_commit.outputs.hash }}
-        restore-keys: |
-          godot-build-${{ runner.os }}-4.4-
 
     - name: Build Godot
       if: steps.godot-cache.outputs.cache-hit != 'true'

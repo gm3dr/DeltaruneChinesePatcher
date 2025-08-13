@@ -33,19 +33,6 @@ jobs:
         echo "~/.dotnet" >> $GITHUB_PATH
         echo "DOTNET_ROOT=\"~/.dotnet\"" >> $GITHUB_ENV
 
-    - name: Clone Godot Engine
-      uses: actions/checkout@v4
-      with:
-        repository: godotengine/godot
-        path: ${{ env.GODOT_SOURCE_PATH }}
-        ref: '4.4'
-          
-    - name: Install Godot Build Dependencies
-      run: |
-        brew install scons
-        chmod +x ${{ env.GODOT_SOURCE_PATH }}/misc/scripts/install_vulkan_sdk_macos.sh
-        bash ${{ env.GODOT_SOURCE_PATH }}/misc/scripts/install_vulkan_sdk_macos.sh
-      
     - name: Cache Godot Build Artifacts
       id: godot-cache
       uses: actions/cache@v4
@@ -57,6 +44,21 @@ jobs:
         key: godot-build-${{ runner.os }}-4.4-${{ steps.godot_commit.outputs.hash }}
         restore-keys: |
           godot-build-${{ runner.os }}-4.4-
+
+    - name: Clone Godot Engine
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      uses: actions/checkout@v4
+      with:
+        repository: godotengine/godot
+        path: ${{ env.GODOT_SOURCE_PATH }}
+        ref: '4.4'
+          
+    - name: Install Godot Build Dependencies
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      run: |
+        brew install scons
+        chmod +x ${{ env.GODOT_SOURCE_PATH }}/misc/scripts/install_vulkan_sdk_macos.sh
+        bash ${{ env.GODOT_SOURCE_PATH }}/misc/scripts/install_vulkan_sdk_macos.sh
 
     - name: Build Godot
       if: steps.godot-cache.outputs.cache-hit != 'true'
