@@ -168,7 +168,6 @@ public partial class Main : Control
 					break;
 				}
 			}
-
 			//自动显示readme
 			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("")))
 			{
@@ -187,6 +186,7 @@ public partial class Main : Control
 					break;
 				}
 			}
+			nodeBtnUpdatePatch.TooltipText = "locUpdatePatchInfo" + (os_name == "macOS" ? "Mac" : "");
 		}
 		DisplayServer.WindowSetTitle(TranslationServer.Translate("locTitle"), wid);
 		nodeBtnUpdatePatcher.Visible = false;
@@ -1178,7 +1178,7 @@ public partial class Main : Control
 		}
 		else if (logtext.Replace("\r", "").Replace("\n", "").Replace(" ", "") == "Extracting...")
 		{
-			PatchResultHandler(false, "locPatchFailedExternals", usedtime, new Vector2I(640, 360));
+			PatchResultHandler(false, "locPatchFailedExternals" + (os_name == "macOS" ? "Mac" : ""), usedtime, new Vector2I(640, 360));
 		}
 		else if ((os_name == "macOS" || os_name == "Linux") && logtext.ToLower().Contains("(required by "))
 		{
@@ -1190,7 +1190,7 @@ public partial class Main : Control
 		}
 		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
 		{
-			PatchResultHandler(false, "locPatchFailed", usedtime, new Vector2I(480, 240));
+			PatchResultHandler(false, "locPatchFailed" + (os_name == "macOS" ? "Mac" : ""), usedtime, new Vector2I(480, 240));
 		}
 		else
 		{
