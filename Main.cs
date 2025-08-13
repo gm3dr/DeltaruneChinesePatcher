@@ -105,6 +105,7 @@ public partial class Main : Control
 	static readonly string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
 	bool inited = false;
+	int windowScale = 1;
 	System.IO.FileStream fileStream = null;
 	Godot.Collections.Array output = [];
 	int patched_count = 0;
@@ -124,7 +125,7 @@ public partial class Main : Control
 			var screenSize = DisplayServer.ScreenGetUsableRect(screenId);
 			var windowDesignSize = new Vector2(640, 480) * 1.5f;
 
-			int windowScale = (int)Mathf.Floor((screenSize.Size.Y - screenSize.Position.Y) / windowDesignSize.Y);
+			windowScale = (int)Mathf.Floor((screenSize.Size.Y - screenSize.Position.Y) / windowDesignSize.Y);
 			if (windowScale > 1)
 			{
 				var windowNewSize = (Vector2I)((windowDesignSize * windowScale).Round());
@@ -132,6 +133,15 @@ public partial class Main : Control
 				// 居中窗口
 				window.MoveToCenter();
 			}
+			else
+			{
+				windowScale = 1;
+			}
+			//Tooltip与下拉菜单大小
+			var theme = Theme;
+			theme.SetFontSize("font_size", "PopupMenu", FontSize(theme.GetFontSize("font_size", "PopupMenu"), windowScale));
+			theme.SetFontSize("font_size", "TooltipLabel", FontSize(theme.GetFontSize("font_size", "TooltipLabel"), windowScale));
+			Theme = theme;
 			//最大帧率
 			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(window.CurrentScreen));
 			//根据系统语言切换语言
@@ -168,7 +178,9 @@ public partial class Main : Control
 					if (readme != null)
 					{
 						nodeWindowReadmeContent.Text = readme.GetAsText();
+						nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 						nodeWindowReadme.Title = file;
+						nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
 						nodeWindowReadme.Show();
 						readme.Close();
 					}
@@ -334,7 +346,9 @@ public partial class Main : Control
 						{
 							readme.StoreString(text);
 							nodeWindowReadmeContent.Text = text;
+							nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 							nodeWindowReadme.Title = "readme.txt";
+							nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
 							nodeWindowReadme.Show();
 							readme.Close();
 						}
@@ -459,6 +473,8 @@ public partial class Main : Control
 			{
 				nodeWindowPatchContent.Text = "locBakDetected";
 			}
+			nodeWindowPatchContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+			nodeWindowPatch.Size = new Vector2I(640, 240) * windowScale;
 			nodeWindowPatch.Show();
 		}
 		else
@@ -1001,7 +1017,8 @@ public partial class Main : Control
 		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
 			nodeWindowPopupContent.Text = "locNoBakDetected";
-			nodeWindowPopup.Size = new Vector2I(360, 120);
+			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+			nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
 			nodeWindowPopup.Show();
 			return;
 		}
@@ -1018,13 +1035,15 @@ public partial class Main : Control
 		if (found)
 		{
 			nodeWindowPopupContent.Text = "locOldBakDetected";
-			nodeWindowPopup.Size = new Vector2I(360, 120);
+			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+			nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
 			nodeWindowPopup.Show();
 			return;
 		}
 		RestoreData(path);
 		nodeWindowPopupContent.Text = "locUnpatched";
-		nodeWindowPopup.Size = new Vector2I(360, 120);
+		nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+		nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
 		nodeWindowPopup.Show();
 	}
 
@@ -1087,7 +1106,8 @@ public partial class Main : Control
 	{
 		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 		nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}", usedtime);
-		nodeWindowPopup.Size = popup_size;
+		nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+		nodeWindowPopup.Size = popup_size * windowScale;
 		if (success)
 		{
 			//保存游戏路径
@@ -1110,6 +1130,8 @@ public partial class Main : Control
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
 		nodeWindowLogContent.Text = logtext;
+		nodeWindowLogContent.Set("theme_override_font_sizes/font_size", FontSize(13, windowScale));
+		nodeWindowLog.Size = new Vector2I(960, 600) * windowScale;
 		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
 		if (log != null)
 		{
@@ -1197,6 +1219,24 @@ public partial class Main : Control
 		{
 			return OS.GetExecutablePath().GetBaseDir() + "/" + str;
 		}
+	}
+	//这个奇怪的DTM字体 最小是13 然后是13+14=27
+	//从27开始公差却是13 14显示会出问题
+	internal static int FontSize(int size, int multiply)
+	{
+		if (multiply == 1)
+		{
+			return size;
+		}
+		if (size % 13 == 0)
+		{
+			return size * multiply + 1;
+		}
+		if ((size - 1) % 13 == 0)
+		{
+			return (size - 1) * multiply;
+		}
+		return size * multiply;
 	}
 	//退出
 	public override void _Notification(int what)

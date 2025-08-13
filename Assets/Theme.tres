@@ -117,4 +117,5 @@ PopupMenu/font_sizes/font_size = 27
 PopupMenu/font_sizes/title_font_size = 27
 PopupMenu/styles/panel = SubResource("StyleBoxTexture_k4w01")
 PopupMenu/styles/separator = SubResource("StyleBoxLine_j4jqe")
+TooltipLabel/font_sizes/font_size = 27
 TooltipPanel/styles/panel = SubResource("StyleBoxTexture_dgat3")
