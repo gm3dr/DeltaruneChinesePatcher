@@ -844,6 +844,7 @@ public partial class Main : Control
 		//Patch
 		if (FileAccess.FileExists(path + "/main.xdelta"))
 		{
+			string xdelta3Args = $"-f -d -v -s \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"";
 			GD.Print("Patching main data");
 			output.Add("Patching main data");
 			if (FileAccess.FileExists(path + "/" + dataname))
@@ -852,11 +853,11 @@ public partial class Main : Control
 				GD.Print("Removed " + path + "/" + dataname);
 				output.Add("Removed " + path + "/" + dataname);
 			}
-			GD.Print($"{xdelta3} -f -d -v -s \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"");
+			GD.Print($"{xdelta3} {xdelta3Args}");
 			var xdelta3_process = new Process();
 			starti = new ProcessStartInfo();
 			starti.FileName = xdelta3;
-			starti.Arguments = $"-f -d -v -s \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"";
+			starti.Arguments = xdelta3Args;
 			starti.RedirectStandardOutput = true;
 			starti.RedirectStandardError = true;
 			xdelta3_process.StartInfo = starti;
@@ -873,6 +874,7 @@ public partial class Main : Control
 		{
 			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
 			{
+				string xdelta3Args = $"-f -d -v -s \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"";
 				GD.Print("Patching chapter" + chapter + " data");
 				output.Add("Patching chapter" + chapter + " data");
 				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
@@ -881,11 +883,11 @@ public partial class Main : Control
 					GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
 					output.Add("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
 				}
-				GD.Print($"{xdelta3} -f -d -v -s \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"");
+				GD.Print($"{xdelta3} {xdelta3Args}");
 				var xdelta3_process = new Process();
 				starti = new ProcessStartInfo();
 				starti.FileName = xdelta3;
-				starti.Arguments = $"-f -d -v -s \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"";
+				starti.Arguments = xdelta3Args;
 				starti.RedirectStandardOutput = true;
 				starti.RedirectStandardError = true;
 				xdelta3_process.StartInfo = starti;
