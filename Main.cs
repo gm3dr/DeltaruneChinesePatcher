@@ -74,7 +74,8 @@ public partial class Main : Control
 		{GetGameDirPath("externals/7zip/7z_mac"), "bd5765978a541323758d82ad1d30df76a2e3c86341f12d6b0524d837411e9b4a"},
 		{GetGameDirPath("externals/xdelta3/xdelta3"), "709f63ebb9655dc3b5c84f17e11217494eb34cf00c009a026386e4c8617ea903"},
 		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "6855c01cf4a1662ba421e6f95370cf9afa2b3ab6c148473c63efe60d634dfb9a"},
-		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), "714c1680b8fb80052e3851b9007d5d4b9ca0130579b0cdd2fd6135cce041ce6a"}
+		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), "714c1680b8fb80052e3851b9007d5d4b9ca0130579b0cdd2fd6135cce041ce6a"},
+		{GetGameDirPath("externals/xdelta3/xdelta3_mac_arm"), "688f6054647109e31590e792042da461e056c2726505ad4400f60b8802eb5f19"}
 	};
 	static readonly Godot.Collections.Dictionary<string,Godot.Collections.Dictionary<string,string>> default_paths = new()
 	{
@@ -99,7 +100,7 @@ public partial class Main : Control
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
 	static readonly string os_name = OS.GetName();
-	//static readonly string os_arch = RuntimeInformation.ProcessArchitecture.ToString(); //未来可能会有用
+	static readonly string os_arch = RuntimeInformation.ProcessArchitecture.ToString();
 	static readonly string osname = (os_name == "macOS" ? "mac" : "windows");
 	static readonly string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
@@ -215,7 +216,7 @@ public partial class Main : Control
 		}
 		else if (os_name == "macOS")
 		{
-			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3_mac");
+			xdelta3 = GetGameDirPath(os_arch == "Arm64" ? "externals/xdelta3/xdelta3_mac_arm" : "externals/xdelta3/xdelta3_mac");
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
 		}
 		//语言选项
@@ -422,6 +423,12 @@ public partial class Main : Control
 		nodeEditGamePath.Editable = false;
 		nodeBtnBrowse.Disabled = true;
 		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		if (os_name != "Windows" && path.StartsWith("~/"))
+		{
+			GD.Print("Non-Windows Home Directory Processing");
+			string homePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+			path = homePath + path.Substring(1);
+		} 
 		if (os_name == "macOS")
 		{
 			string EnsureTrailingSlash(string p) => p.EndsWith("/") ? p : p + "/";
@@ -439,6 +446,8 @@ public partial class Main : Control
 				path = EnsureTrailingSlash(path) + "Resources";
 			}
 		}
+		GD.Print($"Final game path: {path}");
+		nodeEditGamePath.Text = path;
 		bool found = FileAccess.FileExists(path + "/"+dataname+".bak") || DirAccess.DirExistsAbsolute(path + "/backup");
 		foreach (var chapter in chapters)
 		{
