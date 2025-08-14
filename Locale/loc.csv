@@ -7,7 +7,7 @@ locLatestVer,Latest patch version: ,最新补丁版本：,最新補丁版本：
 locInstalledVer,Installed patch version: ,已安装补丁版本：,已安裝補丁版本：
 locPatch, Patch , 安装补丁, 安裝補丁
 locLog,Log,日志,日誌
-locDeltaruneDir,Installtion Directory of the Steam version of DELTARUNE,DELTARUNE Steam 版安装目录,DELTARUNE Steam 版安裝目錄
+locDeltaruneDir,Installation Directory of the Steam version of DELTARUNE,DELTARUNE Steam 版安装目录,DELTARUNE Steam 版安裝目錄
 locRequesting,Requesting...,获取中...,獲取中...
 locNotFound,Not found,未找到,未找到
 locUpdatePatch, Download latest patch , 下载最新补丁包, 下載最新補丁包
@@ -37,13 +37,13 @@ locPatchFailedMac,"Patch failed after {USEDTIME}s\nUnknown error, please report 
 locBakDetected,"Backup files after patching detected.\nUse backup files to patch or patch directly?\nIf game updated, you can use backup files first.",检测到打过补丁留下的备份文件。\n使用备份文件安装还是直接安装？\n如果游戏更新了，你可以优先使用备份文件。,偵測到打過補丁留下的備份檔案。\n使用備份檔案安裝還是直接安裝？\n如果遊戲更新了，你可以優先使用備份檔案。
 locBakVerDetected,"Backup files of patch version {VER} was detected.\nUse backup files to patch or patch directly?\nIf game updated, you can use backup files first.",检测到补丁版本 {VER} 留下的备份文件。\n使用备份文件安装还是直接安装？\n如果游戏更新了，你可以优先使用备份文件。,偵測到補丁版本 {VER} 留下的備份檔案。\n使用備份檔案安裝還是直接安裝？\n如果遊戲更新了，你可以優先使用備份檔案。
 locPatchBackup, Backup files , 使用备份文件, 使用備份檔案
-locPatchDirecyly, Patch directly , 直接安裝, 直接安裝
+locPatchDirectly, Patch directly , 直接安裝, 直接安裝
 locUnpatch, Unpatch , 卸载补丁, 解除安裝補丁
 locNoBakDetected,No backup files detected,未检测到备份文件,未檢測到備份檔案
 locOldBakDetected,Old backup files detected\nUnpatching is not supported,检测到旧版备份文件\n不支持卸载补丁,檢測到舊版備份檔案\n不支援卸載補丁
 locUnpatched,Restored backup files,已恢复备份文件,已恢復備份檔案
 locReadme,Readme,说明,說明
-locInfo,DELTARUNE Chinese Patcher By SheepYhangCN\nIcon By WhatDamon\nMade with Godot Engine 4.4.1 .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installtion directory of the Steam version of DELTARUNE\nPatcher will automatically patch data of every chapter\n\nThis patcher is open source on Github\nClick to open Github repository,DELTARUNE 汉化安装器 By 憨憨羊の宇航鸽鸽\n图标 By WhatDamon\n使用 Godot Engine 4.4.1 .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data 安装补丁\n\n此安装器已在 Github 上开源\n点击打开 Github 仓库,DELTARUNE 漢化安裝器 By 憨憨羊の宇航鴿鴿\n圖標 By WhatDamon\n使用 Godot Engine 4.4.1 .NET 製作\nDELTARUNE 中文在地化版 by 好人漢化組\n\n設置 DELTARUNE Steam 版安裝目錄\n安裝器會自動為每個章節的 data 安裝補丁\n\n此安裝器已在 Github 上開源\n點擊打開 Github 倉庫
-locInfoContributors,DELTARUNE Chinese Patcher By SheepYhangCN\nIcon By WhatDamon\nMade with Godot Engine 4.4.1 .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installtion directory of the Steam version of DELTARUNE\nPatcher will automatically patch data of every chapter\n\nThis patcher is open source on Github\nContributors: {CONTRIBUTORS}\nClick to open Github repository,DELTARUNE 汉化安装器 By 憨憨羊の宇航鸽鸽\n图标 By WhatDamon\n使用 Godot Engine 4.4.1 .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data 安装补丁\n\n此安装器已在 Github 上开源\n贡献者：{CONTRIBUTORS}\n点击打开 Github 仓库,DELTARUNE 漢化安裝器 By 憨憨羊の宇航鴿鴿\n圖標 By WhatDamon\n使用 Godot Engine 4.4.1 .NET 製作\nDELTARUNE 中文在地化版 by 好人漢化組\n\n設置 DELTARUNE Steam 版安裝目錄\n安裝器會自動為每個章節的 data 安裝補丁\n\n此安裝器已在 Github 上開源\n貢獻者：{CONTRIBUTORS}\n點擊打開 Github 倉庫
+locInfo,DELTARUNE Chinese Patcher By SheepYhangCN\nIcon By WhatDamon\nMade with Godot Engine 4.4.1 .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installation directory of the Steam version of DELTARUNE\nPatcher will automatically patch data of every chapter\n\nThis patcher is open source on Github\nClick to open Github repository,DELTARUNE 汉化安装器 By 憨憨羊の宇航鸽鸽\n图标 By WhatDamon\n使用 Godot Engine 4.4.1 .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data 安装补丁\n\n此安装器已在 Github 上开源\n点击打开 Github 仓库,DELTARUNE 漢化安裝器 By 憨憨羊の宇航鴿鴿\n圖標 By WhatDamon\n使用 Godot Engine 4.4.1 .NET 製作\nDELTARUNE 中文在地化版 by 好人漢化組\n\n設置 DELTARUNE Steam 版安裝目錄\n安裝器會自動為每個章節的 data 安裝補丁\n\n此安裝器已在 Github 上開源\n點擊打開 Github 倉庫
+locInfoContributors,DELTARUNE Chinese Patcher By SheepYhangCN\nIcon By WhatDamon\nMade with Godot Engine 4.4.1 .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installation directory of the Steam version of DELTARUNE\nPatcher will automatically patch data of every chapter\n\nThis patcher is open source on Github\nContributors: {CONTRIBUTORS}\nClick to open Github repository,DELTARUNE 汉化安装器 By 憨憨羊の宇航鸽鸽\n图标 By WhatDamon\n使用 Godot Engine 4.4.1 .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data 安装补丁\n\n此安装器已在 Github 上开源\n贡献者：{CONTRIBUTORS}\n点击打开 Github 仓库,DELTARUNE 漢化安裝器 By 憨憨羊の宇航鴿鴿\n圖標 By WhatDamon\n使用 Godot Engine 4.4.1 .NET 製作\nDELTARUNE 中文在地化版 by 好人漢化組\n\n設置 DELTARUNE Steam 版安裝目錄\n安裝器會自動為每個章節的 data 安裝補丁\n\n此安裝器已在 Github 上開源\n貢獻者：{CONTRIBUTORS}\n點擊打開 Github 倉庫
 locRungame, Run Game , 启动游戏, 啟動遊戲
 locRungameTooltip,Run game through Steam,通过 Steam 启动游戏,透過 Steam 啟動遊戲

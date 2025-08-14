@@ -352,7 +352,7 @@ text = "locPatchBackup"
 
 [node name="GameUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "locPatchDirecyly"
+text = "locPatchDirectly"
 
 [node name="Control2" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
