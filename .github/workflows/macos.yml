@@ -120,6 +120,10 @@ jobs:
         mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
         ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "macOS" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
 
+    - name: Strip
+      run: |
+        strip "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/DELTARUNE Chinese Patcher"
+
     - name: Archive and Upload Artifact (macOS)
       run: |
         cd ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
