@@ -407,6 +407,7 @@ public partial class Main : Control
 	public void _on_patch_pressed()
 	{
 		nodeBtnPatch.Disabled = true;
+		nodeBtnUnpatch.Disabled = true;
 		nodeEditGamePath.Editable = false;
 		nodeBtnBrowse.Disabled = true;
 		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
@@ -488,6 +489,7 @@ public partial class Main : Control
 	{
 		nodeWindowPatch.Hide();
 		nodeBtnPatch.Disabled = false;
+		nodeBtnUnpatch.Disabled = false;
 		nodeEditGamePath.Editable = true;
 		nodeBtnBrowse.Disabled = false;
 	}
@@ -798,7 +800,7 @@ public partial class Main : Control
 			output.Add("Removed " + path + "/backup");
 		}
 		//解压
-		string tempPath = "ExtractTemp/";
+		string tempPath = "ExtractTemp";
 		string extractArgs = $"x \"{patchdir}\" -o\"" + GetGameDirPath(tempPath) + "\" -aoa -y";
 		GD.Print($"{_7zip} {extractArgs}");
 		var stime7z = DateTime.Now;
@@ -1144,6 +1146,7 @@ public partial class Main : Control
 		nodeWindowLog.Show();
 		nodeWindowPopup.Show();
 		nodeBtnPatch.Disabled = false;
+		nodeBtnUnpatch.Disabled = false;
 		nodeEditGamePath.Editable = true;
 		nodeBtnBrowse.Disabled = false;
 	}
