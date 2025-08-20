@@ -464,7 +464,7 @@ public partial class Main : Control
 				nodeWindowPatchContent.Text = "locBakDetected";
 			}
 			nodeWindowPatchContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-			nodeWindowPatch.Size = new Vector2I(640, 240) * windowScale;
+			nodeWindowPatch.Size = new Vector2I(640, 320) * windowScale;
 			nodeWindowPatch.Show();
 		}
 		else
