@@ -18,28 +18,48 @@
 
 ## 开发工具
 
-- [Godot Engine](https://godotengine.org) *(修改只需要使用 4.4.1 Stable Mono，文件中的 4.4.2-rc 是用于压缩文件大小的自定义导出模板)*
-```
-Windows 自定义导出模板构建脚本
-scons platform=windows arch=x86_64 target=template_release module_mono_enabled=yes production=yes d3d12=yes angle_libs=${{ env.ANGLE_LIB_PATH }} debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
-python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
-Linux 编辑器与自定义导出模板构建脚本
-scons platform=linuxbsd arch=x86_64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-scons platform=linuxbsd arch=x86_64 target=template_release module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes lto=full module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
-python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
-macOS 编辑器与自定义导出模板构建脚本
-scons platform=macos arch=arm64 target=editor module_mono_enabled=yes production=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes production=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-scons platform=macos target=template_release arch=x86_64 generate_bundle=yes production=yes module_mono_enabled=yes debug_symbols=no optimize=size disable_3d=yes module_text_server_adv_enabled=no module_text_server_fb_enabled=yes
-${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
-python ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
-```
+- [Godot Engine](https://godotengine.org) *(修改只需要使用 4.4.1 Stable Mono，文件中的 4.4.2-rc 是用于压缩文件大小的[自定义导出模板](#编辑器与自定义导出模板构建脚本))*
 - [.NET 8 SDK](https://dotnet.microsoft.com)
 - [Gameloop.Vdf](https://www.nuget.org/packages/Gameloop.Vdf)
 - [rcedit](https://github.com/electron/rcedit) *(非必须, 用于 Windows 平台导出时修改 exe 资源)*
 - [UPX](https://github.com/upx/upx/releases) *(非必须, 用于压缩可执行文件大小)*
+
+### 编辑器与自定义导出模板构建脚本
+`scons` 开头的指令都需要在最后加上[通用参数](#通用参数)的内容
+
+`${{ env.ANGLE_LIB_PATH }}` ANGLE 库的路径，从[这里](https://github.com/godotengine/godot-angle-static/releases)下载（Windows Only）<br>
+`${{ env.LOCAL_NUGET_PATH }}` Nuget 包的导出位置<br>
+`${{ env.GODOT_EDITOR_PATH }}` Godot 编辑器的位置，不限制是自定义构建或是官方构建，只要函数都相同
+#### 通用参数
+```
+production=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no module_text_server_fb_enabled=yes module_godot_physics_2d_enabled=no module_godot_physics_3d_enabled=no module_jolt_enabled=no disable_physics_2d=yes disable_physics_3d=yes module_basis_universal_enabled=no module_bcdec_enabled=no module_bmp_enabled=no module_camera_enabled=no module_csg_enabled=no module_dds_enabled=no module_enet_enabled=no module_etcpak_enabled=no module_fbx_enabled=no module_gltf_enabled=no module_gridmap_enabled=no module_hdr_enabled=no module_interactive_music_enabled=no module_jsonrpc_enabled=no module_ktx_enabled=no module_mbedtls_enabled=no module_meshoptimizer_enabled=no module_minimp3_enabled=no module_mobile_vr_enabled=no module_msdfgen_enabled=no module_multiplayer_enabled=no module_noise_enabled=no module_navigation_2d_enabled=no module_navigation_3d_enabled=no module_ogg_enabled=no module_openxr_enabled=no module_raycast_enabled=no module_regex_enabled=no module_svg_enabled=no module_tga_enabled=no module_theora_enabled=no module_tinyexr_enabled=no module_upnp_enabled=no module_vhacd_enabled=no module_vorbis_enabled=no module_webrtc_enabled=no module_websocket_enabled=no module_webxr_enabled=no module_zip_enabled=no
+```
+#### 构建编辑器
+##### Windows（不含编辑器）
+```
+scons platform=windows arch=x86_64 target=template_release module_mono_enabled=yes d3d12=yes angle_libs=${{ env.ANGLE_LIB_PATH }} disable_3d=yes lto=full
+```
+##### Linux
+```
+scons platform=linuxbsd arch=x86_64 target=editor module_mono_enabled=yes lto=full module_astcenc_enabled=no
+scons platform=linuxbsd arch=x86_64 target=template_release module_mono_enabled=yes lto=full disable_3d=yes module_astcenc_enabled=no
+```
+##### macOS
+```
+scons platform=macos arch=arm64 target=editor module_mono_enabled=yes module_astcenc_enabled=no
+scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes disable_3d=yes module_astcenc_enabled=no
+scons platform=macos target=template_release arch=x86_64 generate_bundle=yes module_mono_enabled=yes disable_3d=yes module_astcenc_enabled=no
+```
+##### 参数差异原因
+Direct3D 12 与 ANGLE 为 Windows 独占所以只有其包含 `d3d12=yes angle_libs=${{ env.ANGLE_LIB_PATH }}`<br>
+Windows 包含 ANGLE 库需要 ASTC Encoding 所以不含 `module_astcenc_enabled=no`<br>
+编辑器无法在不包含 3D 的情况下运作所以不含 `disable_3d=yes`<br>
+macOS 不支援链接时优化所以不含 `lto=full`
+#### 生成C#胶水与构建
+```
+${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
+python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
+```
 
 ## 路线图
 

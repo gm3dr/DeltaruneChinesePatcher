@@ -47,6 +47,11 @@ timers/tooltip_delay_sec=0.0
 
 locale/translations=PackedStringArray("res://Locale/loc.en.translation", "res://Locale/loc.zh_CN.translation", "res://Locale/loc.zh_TW.translation")
 
+[physics]
+
+2d/physics_engine="Dummy"
+3d/physics_engine="Dummy"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
