@@ -131,9 +131,8 @@ jobs:
         mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux
         ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
 
-    - name: UPX Compressing & Strip
+    - name: UPX Compressing
       run: |
-        strip "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
         ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
 
     - name: Archive and Upload Artifact (Linux)
