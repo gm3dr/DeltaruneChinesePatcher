@@ -153,7 +153,7 @@ public partial class Main : Control
 			{
 				windowScale = 1;
 			}
-			
+
 			//Tooltip与下拉菜单大小
 			var theme = Theme;
 			theme.SetFontSize("font_size", "PopupMenu", FontSize(theme.GetFontSize("font_size", "PopupMenu"), windowScale));
@@ -652,15 +652,15 @@ public partial class Main : Control
 	public void _on_title_bar_gui_input(InputEvent @event)
 	{
 		if (@event is InputEventMouseButton mouseButton)
-	{
-		if (mouseButton.ButtonIndex == MouseButton.Left)
 		{
-			if (mouseButton.Pressed)
+			if (mouseButton.ButtonIndex == MouseButton.Left)
 			{
-				DisplayServer.WindowStartDrag();
+				if (mouseButton.Pressed)
+				{
+					DisplayServer.WindowStartDrag();
+				}
 			}
 		}
-	}
 	}
 
 	public string PathTrim(string originalPath)
