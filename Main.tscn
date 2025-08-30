@@ -46,7 +46,7 @@ _data = {
 &"bg_anim": SubResource("Animation_cm0pq")
 }
 
-[node name="Main" type="Control" node_paths=PackedStringArray("nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPatch", "nodeWindowPatchContent")]
+[node name="Main" type="Control" node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPatch", "nodeWindowPatchContent")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,6 +55,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_glv2v")
 script = ExtResource("2_uu6xs")
+nodeTitleBar = NodePath("TitleBar")
 nodeBgAnim = NodePath("Background/AnimationPlayer")
 nodeBtnInfo = NodePath("BtnInfo")
 nodeComboLanguage = NodePath("ComboLanguage")
@@ -265,6 +266,13 @@ popup/item_1/id = 1
 popup/item_2/text = "中文（繁體）"
 popup/item_2/id = 2
 
+[node name="TitleBar" type="ColorRect" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 20.0
+color = Color(1, 0, 0, 0)
+
 [node name="FileDialog" type="FileDialog" parent="."]
 title = "Open a Directory"
 ok_button_text = "Select Current Folder"
@@ -387,6 +395,7 @@ autowrap_mode = 3
 [connection signal="pressed" from="BottomContainer/Update" to="." method="_on_update_pressed"]
 [connection signal="pressed" from="BtnInfo" to="." method="_on_info_pressed"]
 [connection signal="item_selected" from="ComboLanguage" to="." method="_on_language_item_selected"]
+[connection signal="gui_input" from="TitleBar" to="." method="_on_title_bar_gui_input"]
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="close_requested" from="Log" to="." method="_on_window_close_requested"]
 [connection signal="close_requested" from="Popup" to="." method="_on_popup_close_requested"]
