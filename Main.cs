@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 public partial class Main : Control
 {
 	[Export]
+	ColorRect nodeTitleBar = null!;
+
+	[Export]
 	AnimationPlayer nodeBgAnim = null!;
 	[Export]
 	Button nodeBtnInfo = null!;
@@ -125,6 +128,22 @@ public partial class Main : Control
 			var screenSize = DisplayServer.ScreenGetUsableRect(screenId);
 			var windowDesignSize = new Vector2(640, 480) * 1.5f;
 
+			if (os_name == "macOS")
+			{
+				window.Unresizable = true;
+				nodeBtnInfo.Position += new Vector2(0, 20);
+				nodeComboLanguage.Position += new Vector2(0, 20);
+				nodeTitleBar.Visible = true;
+				if (OS.IsDebugBuild())
+				{
+					nodeTitleBar.Color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+				}
+				else
+				{
+					nodeTitleBar.Color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+				}
+			}
+
 			windowScale = (int)Mathf.Floor((screenSize.Size.Y - screenSize.Position.Y) / windowDesignSize.Y);
 			if (windowScale > 1)
 			{
@@ -137,6 +156,7 @@ public partial class Main : Control
 			{
 				windowScale = 1;
 			}
+
 			//Tooltip与下拉菜单大小
 			var theme = Theme;
 			theme.SetFontSize("font_size", "PopupMenu", FontSize(theme.GetFontSize("font_size", "PopupMenu"), windowScale));
@@ -410,29 +430,9 @@ public partial class Main : Control
 		nodeBtnUnpatch.Disabled = true;
 		nodeEditGamePath.Editable = false;
 		nodeBtnBrowse.Disabled = true;
-		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
-		if (os_name != "Windows" && path.StartsWith("~/"))
-		{
-			GD.Print("Non-Windows Home Directory Processing");
-			string homePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
-			path = homePath + path.Substring(1);
-		}
-		if (os_name == "macOS")
-		{
-			if (path.EndsWith("/DELTARUNE"))
-			{
-				path += "/DELTARUNE.app/Contents/Resources";
-			}
-			else if (path.EndsWith(".app"))
-			{
-				path += "/Contents/Resources";
-			}
-			else if (path.EndsWith("/Contents"))
-			{
-				path += "/Resources";
-			}
-		}
-		GD.Print($"Final game path: {path}");
+
+		var path = PathTrim(nodeEditGamePath.Text);
+
 		nodeEditGamePath.Text = path;
 		bool found = FileAccess.FileExists(path + "/" + dataname + ".bak") || DirAccess.DirExistsAbsolute(path + "/backup");
 		foreach (var chapter in chapters)
@@ -652,6 +652,49 @@ public partial class Main : Control
 		}
 	}
 
+	public void _on_title_bar_gui_input(InputEvent @event)
+	{
+		if (@event is InputEventMouseButton mouseButton)
+		{
+			if (mouseButton.ButtonIndex == MouseButton.Left)
+			{
+				if (mouseButton.Pressed)
+				{
+					DisplayServer.WindowStartDrag();
+				}
+			}
+		}
+	}
+
+	public string PathTrim(string originalPath)
+	{
+		var finalPath = originalPath.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+
+		if (os_name != "Windows" && finalPath.StartsWith("~/"))
+		{
+			GD.Print("Non-Windows Home Directory Processing");
+			string homePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
+			finalPath = homePath + finalPath.Substring(1);
+		}
+		if (os_name == "macOS")
+		{
+			if (finalPath.EndsWith("/DELTARUNE"))
+			{
+				finalPath += "/DELTARUNE.app/Contents/Resources";
+			}
+			else if (finalPath.EndsWith(".app"))
+			{
+				finalPath += "/Contents/Resources";
+			}
+			else if (finalPath.EndsWith("/Contents"))
+			{
+				finalPath += "/Resources";
+			}
+		}
+
+		GD.Print($"Final game path: {finalPath}");
+		return finalPath;
+	}
 	public async void Patch(bool use_backup = true)
 	{
 		starttime = DateTime.Now;
@@ -1004,7 +1047,8 @@ public partial class Main : Control
 	}
 	public void _on_unpatch_pressed()
 	{
-		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		var path = PathTrim(nodeEditGamePath.Text);
+
 		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
 			nodeWindowPopupContent.Text = "locNoBakDetected";
