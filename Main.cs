@@ -134,11 +134,14 @@ public partial class Main : Control
 				nodeBtnInfo.Position += new Vector2(0, 20);
 				nodeComboLanguage.Position += new Vector2(0, 20);
 				nodeTitleBar.Visible = true;
-#if DEBUG
-				nodeTitleBar.Color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
-#else
-				nodeTitleBar.Color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
-#endif
+				if (OS.IsDebugBuild())
+				{
+					nodeTitleBar.Color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+				}
+				else
+				{
+					nodeTitleBar.Color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+				}
 			}
 
 			windowScale = (int)Mathf.Floor((screenSize.Size.Y - screenSize.Position.Y) / windowDesignSize.Y);
