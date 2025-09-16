@@ -18,7 +18,7 @@
 
 ## 开发工具
 
-- [Godot Engine](https://godotengine.org) *(修改只需要使用 4.4.1 Stable Mono，文件中的 4.4.2-rc 是用于压缩文件大小的[自定义导出模板](#编辑器与自定义导出模板构建脚本))*
+- [Godot Engine](https://godotengine.org) *(修改只需要使用 4.5 Stable Mono，`csproj` 中的 SDK 版本号是用于压缩文件大小的[自定义导出模板](#编辑器与自定义导出模板构建脚本))*
 - [.NET 8 SDK](https://dotnet.microsoft.com)
 - [Gameloop.Vdf](https://www.nuget.org/packages/Gameloop.Vdf)
 - [rcedit](https://github.com/electron/rcedit) *(非必须, 用于 Windows 平台导出时修改 exe 资源)*
