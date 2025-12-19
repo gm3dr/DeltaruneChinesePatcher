@@ -57,6 +57,8 @@ public partial class Main : Control
 	[Export]
 	Label nodeWindowPopupContent = null!;
 	[Export]
+	Window nodeWindowPopup1225 = null!;
+	[Export]
 	Window nodeWindowPatch = null!;
 	[Export]
 	Label nodeWindowPatchContent = null!;
@@ -117,6 +119,7 @@ public partial class Main : Control
 	{
 		var window = GetWindow();
 		var wid = window.GetWindowId();
+		var datedict = Time.GetDateDictFromSystem();
 		//首次初始化
 		if (!inited)
 		{
@@ -184,6 +187,11 @@ public partial class Main : Control
 				{
 					patchdir = GetGameDirPath(file);
 					patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
+					// 1225 check
+					if (patchver == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+					{
+						patchver = "■■■■";
+					}
 					GD.Print("Found patch file " + patchdir);
 					break;
 				}
@@ -213,6 +221,12 @@ public partial class Main : Control
 		nodeBtnUpdatePatcher.Disabled = false;
 		//安装器版本号
 		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
+		// 1225 check
+		if (patchver == "1225" || patchver == "■■■■" || (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25"))
+		{
+			nodeTextPatcherVersion.TooltipText = nodeTextPatcherVersion.Text;
+			nodeTextPatcherVersion.Text = "v1225";
+		}
 		//系统特供目录
 		if (os_name == "Windows")
 		{
@@ -328,14 +342,26 @@ public partial class Main : Control
 				json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinese/releases/latest"));
 				patchreleases = json.Data.AsGodotDictionary();
 			}
-			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + patchreleases["tag_name"].AsString();
+			var latestver = patchreleases["tag_name"].AsString();
+			// 1225 check
+			if (latestver == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+			{
+				latestver = "■■■■";
+			}
+			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + latestver;
 			var gamepath = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
 			if (gamepath != "" && FileAccess.FileExists(gamepath + "/backup/version"))
 			{
 				var ver = FileAccess.Open(gamepath + "/backup/version", FileAccess.ModeFlags.Read);
 				if (ver != null)
 				{
-					nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locInstalledVer") + ver.GetAsText();
+					var vertxt = ver.GetAsText();
+					// 1225 check
+					if (vertxt == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+					{
+						vertxt = "■■■■";
+					}
+					nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locInstalledVer") + vertxt;
 					ver.Close();
 				}
 			}
@@ -484,6 +510,10 @@ public partial class Main : Control
 	public void _on_popup_close_requested()
 	{
 		nodeWindowPopup.Hide();
+	}
+	public void _on_popup_1225_close_requested()
+	{
+		nodeWindowPopup1225.Hide();
 	}
 	public void _on_patch_close_requested()
 	{
@@ -1189,6 +1219,12 @@ public partial class Main : Control
 		}
 		nodeWindowLog.Show();
 		nodeWindowPopup.Show();
+		// 1225 check
+		var datedict = Time.GetDateDictFromSystem();
+		if (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+		{
+			nodeWindowPopup1225.Show();
+		}
 		nodeBtnPatch.Disabled = false;
 		nodeBtnUnpatch.Disabled = false;
 		nodeEditGamePath.Editable = true;

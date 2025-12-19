@@ -46,7 +46,7 @@ _data = {
 &"bg_anim": SubResource("Animation_cm0pq")
 }
 
-[node name="Main" type="Control" node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPatch", "nodeWindowPatchContent")]
+[node name="Main" type="Control" node_paths=PackedStringArray("nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchContent")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,7 +55,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_glv2v")
 script = ExtResource("2_uu6xs")
-nodeTitleBar = NodePath("TitleBar")
 nodeBgAnim = NodePath("Background/AnimationPlayer")
 nodeBtnInfo = NodePath("BtnInfo")
 nodeComboLanguage = NodePath("ComboLanguage")
@@ -76,6 +75,7 @@ nodeWindowLog = NodePath("Log")
 nodeWindowLogContent = NodePath("Log/ScrollContainer/Label")
 nodeWindowPopup = NodePath("Popup")
 nodeWindowPopupContent = NodePath("Popup/ScrollContainer/Label")
+nodeWindowPopup1225 = NodePath("Popup1225")
 nodeWindowPatch = NodePath("Patch")
 nodeWindowPatchContent = NodePath("Patch/CenterContainer/VBoxContainer/Label")
 
@@ -230,6 +230,7 @@ size_flags_vertical = 3
 
 [node name="TextPatcherVersion" type="Label" parent="BottomContainer/Left"]
 layout_mode = 2
+mouse_filter = 1
 text = "v0.0.0"
 
 [node name="Center" type="Control" parent="BottomContainer"]
@@ -302,6 +303,7 @@ theme_override_font_sizes/font_size = 13
 autowrap_mode = 3
 
 [node name="Popup" type="Window" parent="."]
+oversampling_override = 1.0
 title = "locResult"
 initial_position = 2
 size = Vector2i(480, 240)
@@ -324,7 +326,31 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
+[node name="Popup1225" type="Window" parent="."]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(480, 240)
+visible = false
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Popup1225"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Label" type="Label" parent="Popup1225/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "loc1225"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
 [node name="Patch" type="Window" parent="."]
+oversampling_override = 1.0
 title = "locPatch"
 initial_position = 2
 size = Vector2i(640, 320)
@@ -399,6 +425,7 @@ autowrap_mode = 3
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="close_requested" from="Log" to="." method="_on_window_close_requested"]
 [connection signal="close_requested" from="Popup" to="." method="_on_popup_close_requested"]
+[connection signal="close_requested" from="Popup1225" to="." method="_on_popup_1225_close_requested"]
 [connection signal="close_requested" from="Patch" to="." method="_on_patch_close_requested"]
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="_on_patch_updated_pressed"]
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/GameUpdated" to="." method="_on_game_updated_pressed"]
