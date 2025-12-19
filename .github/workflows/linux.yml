@@ -39,9 +39,9 @@ jobs:
           ${{ env.GODOT_SOURCE_PATH }}/bin
           ${{ env.GODOT_SOURCE_PATH }}/modules/mono/glue
           ${{ env.LOCAL_NUGET_PATH }}
-        key: godot-build-${{ runner.os }}-4.4-${{ steps.godot_commit.outputs.hash }}
+        key: godot-build-${{ runner.os }}-4.5-${{ steps.godot_commit.outputs.hash }}
         restore-keys: |
-          godot-build-${{ runner.os }}-4.4-
+          godot-build-${{ runner.os }}-4.5-
 
     - name: Install Godot Build Dependencies
       if: steps.godot-cache.outputs.cache-hit != 'true'
@@ -70,7 +70,7 @@ jobs:
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
-        ref: '4.4'
+        ref: '4.5'
 
     - name: Build Godot
       if: steps.godot-cache.outputs.cache-hit != 'true'
@@ -122,7 +122,7 @@ jobs:
       
     - name: Install Custom Export Template
       run: |
-        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.4.2.rc.mono"
+        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.5.2.rc.mono"
         mkdir -p "$TEMPLATE_DIR"
         cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot.linuxbsd.template_release.x86_64.mono "${TEMPLATE_DIR}/linux_release.x86_64"
 
