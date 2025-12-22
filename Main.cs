@@ -161,10 +161,12 @@ public partial class Main : Control
 			}
 
 			//Tooltip与下拉菜单大小
+			/*
 			var theme = Theme;
 			theme.SetFontSize("font_size", "PopupMenu", FontSize(theme.GetFontSize("font_size", "PopupMenu"), windowScale));
 			theme.SetFontSize("font_size", "TooltipLabel", FontSize(theme.GetFontSize("font_size", "TooltipLabel"), windowScale));
 			Theme = theme;
+			*/
 			//最大帧率
 			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(window.CurrentScreen));
 			//根据系统语言切换语言
