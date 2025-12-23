@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://hv4jki47g85q"]
+[gd_scene load_steps=18 format=3 uid="uid://hv4jki47g85q"]
 
 [ext_resource type="Theme" uid="uid://b0ixpqfc0nrgw" path="res://Assets/Theme.tres" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://cxec4g8oww2if" path="res://Main.cs" id="2_uu6xs"]
@@ -46,7 +46,19 @@ _data = {
 &"bg_anim": SubResource("Animation_cm0pq")
 }
 
-[node name="Main" type="Control" node_paths=PackedStringArray("nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchContent")]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_trn2v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_03owx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wkp8b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_20pc6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5vvyt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6i3y"]
+
+[node name="Main" type="Control" node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeOverrideOS")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -55,6 +67,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_glv2v")
 script = ExtResource("2_uu6xs")
+nodeTitleBar = NodePath("TitleBar")
 nodeBgAnim = NodePath("Background/AnimationPlayer")
 nodeBtnInfo = NodePath("BtnInfo")
 nodeComboLanguage = NodePath("ComboLanguage")
@@ -78,6 +91,8 @@ nodeWindowPopupContent = NodePath("Popup/ScrollContainer/Label")
 nodeWindowPopup1225 = NodePath("Popup1225")
 nodeWindowPatch = NodePath("Patch")
 nodeWindowPatchContent = NodePath("Patch/CenterContainer/VBoxContainer/Label")
+nodeWindowAdvanced = NodePath("Advanced")
+nodeOverrideOS = NodePath("Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS/LineEdit")
 
 [node name="Background" type="Control" parent="."]
 layout_mode = 1
@@ -228,9 +243,16 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TextPatcherVersion" type="Label" parent="BottomContainer/Left"]
+[node name="TextPatcherVersion" type="Button" parent="BottomContainer/Left"]
 layout_mode = 2
+tooltip_text = "locAdvancedTooltip"
 mouse_filter = 1
+theme_override_styles/normal = SubResource("StyleBoxEmpty_trn2v")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_03owx")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wkp8b")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_20pc6")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_5vvyt")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_c6i3y")
 text = "v0.0.0"
 
 [node name="Center" type="Control" parent="BottomContainer"]
@@ -412,12 +434,159 @@ layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 
+[node name="Advanced" type="Window" parent="."]
+oversampling_override = 1.0
+title = "locAdvanced"
+initial_position = 2
+size = Vector2i(720, 480)
+visible = false
+
+[node name="CenterContainer" type="CenterContainer" parent="Advanced"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="BypassHash" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash"]
+layout_mode = 2
+text = "locBypassHash"
+horizontal_alignment = 2
+
+[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash"]
+layout_mode = 2
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="XDelta" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "locXDeltaPath"
+horizontal_alignment = 2
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer"]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+placeholder_text = "locEmptyToDisable"
+
+[node name="7Zip" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "loc7zipPath"
+horizontal_alignment = 2
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer"]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+placeholder_text = "locEmptyToDisable"
+
+[node name="OverrideOS" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS"]
+layout_mode = 2
+text = "locOverrideOS"
+horizontal_alignment = 2
+
+[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+placeholder_text = "Windows"
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GithubApi" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "locGithubApiSource"
+horizontal_alignment = 2
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer"]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "https://api.github.com"
+placeholder_text = "https://api.github.com"
+
 [connection signal="item_selected" from="CenterContainer/Container/UpdatePatchRow/OptionButton" to="." method="_on_option_button_item_selected"]
 [connection signal="text_changed" from="CenterContainer/Container/GamePathRow/EditGamePath" to="." method="_on_edit_game_path_text_changed"]
 [connection signal="pressed" from="CenterContainer/Container/GamePathRow/BtnBrowse" to="." method="_on_browse_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Patch" to="." method="_on_patch_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/BtnRun" to="." method="_on_rungame_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Unpatch" to="." method="_on_unpatch_pressed"]
+[connection signal="pressed" from="BottomContainer/Left/TextPatcherVersion" to="." method="_on_text_patcher_version_pressed"]
 [connection signal="pressed" from="BottomContainer/Update" to="." method="_on_update_pressed"]
 [connection signal="pressed" from="BtnInfo" to="." method="_on_info_pressed"]
 [connection signal="item_selected" from="ComboLanguage" to="." method="_on_language_item_selected"]
@@ -430,3 +599,9 @@ autowrap_mode = 3
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="_on_patch_updated_pressed"]
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/GameUpdated" to="." method="_on_game_updated_pressed"]
 [connection signal="close_requested" from="Readme" to="." method="_on_readme_close_requested"]
+[connection signal="close_requested" from="Advanced" to="." method="_on_advanced_close_requested"]
+[connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash/CheckButton" to="." method="_on_bypasshash_toggled"]
+[connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/LineEdit" to="." method="_on_xdelta_text_changed"]
+[connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/LineEdit" to="." method="_on_7z_text_changed"]
+[connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS/LineEdit" to="." method="_on_overrideos_text_changed"]
+[connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/LineEdit" to="." method="_on_githubapi_text_changed"]

@@ -21,7 +21,7 @@ public partial class Main : Control
 	[Export]
 	OptionButton nodeComboLanguage = null!;
 	[Export]
-	Label nodeTextPatcherVersion = null!;
+	Button nodeTextPatcherVersion = null!;
 	[Export]
 	Button nodeBtnUpdatePatcher = null!;
 
@@ -62,6 +62,10 @@ public partial class Main : Control
 	Window nodeWindowPatch = null!;
 	[Export]
 	Label nodeWindowPatchContent = null!;
+	[Export]
+	Window nodeWindowAdvanced = null!;
+	[Export]
+	LineEdit nodeOverrideOS = null!;
 
 
 	static readonly string[] chapters = ["1", "2", "3", "4"];
@@ -104,9 +108,9 @@ public partial class Main : Control
 	static string patchver = "locNotFound";
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
-	static readonly string os_name = OS.GetName();
+	static string os_name = OS.GetName();
 	static readonly Architecture os_arch = RuntimeInformation.ProcessArchitecture;
-	static readonly string osname = (os_name == "macOS" ? "mac" : "windows");
+	static string osname = (os_name == "macOS" ? "mac" : "windows");
 	static readonly string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
 	bool inited = false;
@@ -115,6 +119,11 @@ public partial class Main : Control
 	Godot.Collections.Array output = [];
 	int patched_count = 0;
 	DateTime starttime = DateTime.MinValue;
+	// advanced options
+	static bool bypass_hash = false;
+	static string github_api = "https://api.github.com";
+	static string xdelta_override = "";
+	static string _7zip_override = "";
 	public override async void _Ready()
 	{
 		var window = GetWindow();
@@ -217,6 +226,7 @@ public partial class Main : Control
 				}
 			}
 			nodeBtnUpdatePatch.TooltipText = "locUpdatePatchInfo" + (os_name == "macOS" ? "Mac" : "");
+			nodeOverrideOS.PlaceholderText = os_name;
 		}
 		DisplayServer.WindowSetTitle(TranslationServer.Translate("locTitle"), wid);
 		nodeBtnUpdatePatcher.Visible = false;
@@ -226,7 +236,7 @@ public partial class Main : Control
 		// 1225 check
 		if (patchver == "1225" || patchver == "■■■■" || (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25"))
 		{
-			nodeTextPatcherVersion.TooltipText = nodeTextPatcherVersion.Text;
+			nodeTextPatcherVersion.TooltipText = nodeTextPatcherVersion.Text + "\n" + TranslationServer.Translate(nodeTextPatcherVersion.TooltipText);
 			nodeTextPatcherVersion.Text = "v1225";
 		}
 		//系统特供目录
@@ -319,7 +329,7 @@ public partial class Main : Control
 		var json = new Json();
 		try
 		{
-			json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/contributors"));
+			json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinesePatcher/contributors"));
 			var names = "";
 			foreach (var contributor in json.Data.AsGodotArray<Godot.Collections.Dictionary<string, string>>())
 			{
@@ -341,7 +351,7 @@ public partial class Main : Control
 		{
 			if (!inited)
 			{
-				json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinese/releases/latest"));
+				json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinese/releases/latest"));
 				patchreleases = json.Data.AsGodotDictionary();
 			}
 			var latestver = patchreleases["tag_name"].AsString();
@@ -407,7 +417,7 @@ public partial class Main : Control
 			{
 				if (!inited)
 				{
-					json.Parse(await httpc.GetStringAsync("https://api.github.com/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
+					json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
 					patcherreleases = json.Data.AsGodotDictionary();
 				}
 				if (patcherreleases["tag_name"].AsString() != "v" + ProjectSettings.GetSetting("application/config/version").AsString())
@@ -528,6 +538,10 @@ public partial class Main : Control
 	public void _on_readme_close_requested()
 	{
 		nodeWindowReadme.Hide();
+	}
+	public void _on_advanced_close_requested()
+	{
+		nodeWindowAdvanced.Hide();
 	}
 	public void _on_update_pressed()
 	{
@@ -683,6 +697,11 @@ public partial class Main : Control
 			}
 		}
 	}
+	public void _on_text_patcher_version_pressed()
+	{
+		nodeWindowAdvanced.Size = new Vector2I(720, 480) * windowScale;
+		nodeWindowAdvanced.Show();
+	}
 
 	public void _on_title_bar_gui_input(InputEvent @event)
 	{
@@ -804,6 +823,19 @@ public partial class Main : Control
 				break;
 			}
 		}
+		// path override
+		if (!string.IsNullOrEmpty(xdelta_override))
+		{
+			xdelta3 = xdelta_override;
+			GD.Print("XDelta3 path was overridden to " + xdelta3);
+			output.Add("xXDelta3 path was overridden to " + xdelta3);
+		}
+		if (!string.IsNullOrEmpty(_7zip_override))
+		{
+			_7zip = _7zip_override;
+			GD.Print("7-Zip path was overridden to " + _7zip);
+			output.Add("7-Zip path was overridden to " + _7zip);
+		}
 		//existence check
 		foreach (var pathhhhh in externals_hash.Keys)
 		{
@@ -823,25 +855,33 @@ public partial class Main : Control
 			}
 		}
 		//hash check
-		foreach (var pathhhhh in externals_hash.Keys)
+		if (bypass_hash)
 		{
-			if (((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh)) && FileAccess.FileExists(pathhhhh))
-			{
-				GD.Print($"Checking hash of {pathhhhh}");
-				output.Add($"Checking hash of {pathhhhh}");
-				if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
-				{
-					GD.Print(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
-					output.Add(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
-					PatchResultHandler(false, "locPatchFailedSha256", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 360));
-					return;
-				}
-				GD.Print("Hash matched: " + externals_hash[pathhhhh]);
-				output.Add("Hash matched: " + externals_hash[pathhhhh]);
-			}
+			GD.Print("Sha256 check bypassed.");
+			output.Add("Sha256 check bypassed.");
 		}
-		GD.Print("Sha256 check all passed.");
-		output.Add("Sha256 check all passed.");
+		else
+		{
+			foreach (var pathhhhh in externals_hash.Keys)
+			{
+				if (((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh)) && FileAccess.FileExists(pathhhhh))
+				{
+					GD.Print($"Checking hash of {pathhhhh}");
+					output.Add($"Checking hash of {pathhhhh}");
+					if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
+					{
+						GD.Print(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
+						output.Add(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
+						PatchResultHandler(false, "locPatchFailedSha256", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 360));
+						return;
+					}
+					GD.Print("Hash matched: " + externals_hash[pathhhhh]);
+					output.Add("Hash matched: " + externals_hash[pathhhhh]);
+				}
+			}
+			GD.Print("Sha256 check all passed.");
+			output.Add("Sha256 check all passed.");
+		}
 		GD.Print("Extracting...");
 		output.Add("Extracting...");
 		if (use_backup)
@@ -1118,6 +1158,43 @@ public partial class Main : Control
 	{
 		nodeBtnPatch.Disabled = (path == "" || patchver == "locNotFound");
 		nodeBtnUnpatch.Disabled = (path == "");
+	}
+
+	public void _on_bypasshash_toggled(bool toggled)
+	{
+		bypass_hash = toggled;
+	}
+
+	public void _on_overrideos_text_changed(string os)
+	{
+		if (string.IsNullOrEmpty(os))
+		{
+			os_name = OS.GetName();
+		}
+		else
+		{
+			os_name = os;
+		}
+		osname = (os_name == "macOS" ? "mac" : "windows");
+	}
+
+	public void _on_githubapi_text_changed(string api)
+	{
+		if (string.IsNullOrEmpty(api))
+		{
+			api = "https://api.github.com";
+		}
+		github_api = api;
+	}
+
+	public void _on_xdelta_text_changed(string path)
+	{
+		xdelta_override = path;
+	}
+
+	public void _on_7z_text_changed(string path)
+	{
+		_7zip_override = path;
 	}
 
 	internal void RecivedOutput(object process, DataReceivedEventArgs recived)
