@@ -542,6 +542,8 @@ public partial class Main : Control
 	public void _on_advanced_close_requested()
 	{
 		nodeWindowAdvanced.Hide();
+		inited = false;
+		_Ready();
 	}
 	public void _on_update_pressed()
 	{
@@ -1175,7 +1177,6 @@ public partial class Main : Control
 		{
 			os_name = os;
 		}
-		osname = (os_name == "macOS" ? "mac" : "windows");
 	}
 
 	public void _on_githubapi_text_changed(string api)
