@@ -268,56 +268,7 @@ public partial class Main : Control
 		}
 		else
 		{
-			//寻找游戏路径
-			game_path = default_paths["deltarune"][os_name];
-			if (DirAccess.DirExistsAbsolute(game_path))
-			{
-				GD.Print("Found " + game_path);
-			}
-			else
-			{
-				game_path = "";
-				//Windows读取注册表获取Steam目录
-				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-				{
-					string[] paths = [default_paths["deltarune"][os_name], default_paths["libraryfolders"][os_name]];
-					var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
-					var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
-					if (regkey != null)
-					{
-						steampath = regkey.GetValue("SteamPath").ToString().Replace("\\", "/");
-						regkey.Close();
-					}
-					default_paths["deltarune"][os_name] = paths[0].Replace("{STEAMPATH}", steampath);
-					default_paths["libraryfolders"][os_name] = paths[1].Replace("{STEAMPATH}", steampath);
-				}
-				if (FileAccess.FileExists(default_paths["libraryfolders"][os_name]))
-				{
-					var lff = FileAccess.Open(default_paths["libraryfolders"][os_name], FileAccess.ModeFlags.Read);
-					if (lff != null)
-					{
-						VObject vdfc = (VObject)VdfConvert.Deserialize(lff.GetAsText()).Value;
-						lff.Close();
-						foreach (VProperty i in vdfc.Properties())
-						{
-							VObject ii = (VObject)i.Value;
-							VObject apps = (VObject)ii["apps"];
-							if (apps.ContainsKey("1671210"))
-							{
-								game_path = ii["path"].ToString().Replace("\\", "/") + "/steamapps/common/DELTARUNE" + (os_name == "macOS" ? "/DELTARUNE.app/Contents/Resources" : "");
-								if (DirAccess.DirExistsAbsolute(game_path))
-								{
-									GD.Print("Found " + game_path);
-								}
-								else
-								{
-									game_path = "";
-								}
-							}
-						}
-					}
-				}
-			}
+			game_path = FindGamePath();
 		}
 		nodeEditGamePath.Text = game_path;
 		//HttpClient
@@ -701,7 +652,7 @@ public partial class Main : Control
 	}
 	public void _on_text_patcher_version_pressed()
 	{
-		nodeWindowAdvanced.Size = new Vector2I(720, 480) * windowScale;
+		nodeWindowAdvanced.Size = new Vector2I(720, 540) * windowScale;
 		nodeWindowAdvanced.Show();
 	}
 
@@ -1162,6 +1113,21 @@ public partial class Main : Control
 		nodeBtnUnpatch.Disabled = (path == "");
 	}
 
+	public void _on_triggerpathcheck_pressed()
+	{
+		var path = FindGamePath();
+		if (path != "")
+		{
+			nodeEditGamePath.Text = path;
+			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
+			if (game_path != null)
+			{
+				game_path.StoreString(path);
+				game_path.Close();
+			}
+		}
+	}
+
 	public void _on_bypasshash_toggled(bool toggled)
 	{
 		bypass_hash = toggled;
@@ -1373,6 +1339,62 @@ public partial class Main : Control
 			return OS.GetExecutablePath().GetBaseDir() + "/" + str;
 		}
 	}
+
+	//寻找游戏路径
+	internal static string FindGamePath()
+	{
+		var game_path = default_paths["deltarune"][os_name];
+		if (DirAccess.DirExistsAbsolute(game_path))
+		{
+			GD.Print("Found " + game_path);
+		}
+		else
+		{
+			game_path = "";
+			//Windows读取注册表获取Steam目录
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				string[] paths = [default_paths["deltarune"][os_name], default_paths["libraryfolders"][os_name]];
+				var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
+				var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
+				if (regkey != null)
+				{
+					steampath = regkey.GetValue("SteamPath").ToString().Replace("\\", "/");
+					regkey.Close();
+				}
+				default_paths["deltarune"][os_name] = paths[0].Replace("{STEAMPATH}", steampath);
+				default_paths["libraryfolders"][os_name] = paths[1].Replace("{STEAMPATH}", steampath);
+			}
+			if (FileAccess.FileExists(default_paths["libraryfolders"][os_name]))
+			{
+				var lff = FileAccess.Open(default_paths["libraryfolders"][os_name], FileAccess.ModeFlags.Read);
+				if (lff != null)
+				{
+					VObject vdfc = (VObject)VdfConvert.Deserialize(lff.GetAsText()).Value;
+					lff.Close();
+					foreach (VProperty i in vdfc.Properties())
+					{
+						VObject ii = (VObject)i.Value;
+						VObject apps = (VObject)ii["apps"];
+						if (apps.ContainsKey("1671210"))
+						{
+							game_path = ii["path"].ToString().Replace("\\", "/") + "/steamapps/common/DELTARUNE" + (os_name == "macOS" ? "/DELTARUNE.app/Contents/Resources" : "");
+							if (DirAccess.DirExistsAbsolute(game_path))
+							{
+								GD.Print("Found " + game_path);
+							}
+							else
+							{
+								game_path = "";
+							}
+						}
+					}
+				}
+			}
+		}
+		return game_path;
+	}
+
 	//这个奇怪的DTM字体 最小是13 然后是13+14=27
 	//从27开始公差却是13 14显示会出问题
 	internal static int FontSize(int size, int multiply)

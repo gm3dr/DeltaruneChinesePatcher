@@ -438,7 +438,7 @@ autowrap_mode = 3
 oversampling_override = 1.0
 title = "locAdvanced"
 initial_position = 2
-size = Vector2i(720, 480)
+size = Vector2i(720, 540)
 visible = false
 
 [node name="CenterContainer" type="CenterContainer" parent="Advanced"]
@@ -453,6 +453,21 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer"]
 layout_mode = 2
+
+[node name="TriggerPath" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath"]
+layout_mode = 2
+text = "locTriggerPathDetect"
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="BypassHash" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -600,6 +615,7 @@ placeholder_text = "https://api.github.com"
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/GameUpdated" to="." method="_on_game_updated_pressed"]
 [connection signal="close_requested" from="Readme" to="." method="_on_readme_close_requested"]
 [connection signal="close_requested" from="Advanced" to="." method="_on_advanced_close_requested"]
+[connection signal="pressed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath/Button" to="." method="_on_triggerpathcheck_pressed"]
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash/CheckButton" to="." method="_on_bypasshash_toggled"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/LineEdit" to="." method="_on_xdelta_text_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/LineEdit" to="." method="_on_7z_text_changed"]
