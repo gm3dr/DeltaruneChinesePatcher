@@ -361,7 +361,7 @@ public partial class Main : Control
 				latestver = "■■■■";
 			}
 			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + latestver;
-			var gamepath = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+			var gamepath = PathTrim(nodeEditGamePath.Text);
 			if (gamepath != "" && FileAccess.FileExists(gamepath + "/backup/version"))
 			{
 				var ver = FileAccess.Open(gamepath + "/backup/version", FileAccess.ModeFlags.Read);
@@ -754,7 +754,7 @@ public partial class Main : Control
 		patched_count = 0;
 		nodeWindowPatch.Hide();
 		nodeWindowLogContent.Text = "";
-		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		var path = PathTrim(nodeEditGamePath.Text);
 		output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
 		//chmod加权限
 		if (os_name == "macOS" || os_name == "Linux")
@@ -1249,17 +1249,18 @@ public partial class Main : Control
 	}
 	internal async void PatchResultHandler(bool success, string information, string usedtime, Vector2I popup_size)
 	{
-		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		var path = PathTrim(nodeEditGamePath.Text);
 		nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}", usedtime);
 		nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 		nodeWindowPopup.Size = popup_size * windowScale;
 		if (success)
 		{
+			var gamepath = nodeEditGamePath.Text;
 			//保存游戏路径
 			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
 			if (game_path != null)
 			{
-				game_path.StoreString(path);
+				game_path.StoreString(gamepath);
 				game_path.Close();
 			}
 		}
@@ -1312,7 +1313,7 @@ public partial class Main : Control
 	}
 	internal void Ending()
 	{
-		var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		var path = PathTrim(nodeEditGamePath.Text);
 		//cleanup
 		foreach (var file in DirAccess.GetFilesAt(path))
 		{
@@ -1396,7 +1397,7 @@ public partial class Main : Control
 		if (what == NotificationWMCloseRequest)
 		{
 			//保存游戏路径
-			var path = nodeEditGamePath.Text.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+			var path = nodeEditGamePath.Text;
 			if (path != "")
 			{
 				var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
