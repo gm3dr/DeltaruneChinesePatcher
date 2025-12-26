@@ -226,7 +226,7 @@ public partial class Main : Control
 				}
 			}
 			nodeBtnUpdatePatch.TooltipText = "locUpdatePatchInfo" + (os_name == "macOS" ? "Mac" : "");
-			nodeOverrideOS.PlaceholderText = os_name;
+			nodeOverrideOS.PlaceholderText = OS.GetName();
 		}
 		DisplayServer.WindowSetTitle(TranslationServer.Translate("locTitle"), wid);
 		nodeBtnUpdatePatcher.Visible = false;
