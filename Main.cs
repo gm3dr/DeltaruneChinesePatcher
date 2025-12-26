@@ -236,7 +236,7 @@ public partial class Main : Control
 		// 1225 check
 		if (patchver == "1225" || patchver == "■■■■" || (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25"))
 		{
-			nodeTextPatcherVersion.TooltipText = nodeTextPatcherVersion.Text + "\n" + TranslationServer.Translate(nodeTextPatcherVersion.TooltipText);
+			nodeTextPatcherVersion.TooltipText = nodeTextPatcherVersion.Text + "\n" + TranslationServer.Translate("locAdvancedTooltip");
 			nodeTextPatcherVersion.Text = "v1225";
 		}
 		//系统特供目录
