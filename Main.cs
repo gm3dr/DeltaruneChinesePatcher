@@ -121,6 +121,7 @@ public partial class Main : Control
 	DateTime starttime = DateTime.MinValue;
 	// advanced options
 	static bool bypass_hash = false;
+	static bool bypass_too_long = false;
 	static string github_api = "https://api.github.com";
 	static string xdelta_override = "";
 	static string _7zip_override = "";
@@ -985,7 +986,7 @@ public partial class Main : Control
 			CallDeferred("Ending");
 			return;
 		}
-		if ((DateTime.Now - starttime).TotalSeconds >= 30)
+		if ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= 30))
 		{
 			Godot.Collections.Array<string> externals = [];
 			foreach (var programs in available_externals.Values)
@@ -1131,6 +1132,11 @@ public partial class Main : Control
 	public void _on_bypasshash_toggled(bool toggled)
 	{
 		bypass_hash = toggled;
+	}
+
+	public void _on_bypasstoolong_toggled(bool toggled)
+	{
+		bypass_too_long = toggled;
 	}
 
 	public void _on_overrideos_text_changed(string os)

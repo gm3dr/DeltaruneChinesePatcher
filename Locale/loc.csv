@@ -51,6 +51,7 @@ locAdvanced,Advanced Options,高级选项,高級選項
 locAdvancedTooltip,Click to open Advanced Options\nWarning: Please ensure that you know what you are doing\nbefore using these options,点击打开高级选项\n警告：请确保你知道你在做什么的情况下\n才使用这些选项,點擊打開高級選項\n警告：請確保你知道你在做什麼的情況下\n才使用這些選項
 locTriggerPathDetect,Trigger DR Path Detect & Save it,触发 DR 路径检测并储存,觸發 DR 路徑檢測並儲存
 locBypassHash,Bypass Hash Check,绕过散列值检查,繞過雜湊值檢查
+locBypassTooLong,Bypass TAKING TOO LONG Stopping,绕过 TAKING TOO LONG 终止,繞過 TAKING TOO LONG 終止
 locXDeltaPath,Override XDelta3 Path,覆盖 XDelta3 路径,覆寫 XDelta3 路徑
 loc7zipPath,Override 7-Zip Path,覆盖 7-Zip 路径,覆寫 7-Zip 路徑
 locEmptyToDisable,Empty to Disable,留空以禁用,留空以禁用

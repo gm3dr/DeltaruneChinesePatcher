@@ -488,6 +488,25 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="BypassTooLong" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong"]
+layout_mode = 2
+text = "locBypassTooLong"
+horizontal_alignment = 2
+
+[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong"]
+layout_mode = 2
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="XDelta" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -617,6 +636,7 @@ placeholder_text = "https://api.github.com"
 [connection signal="close_requested" from="Advanced" to="." method="_on_advanced_close_requested"]
 [connection signal="pressed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath/Button" to="." method="_on_triggerpathcheck_pressed"]
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash/CheckButton" to="." method="_on_bypasshash_toggled"]
+[connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong/CheckButton" to="." method="_on_bypasstoolong_toggled"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/LineEdit" to="." method="_on_xdelta_text_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/LineEdit" to="." method="_on_7z_text_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS/LineEdit" to="." method="_on_overrideos_text_changed"]
