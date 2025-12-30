@@ -7,7 +7,7 @@
 在线下载并一键安装 [DELTARUNE 汉化补丁](https://github.com/gm3dr/DeltaruneChinese/releases)
 
 > [!NOTE]
-> 补丁安装方法见 **[此处](https://github.com/gm3dr/DeltaruneChinese/blob/main/README.md#%E8%A1%A5%E4%B8%81%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95)**
+> 补丁安装方法见 **[此处](https://github.com/gm3dr/DeltaruneChinese/blob/main/README.md#%E8%A1%A5%E4%B8%81%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95)**<br>
 > 如果无法正常使用安装器安装补丁<br>
 > 可以通过手动方法来进行安装<br>
 > 手动安装方式见 **[此处](https://github.com/gm3dr/DeltaruneChinese/blob/main/README.md#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85)**
@@ -78,6 +78,7 @@ python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./b
  - [x] \[v2.1.2\] 安装后显示安装用时
  - [x] \[v2.1.2\] 多线程安装
  - [x] \[v2.1.3\] macOS 平台支持
+ - [x] \[v2.2.0\] 高级选项
 
 ## 借物
 
