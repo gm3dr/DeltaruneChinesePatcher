@@ -838,6 +838,38 @@ public partial class Main : Control
 			GD.Print("Sha256 check all passed.");
 			output.Add("Sha256 check all passed.");
 		}
+		// path check
+		var path_exists = true;
+		if (FileAccess.FileExists(path + "/" + dataname))
+		{
+			GD.Print("Found " + path + "/" + dataname);
+			output.Add("Found " + path + "/" + dataname);
+		}
+		else
+		{
+			GD.Print("Unable to find " + path + "/" + dataname);
+			output.Add("Unable to find " + path + "/" + dataname);
+			path_exists = false;
+		}
+		foreach (var chapter in chapters)
+		{
+			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+			{
+				GD.Print("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+				output.Add("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+			}
+			else
+			{
+				GD.Print("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+				output.Add("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+				path_exists = false;
+			}
+		}
+		if (!path_exists)
+		{
+			PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
+			return;
+		}
 		GD.Print("Extracting...");
 		output.Add("Extracting...");
 		if (use_backup)
