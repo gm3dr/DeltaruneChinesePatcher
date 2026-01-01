@@ -111,7 +111,7 @@ public partial class Main : Control
 	static string os_name = OS.GetName();
 	static readonly Architecture os_arch = RuntimeInformation.ProcessArchitecture;
 	static string osname = (os_name == "macOS" ? "mac" : "windows");
-	static readonly string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
+	static string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
 	bool inited = false;
 	int windowScale = 1;
@@ -133,6 +133,8 @@ public partial class Main : Control
 		//首次初始化
 		if (!inited)
 		{
+			osname = (os_name == "macOS" ? "mac" : "windows");
+			dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 			nodeBgAnim.Play("bg_anim");
 			nodeComboLanguage.Disabled = true;
 
