@@ -65,6 +65,8 @@ public partial class Main : Control
 	[Export]
 	Window nodeWindowAdvanced = null!;
 	[Export]
+	CenterContainer nodeContainerAdvanced = null!;
+	[Export]
 	LineEdit nodeOverrideOS = null!;
 
 
@@ -656,6 +658,7 @@ public partial class Main : Control
 	public void _on_text_patcher_version_pressed()
 	{
 		nodeWindowAdvanced.Size = new Vector2I(720, 540) * windowScale;
+		nodeContainerAdvanced.Scale = new(windowScale, windowScale);
 		nodeWindowAdvanced.Show();
 	}
 
