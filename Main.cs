@@ -657,7 +657,8 @@ public partial class Main : Control
 	}
 	public void _on_text_patcher_version_pressed()
 	{
-		nodeWindowAdvanced.Size = new Vector2I(720, 540) * windowScale;
+		nodeWindowAdvanced.Size = new Vector2I(720, 640) * windowScale;
+		nodeContainerAdvanced.Size /= new Vector2(windowScale, windowScale);
 		nodeContainerAdvanced.Scale = new(windowScale, windowScale);
 		nodeWindowAdvanced.Show();
 	}
