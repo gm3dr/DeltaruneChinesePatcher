@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://hv4jki47g85q"]
+[gd_scene load_steps=19 format=3 uid="uid://hv4jki47g85q"]
 
 [ext_resource type="Theme" uid="uid://b0ixpqfc0nrgw" path="res://Assets/Theme.tres" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://cxec4g8oww2if" path="res://Main.cs" id="2_uu6xs"]
@@ -58,7 +58,10 @@ _data = {
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6i3y"]
 
-[node name="Main" type="Control" node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeOverrideOS")]
+[sub_resource type="Theme" id="Theme_trn2v"]
+default_font_size = 26
+
+[node name="Main" type="Control" node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -92,7 +95,9 @@ nodeWindowPopup1225 = NodePath("Popup1225")
 nodeWindowPatch = NodePath("Patch")
 nodeWindowPatchContent = NodePath("Patch/CenterContainer/VBoxContainer/Label")
 nodeWindowAdvanced = NodePath("Advanced")
+nodeContainerAdvanced = NodePath("Advanced/CenterContainer")
 nodeOverrideOS = NodePath("Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS/LineEdit")
+nodeOverrideScale = NodePath("Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale/SpinBox")
 
 [node name="Background" type="Control" parent="."]
 layout_mode = 1
@@ -438,7 +443,7 @@ autowrap_mode = 3
 oversampling_override = 1.0
 title = "locAdvanced"
 initial_position = 2
-size = Vector2i(720, 540)
+size = Vector2i(720, 640)
 visible = false
 
 [node name="CenterContainer" type="CenterContainer" parent="Advanced"]
@@ -586,6 +591,29 @@ placeholder_text = "Windows"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="OverrideScale" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale"]
+layout_mode = 2
+text = "locOverrideScale"
+horizontal_alignment = 2
+
+[node name="SpinBox" type="SpinBox" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale"]
+layout_mode = 2
+theme = SubResource("Theme_trn2v")
+min_value = 1.0
+value = 1.0
+rounded = true
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="GithubApi" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -641,4 +669,5 @@ placeholder_text = "https://api.github.com"
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/LineEdit" to="." method="_on_xdelta_text_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/LineEdit" to="." method="_on_7z_text_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS/LineEdit" to="." method="_on_overrideos_text_changed"]
+[connection signal="value_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale/SpinBox" to="." method="_on_overridescale_value_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/LineEdit" to="." method="_on_githubapi_text_changed"]

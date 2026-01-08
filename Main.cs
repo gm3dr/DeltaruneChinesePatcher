@@ -68,6 +68,8 @@ public partial class Main : Control
 	CenterContainer nodeContainerAdvanced = null!;
 	[Export]
 	LineEdit nodeOverrideOS = null!;
+	[Export]
+	SpinBox nodeOverrideScale = null!;
 
 
 	static readonly string[] chapters = ["1", "2", "3", "4"];
@@ -116,7 +118,9 @@ public partial class Main : Control
 	static string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	string[] locales;
 	bool inited = false;
-	int windowScale = 1;
+	static Vector2 windowDesignSize = new Vector2(640, 480);
+	static Vector2 windowDesignSpaceSize = new Vector2(640, 480) * 1.5f;
+	int windowScale = Math.Max(Mathf.FloorToInt((DisplayServer.ScreenGetUsableRect().Size.Y - DisplayServer.ScreenGetUsableRect().Position.Y) / windowDesignSpaceSize.Y), 1);
 	System.IO.FileStream fileStream = null;
 	Godot.Collections.Array output = [];
 	int patched_count = 0;
@@ -140,11 +144,6 @@ public partial class Main : Control
 			nodeBgAnim.Play("bg_anim");
 			nodeComboLanguage.Disabled = true;
 
-			//修改窗口大小
-			var screenId = window.CurrentScreen;
-			var screenSize = DisplayServer.ScreenGetUsableRect(screenId);
-			var windowDesignSize = new Vector2(640, 480) * 1.5f;
-
 			if (os_name == "macOS")
 			{
 				window.Unresizable = true;
@@ -161,18 +160,10 @@ public partial class Main : Control
 				}
 			}
 
-			windowScale = (int)Mathf.Floor((screenSize.Size.Y - screenSize.Position.Y) / windowDesignSize.Y);
-			if (windowScale > 1)
-			{
-				var windowNewSize = (Vector2I)((windowDesignSize * windowScale).Round());
-				DisplayServer.WindowSetSize(windowNewSize, wid);
-				// 居中窗口
-				window.MoveToCenter();
-			}
-			else
-			{
-				windowScale = 1;
-			}
+			var windowNewSize = (Vector2I)((windowDesignSize * windowScale).Round());
+			DisplayServer.WindowSetSize(windowNewSize, wid);
+			window.MoveToCenter();
+			nodeOverrideScale.Value = windowScale;
 
 			//Tooltip与下拉菜单大小
 			/*
@@ -232,6 +223,7 @@ public partial class Main : Control
 			}
 			nodeBtnUpdatePatch.TooltipText = "locUpdatePatchInfo" + (os_name == "macOS" ? "Mac" : "");
 			nodeOverrideOS.PlaceholderText = OS.GetName();
+			nodeOverrideScale.Value = windowScale;
 		}
 		DisplayServer.WindowSetTitle(TranslationServer.Translate("locTitle"), wid);
 		nodeBtnUpdatePatcher.Visible = false;
@@ -1188,6 +1180,11 @@ public partial class Main : Control
 		{
 			os_name = os;
 		}
+	}
+
+	public void _on_overridescale_value_changed(float value)
+	{
+		windowScale = Mathf.RoundToInt(value);
 	}
 
 	public void _on_githubapi_text_changed(string api)
