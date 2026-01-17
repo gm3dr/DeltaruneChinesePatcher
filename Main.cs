@@ -1344,7 +1344,7 @@ public partial class Main : Control
 		{
 			PatchResultHandler(false, "locPatchFailedInvalidInput", usedtime, new Vector2I(640, 480));
 		}
-		else if (logtext.Contains("cannot find the path specified"))
+		else if (logtext.Contains("cannot find the path specified") || logtext.Contains("找不到指定的路径"))
 		{
 			PatchResultHandler(false, "locPatchFailedCantFind", usedtime, new Vector2I(640, 360));
 		}
