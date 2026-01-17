@@ -1340,9 +1340,9 @@ public partial class Main : Control
 		{
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
-		if (logtext.Contains("checksum mismatch"))
+		if (logtext.Contains("XD3_INVALID_INPUT"))
 		{
-			PatchResultHandler(false, "locPatchFailedChecksum", usedtime, new Vector2I(640, 480));
+			PatchResultHandler(false, "locPatchFailedInvalidInput", usedtime, new Vector2I(640, 480));
 		}
 		else if (logtext.Contains("cannot find the path specified"))
 		{
