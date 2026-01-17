@@ -128,6 +128,7 @@ public partial class Main : Control
 	// advanced options
 	static bool bypass_hash = false;
 	static bool bypass_too_long = false;
+	static bool bypass_same_path = false;
 	static string github_api = "https://api.github.com";
 	static string xdelta_override = "";
 	static string _7zip_override = "";
@@ -672,7 +673,7 @@ public partial class Main : Control
 
 	public string PathTrim(string originalPath)
 	{
-		var finalPath = originalPath.TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/").TrimSuffix("\\");
+		var finalPath = originalPath.Replace("\\","/").TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/");
 
 		if (os_name != "Windows" && finalPath.StartsWith("~/"))
 		{
@@ -707,6 +708,18 @@ public partial class Main : Control
 		nodeWindowLogContent.Text = "";
 		var path = PathTrim(nodeEditGamePath.Text);
 		output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
+		//Same path check
+		if (!bypass_same_path)
+		{
+			var patcherpath = GetGameDirPath().Replace("\\","/").TrimSuffix("/");
+			GD.Print($"Target Path: {path}\nPatcher Path: {patcherpath}");
+			output.Add($"Target Path: {path}\nPatcher Path: {patcherpath}");
+			if (path == patcherpath)
+			{
+				PatchResultHandler(false, "locPatchFailedSamePath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
+				return;
+			}
+		}
 		//chmod加权限
 		if (os_name == "macOS" || os_name == "Linux")
 		{
@@ -1168,6 +1181,11 @@ public partial class Main : Control
 	public void _on_bypasstoolong_toggled(bool toggled)
 	{
 		bypass_too_long = toggled;
+	}
+
+	public void _on_bypasssamepath_toggled(bool toggled)
+	{
+		bypass_same_path = toggled;
 	}
 
 	public void _on_overrideos_text_changed(string os)
