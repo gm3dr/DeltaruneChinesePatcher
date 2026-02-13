@@ -8,6 +8,10 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="DELTARUNE Chinese Patcher"
@@ -15,9 +19,9 @@ config/name_localized={
 "zh_CN": "DELTARUNE 汉化安装器",
 "zh_TW": "DELTARUNE 漢化安裝器"
 }
-config/version="2.2.0"
+config/version="2.3.0"
 run/main_scene="uid://hv4jki47g85q"
-config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
+config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 run/max_fps=60
 run/low_processor_mode=true
 boot_splash/bg_color=Color(0, 0, 0, 1)

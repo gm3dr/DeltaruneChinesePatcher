@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://hv4jki47g85q"]
+[gd_scene format=3 uid="uid://hv4jki47g85q"]
 
 [ext_resource type="Theme" uid="uid://b0ixpqfc0nrgw" path="res://Assets/Theme.tres" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://cxec4g8oww2if" path="res://Main.cs" id="2_uu6xs"]
@@ -61,7 +61,7 @@ _data = {
 [sub_resource type="Theme" id="Theme_trn2v"]
 default_font_size = 26
 
-[node name="Main" type="Control" node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
+[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -99,7 +99,7 @@ nodeContainerAdvanced = NodePath("Advanced/CenterContainer")
 nodeOverrideOS = NodePath("Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS/LineEdit")
 nodeOverrideScale = NodePath("Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale/SpinBox")
 
-[node name="Background" type="Control" parent="."]
+[node name="Background" type="Control" parent="." unique_id=1988146879]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -107,7 +107,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Background" type="TextureRect" parent="Background"]
+[node name="Background" type="TextureRect" parent="Background" unique_id=896694001]
 layout_mode = 1
 offset_top = -40.0
 offset_right = 320.0
@@ -115,7 +115,7 @@ offset_bottom = 220.0
 scale = Vector2(2, 2)
 texture = ExtResource("3_r0du0")
 
-[node name="BackgroundBottom" type="TextureRect" parent="Background"]
+[node name="BackgroundBottom" type="TextureRect" parent="Background" unique_id=751846704]
 layout_mode = 1
 offset_top = 340.0
 offset_right = 320.0
@@ -123,13 +123,11 @@ offset_bottom = 410.0
 scale = Vector2(2, 2)
 texture = ExtResource("4_cm0pq")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Background"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Background" unique_id=1105930322]
 root_node = NodePath("../..")
-libraries = {
-&"": SubResource("AnimationLibrary_fos0i")
-}
+libraries/ = SubResource("AnimationLibrary_fos0i")
 
-[node name="ColorRect" type="ColorRect" parent="Background"]
+[node name="ColorRect" type="ColorRect" parent="Background" unique_id=1514140223]
 modulate = Color(1, 1, 1, 0.501961)
 layout_mode = 1
 anchors_preset = 15
@@ -139,7 +137,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2028401317]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -149,25 +147,25 @@ offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Container" type="VBoxContainer" parent="CenterContainer"]
+[node name="Container" type="VBoxContainer" parent="CenterContainer" unique_id=1253943218]
 layout_mode = 2
 
-[node name="TextPatchVersion" type="Label" parent="CenterContainer/Container"]
+[node name="TextPatchVersion" type="Label" parent="CenterContainer/Container" unique_id=451892968]
 layout_mode = 2
 text = "locLocalVer
 locLatestVer"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="UpdatePatchRow" type="HBoxContainer" parent="CenterContainer/Container"]
+[node name="UpdatePatchRow" type="HBoxContainer" parent="CenterContainer/Container" unique_id=1689028185]
 visible = false
 layout_mode = 2
 
-[node name="Left" type="Control" parent="CenterContainer/Container/UpdatePatchRow"]
+[node name="Left" type="Control" parent="CenterContainer/Container/UpdatePatchRow" unique_id=410825658]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="OptionButton" type="OptionButton" parent="CenterContainer/Container/UpdatePatchRow"]
+[node name="OptionButton" type="OptionButton" parent="CenterContainer/Container/UpdatePatchRow" unique_id=1237766939]
 layout_mode = 2
 tooltip_text = "locUpdatePatchInfo"
 selected = 0
@@ -181,21 +179,21 @@ popup/item_1/id = 1
 popup/item_2/text = "locUpdatePatchBrowser"
 popup/item_2/id = 2
 
-[node name="Right" type="Control" parent="CenterContainer/Container/UpdatePatchRow"]
+[node name="Right" type="Control" parent="CenterContainer/Container/UpdatePatchRow" unique_id=2021203755]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ProgressBar" type="ProgressBar" parent="CenterContainer/Container"]
+[node name="ProgressBar" type="ProgressBar" parent="CenterContainer/Container" unique_id=55494266]
 visible = false
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 27
 
-[node name="GamePathRow" type="HBoxContainer" parent="CenterContainer/Container"]
+[node name="GamePathRow" type="HBoxContainer" parent="CenterContainer/Container" unique_id=1784652680]
 custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
-[node name="EditGamePath" type="LineEdit" parent="CenterContainer/Container/GamePathRow"]
+[node name="EditGamePath" type="LineEdit" parent="CenterContainer/Container/GamePathRow" unique_id=1055629153]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -203,35 +201,35 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 13
 placeholder_text = "locDeltaruneDir"
 
-[node name="BtnBrowse" type="Button" parent="CenterContainer/Container/GamePathRow"]
+[node name="BtnBrowse" type="Button" parent="CenterContainer/Container/GamePathRow" unique_id=33479464]
 layout_mode = 2
 text = "locBrowse"
 
-[node name="PatchButtonRow" type="HBoxContainer" parent="CenterContainer/Container"]
+[node name="PatchButtonRow" type="HBoxContainer" parent="CenterContainer/Container" unique_id=706516890]
 layout_mode = 2
 
-[node name="Left" type="Control" parent="CenterContainer/Container/PatchButtonRow"]
+[node name="Left" type="Control" parent="CenterContainer/Container/PatchButtonRow" unique_id=72137996]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Patch" type="Button" parent="CenterContainer/Container/PatchButtonRow"]
+[node name="Patch" type="Button" parent="CenterContainer/Container/PatchButtonRow" unique_id=1967342822]
 layout_mode = 2
 text = "locPatch"
 
-[node name="BtnRun" type="Button" parent="CenterContainer/Container/PatchButtonRow"]
+[node name="BtnRun" type="Button" parent="CenterContainer/Container/PatchButtonRow" unique_id=2080589915]
 layout_mode = 2
 tooltip_text = "locRungameTooltip"
 text = "locRungame"
 
-[node name="Unpatch" type="Button" parent="CenterContainer/Container/PatchButtonRow"]
+[node name="Unpatch" type="Button" parent="CenterContainer/Container/PatchButtonRow" unique_id=1601507933]
 layout_mode = 2
 text = "locUnpatch"
 
-[node name="Right" type="Control" parent="CenterContainer/Container/PatchButtonRow"]
+[node name="Right" type="Control" parent="CenterContainer/Container/PatchButtonRow" unique_id=1642032400]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BottomContainer" type="HBoxContainer" parent="."]
+[node name="BottomContainer" type="HBoxContainer" parent="." unique_id=1809813028]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -241,14 +239,14 @@ offset_top = -60.0
 offset_right = 640.0
 grow_vertical = 0
 
-[node name="Left" type="VBoxContainer" parent="BottomContainer"]
+[node name="Left" type="VBoxContainer" parent="BottomContainer" unique_id=612521844]
 layout_mode = 2
 
-[node name="Top" type="Control" parent="BottomContainer/Left"]
+[node name="Top" type="Control" parent="BottomContainer/Left" unique_id=1528406087]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TextPatcherVersion" type="Button" parent="BottomContainer/Left"]
+[node name="TextPatcherVersion" type="Button" parent="BottomContainer/Left" unique_id=1686735404]
 layout_mode = 2
 tooltip_text = "locAdvancedTooltip"
 mouse_filter = 1
@@ -260,17 +258,17 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_5vvyt")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_c6i3y")
 text = "v0.0.0"
 
-[node name="Center" type="Control" parent="BottomContainer"]
+[node name="Center" type="Control" parent="BottomContainer" unique_id=877319]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Update" type="Button" parent="BottomContainer"]
+[node name="Update" type="Button" parent="BottomContainer" unique_id=1656306783]
 visible = false
 layout_mode = 2
 tooltip_text = "locClickToUpdate"
 text = "locUpdate"
 
-[node name="BtnInfo" type="Button" parent="."]
+[node name="BtnInfo" type="Button" parent="." unique_id=245920091]
 layout_mode = 1
 offset_left = 1.0
 offset_right = 63.0
@@ -278,7 +276,7 @@ offset_bottom = 60.0
 tooltip_text = "locInfo"
 text = "  !  "
 
-[node name="ComboLanguage" type="OptionButton" parent="."]
+[node name="ComboLanguage" type="OptionButton" parent="." unique_id=1745333609]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -294,14 +292,14 @@ popup/item_1/id = 1
 popup/item_2/text = "中文（繁體）"
 popup/item_2/id = 2
 
-[node name="TitleBar" type="ColorRect" parent="."]
+[node name="TitleBar" type="ColorRect" parent="." unique_id=2009895199]
 visible = false
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 20.0
 color = Color(1, 0, 0, 0)
 
-[node name="FileDialog" type="FileDialog" parent="."]
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1743941519]
 title = "Open a Directory"
 ok_button_text = "Select Current Folder"
 file_mode = 2
@@ -309,13 +307,13 @@ access = 2
 show_hidden_files = true
 use_native_dialog = true
 
-[node name="Log" type="Window" parent="."]
+[node name="Log" type="Window" parent="." unique_id=333583143]
 title = "locLog"
 initial_position = 2
 size = Vector2i(960, 600)
 visible = false
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Log"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Log" unique_id=62524602]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -323,20 +321,20 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="Label" type="Label" parent="Log/ScrollContainer"]
+[node name="Label" type="Label" parent="Log/ScrollContainer" unique_id=473903807]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 13
 autowrap_mode = 3
 
-[node name="Popup" type="Window" parent="."]
+[node name="Popup" type="Window" parent="." unique_id=1819862319]
 oversampling_override = 1.0
 title = "locResult"
 initial_position = 2
 size = Vector2i(480, 240)
 visible = false
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Popup"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Popup" unique_id=1902717548]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -344,7 +342,7 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="Label" type="Label" parent="Popup/ScrollContainer"]
+[node name="Label" type="Label" parent="Popup/ScrollContainer" unique_id=1356347514]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -353,13 +351,13 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="Popup1225" type="Window" parent="."]
+[node name="Popup1225" type="Window" parent="." unique_id=2134227393]
 oversampling_override = 1.0
 initial_position = 2
 size = Vector2i(480, 240)
 visible = false
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Popup1225"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Popup1225" unique_id=1823421290]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -367,7 +365,7 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="Label" type="Label" parent="Popup1225/ScrollContainer"]
+[node name="Label" type="Label" parent="Popup1225/ScrollContainer" unique_id=1989616045]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -376,57 +374,57 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="Patch" type="Window" parent="."]
+[node name="Patch" type="Window" parent="." unique_id=1159376575]
 oversampling_override = 1.0
 title = "locPatch"
 initial_position = 2
 size = Vector2i(640, 320)
 visible = false
 
-[node name="CenterContainer" type="CenterContainer" parent="Patch"]
+[node name="CenterContainer" type="CenterContainer" parent="Patch" unique_id=455539197]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Patch/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Patch/CenterContainer" unique_id=2048459124]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Patch/CenterContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Patch/CenterContainer/VBoxContainer" unique_id=533468687]
 layout_mode = 2
 text = "locBakDetected"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Patch/CenterContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Patch/CenterContainer/VBoxContainer" unique_id=172987040]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer" unique_id=714320452]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PatchUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="PatchUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1915341865]
 layout_mode = 2
 text = "locPatchBackup"
 
-[node name="GameUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="GameUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1826513750]
 layout_mode = 2
 text = "locPatchDirectly"
 
-[node name="Control2" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer"]
+[node name="Control2" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer" unique_id=5045741]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Readme" type="Window" parent="."]
+[node name="Readme" type="Window" parent="." unique_id=1143884703]
 auto_translate_mode = 1
 title = "locReadme"
 initial_position = 2
 size = Vector2i(960, 600)
 visible = false
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Readme"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Readme" unique_id=661004358]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -434,19 +432,19 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="Label" type="Label" parent="Readme/ScrollContainer"]
+[node name="Label" type="Label" parent="Readme/ScrollContainer" unique_id=256262554]
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 
-[node name="Advanced" type="Window" parent="."]
+[node name="Advanced" type="Window" parent="." unique_id=1720558407]
 oversampling_override = 1.0
 title = "locAdvanced"
 initial_position = 2
 size = Vector2i(720, 640)
 visible = false
 
-[node name="CenterContainer" type="CenterContainer" parent="Advanced"]
+[node name="CenterContainer" type="CenterContainer" parent="Advanced" unique_id=1020563971]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -454,208 +452,208 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer" unique_id=1987551554]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer" unique_id=1797529931]
 layout_mode = 2
 
-[node name="TriggerPath" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+[node name="TriggerPath" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=1734787726]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath"]
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath" unique_id=552388190]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath"]
+[node name="Button" type="Button" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath" unique_id=1253978103]
 layout_mode = 2
 text = "locTriggerPathDetect"
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath" unique_id=1886698003]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BypassHash" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+[node name="BypassHash" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=434511136]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash"]
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash" unique_id=1828874925]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash"]
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash" unique_id=947739632]
 layout_mode = 2
 text = "locBypassHash"
 horizontal_alignment = 2
 
-[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash"]
+[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash" unique_id=1332735710]
 layout_mode = 2
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BypassTooLong" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash" unique_id=632193513]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong"]
+[node name="BypassTooLong" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=238781723]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong" unique_id=1497800066]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong" unique_id=1999796737]
 layout_mode = 2
 text = "locBypassTooLong"
 horizontal_alignment = 2
 
-[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong"]
+[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong" unique_id=1302019373]
 layout_mode = 2
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BypassSamePath" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong" unique_id=1146188303]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath"]
+[node name="BypassSamePath" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=2041108636]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath" unique_id=145652895]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath" unique_id=717078725]
 layout_mode = 2
 text = "locBypassSamePath"
 horizontal_alignment = 2
 
-[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath"]
+[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath" unique_id=1882049210]
 layout_mode = 2
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="XDelta" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer"]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath" unique_id=1547668283]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer"]
+[node name="XDelta" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=1460395383]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta" unique_id=2056866370]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer" unique_id=1540900298]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer" unique_id=1200144480]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer" unique_id=1888400745]
 layout_mode = 2
 text = "locXDeltaPath"
 horizontal_alignment = 2
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/HBoxContainer" unique_id=2059695345]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer" unique_id=849576187]
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 placeholder_text = "locEmptyToDisable"
 
-[node name="7Zip" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+[node name="7Zip" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=2111628437]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip" unique_id=20177845]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer" unique_id=1319138500]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer" unique_id=627291603]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer" unique_id=2026998109]
 layout_mode = 2
 text = "loc7zipPath"
 horizontal_alignment = 2
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/HBoxContainer" unique_id=1681976938]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer" unique_id=1989576315]
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 placeholder_text = "locEmptyToDisable"
 
-[node name="OverrideOS" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+[node name="OverrideOS" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=1939028539]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS"]
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS" unique_id=791144337]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS"]
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS" unique_id=1944028465]
 layout_mode = 2
 text = "locOverrideOS"
 horizontal_alignment = 2
 
-[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS"]
+[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS" unique_id=1486767554]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 placeholder_text = "Windows"
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS" unique_id=2103612412]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="OverrideScale" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+[node name="OverrideScale" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=1691370021]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale"]
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale" unique_id=691831923]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale"]
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale" unique_id=129705218]
 layout_mode = 2
 text = "locOverrideScale"
 horizontal_alignment = 2
 
-[node name="SpinBox" type="SpinBox" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale"]
+[node name="SpinBox" type="SpinBox" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale" unique_id=1578820883]
 layout_mode = 2
 theme = SubResource("Theme_trn2v")
 min_value = 1.0
 value = 1.0
 rounded = true
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideScale" unique_id=675253688]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="GithubApi" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer"]
+[node name="GithubApi" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=754554153]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi" unique_id=1024254787]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer" unique_id=796966280]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer" unique_id=1186069442]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer" unique_id=522975535]
 layout_mode = 2
 text = "locGithubApiSource"
 horizontal_alignment = 2
 
-[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer"]
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer/HBoxContainer" unique_id=1558242285]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer" unique_id=397757338]
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
