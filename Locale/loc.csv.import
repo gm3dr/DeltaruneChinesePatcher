@@ -15,3 +15,5 @@ dest_files=["res://Locale/loc.en.translation", "res://Locale/loc.zh_CN.translati
 
 compress=true
 delimiter=0
+unescape_keys=false
+unescape_translations=true
