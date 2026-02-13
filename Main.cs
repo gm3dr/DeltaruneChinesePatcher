@@ -253,7 +253,7 @@ public partial class Main : Control
 		nodeComboLanguage.ItemCount = locales.Length;
 		foreach (var current in locales)
 		{
-			nodeComboLanguage.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.GetTranslationObject(current).GetMessage("locLanguageName"));
+			nodeComboLanguage.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.FindTranslations(current, true)[0].GetMessage("locLanguageName"));
 		}
 		nodeComboLanguage.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
 		//读取之前的游戏路径
