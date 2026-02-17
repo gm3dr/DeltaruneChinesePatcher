@@ -615,6 +615,7 @@ public partial class Main : Control
 			catch (Exception exc)
 			{
 				nodeBtnUpdatePatch.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
+				nodeBtnUpdatePatch.TooltipText = exc.Message;
 				GD.PushError("Exception catched when updating patch: " + exc.ToString() + " (" + exc.Message + ")");
 				return;
 			}
