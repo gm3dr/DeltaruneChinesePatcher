@@ -11,6 +11,7 @@ locDeltaruneDir,Installation Directory of the Steam version of DELTARUNE,DELTARU
 locRequesting,Requesting...,获取中...,獲取中...
 locNotFound,Not found,未找到,未找到
 locUpdatePatch, Download latest patch , 下载最新补丁包, 下載最新補丁包
+locUpdateDemoPatch,↓ Patch for demo ↓,↓ Demo 版补丁 ↓,↓ Demo 版補丁 ↓
 locUpdatePatchAuto,Auto download,自动下载,自動下載
 locUpdatePatchBrowser,Download with Browser,通过浏览器下载,透過瀏覽器下載
 locUpdatePatchInfo,"< Auto download >\nAutomatically download latest patch\nOnly single thread supported, might be slow\n\n< Download with Browser >\nDownload latest patch with your browser, faster speed\nYou need to move it into the patcher's directory after download finished\n(No need for extracting it)\n\nPlease restart patcher after you finished",< 自动下载>\n自动下载最新的补丁包\n仅支持单线程，可能会很慢\n\n< 通过浏览器下載>\n通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要自行将其移动到安装器目录\n（不需要解压）\n\n请在完成后重启安装器,< 自動下載>\n自動下載最新的補丁包\n僅支援單執行緒，可能會很慢\n\n< 透過瀏覽器下載>\n透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要自行將其移動到安裝器目錄\n（不需要提取壓縮包）\n\n請在完成後重啟安裝器

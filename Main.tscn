@@ -170,7 +170,7 @@ layout_mode = 2
 tooltip_text = "locUpdatePatchInfo"
 selected = 0
 fit_to_longest_item = false
-item_count = 3
+item_count = 6
 popup/item_0/text = "locUpdatePatch"
 popup/item_0/id = 0
 popup/item_0/disabled = true
@@ -178,6 +178,13 @@ popup/item_1/text = "locUpdatePatchAuto"
 popup/item_1/id = 1
 popup/item_2/text = "locUpdatePatchBrowser"
 popup/item_2/id = 2
+popup/item_3/text = "locUpdateDemoPatch"
+popup/item_3/id = 3
+popup/item_3/separator = true
+popup/item_4/text = "locUpdatePatchAuto"
+popup/item_4/id = 4
+popup/item_5/text = "locUpdatePatchBrowser"
+popup/item_5/id = 5
 
 [node name="Right" type="Control" parent="CenterContainer/Container/UpdatePatchRow" unique_id=2021203755]
 layout_mode = 2

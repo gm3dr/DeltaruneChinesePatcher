@@ -110,6 +110,8 @@ public partial class Main : Control
 	static string game_path_file = GetGameDirPath("game_path.txt");
 	static string patchdir = GetGameDirPath("patch");
 	static string patchver = "locNotFound";
+	static string demopatchver = "";
+	static string demopatchdir = GetGameDirPath("patch");
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
 	static string os_name = OS.GetName();
@@ -193,6 +195,13 @@ public partial class Main : Control
 			{
 				if (file.StartsWith("patch_"))
 				{
+					if (file.Contains("demo"))
+					{
+						demopatchdir = GetGameDirPath(file);
+						demopatchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
+						GD.Print("Found demo patch file " + patchdir);
+						continue;
+					}
 					patchdir = GetGameDirPath(file);
 					patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
 					// 1225 check
@@ -201,7 +210,7 @@ public partial class Main : Control
 						patchver = "■■■■";
 					}
 					GD.Print("Found patch file " + patchdir);
-					break;
+					continue;
 				}
 			}
 			//自动显示readme
@@ -273,7 +282,7 @@ public partial class Main : Control
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 		nodeBtnInfo.TooltipText = "locInfo";
-		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
+		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + (demopatchver != "" ? (", " + demopatchver.ToString() + " (Demo)") : "") + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
 		//contributors
 		var json = new Json();
 		try
@@ -309,7 +318,12 @@ public partial class Main : Control
 			{
 				latestver = "■■■■";
 			}
-			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + latestver;
+			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver);
+			if (demopatchver != "")
+			{
+				nodeTextPatchVersion.Text += ", " + demopatchver.ToString() + " (Demo)";
+			}
+			nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locLatestVer") + latestver;
 			var gamepath = PathTrim(nodeEditGamePath.Text);
 			if (gamepath != "" && FileAccess.FileExists(gamepath + "/backup/version"))
 			{
@@ -326,7 +340,7 @@ public partial class Main : Control
 					ver.Close();
 				}
 			}
-			if (patchver != patchreleases["tag_name"].AsString())
+			if (patchver != patchreleases["tag_name"].AsString() || demopatchver != patchreleases["tag_name"].AsString())
 			{
 				nodeUpdatePatchRow.Visible = true;
 			}
@@ -518,15 +532,22 @@ public partial class Main : Control
 		switch (selected)
 		{
 			case 1:
-				_on_update_patch_pressed();
+				_on_update_patch_pressed(false);
 				break;
 			case 2:
-				_on_update_patch_browser_pressed();
+				_on_update_patch_browser_pressed(false);
+				nodeBtnUpdatePatch.Selected = 0;
+				break;
+			case 4:
+				_on_update_patch_pressed(true);
+				break;
+			case 5:
+				_on_update_patch_browser_pressed(true);
 				nodeBtnUpdatePatch.Selected = 0;
 				break;
 		}
 	}
-	public async void _on_update_patch_pressed()
+	public async void _on_update_patch_pressed(bool demo)
 	{
 		nodeBtnUpdatePatch.Disabled = true;
 		nodeProgress.Visible = true;
@@ -534,7 +555,7 @@ public partial class Main : Control
 		//删除旧patch
 		foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
 		{
-			if (fff.StartsWith("patch_"))
+			if (fff.StartsWith("patch_") && ((demo && fff.Contains("demo")) || ((!demo) && !fff.Contains("demo"))))
 			{
 				DirAccess.RemoveAbsolute(GetGameDirPath(fff));
 				GD.Print("Removed " + GetGameDirPath(fff));
@@ -547,7 +568,8 @@ public partial class Main : Control
 		var size = 0;
 		foreach (var asset in patchreleases["assets"].AsGodotArray())
 		{
-			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
+			var filename = asset.AsGodotDictionary()["name"].AsString().ToLower();
+			if (filename.Contains(os_name.ToLower()) && ((demo && filename.Contains("demo")) || ((!demo) && !filename.Contains("demo"))))
 			{
 				url = asset.AsGodotDictionary()["browser_download_url"].AsString();
 				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
@@ -630,11 +652,11 @@ public partial class Main : Control
 			nodeBtnUpdatePatch.TooltipText = "locPleaseRestart";
 		}
 	}
-	public void _on_update_patch_browser_pressed()
+	public void _on_update_patch_browser_pressed(bool demo)
 	{
 		foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
 		{
-			if (fff.StartsWith("patch_"))
+			if (fff.StartsWith("patch_") && ((demo && fff.Contains("demo")) || ((!demo) && !fff.Contains("demo"))))
 			{
 				DirAccess.RemoveAbsolute(GetGameDirPath(fff));
 				GD.Print("Removed " + GetGameDirPath(fff));
@@ -642,7 +664,8 @@ public partial class Main : Control
 		}
 		foreach (var asset in patchreleases["assets"].AsGodotArray())
 		{
-			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
+			var filename = asset.AsGodotDictionary()["name"].AsString().ToLower();
+			if (filename.Contains(os_name.ToLower()) && ((demo && filename.Contains("demo")) || ((!demo) && !filename.Contains("demo"))))
 			{
 				OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
 				break;
@@ -707,6 +730,7 @@ public partial class Main : Control
 		patched_count = 0;
 		nodeWindowPatch.Hide();
 		nodeWindowLogContent.Text = "";
+		var patchingdemo = false;
 		var path = PathTrim(nodeEditGamePath.Text);
 		output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
 		//Same path check
@@ -862,18 +886,22 @@ public partial class Main : Control
 			output.Add("Unable to find " + path + "/" + dataname);
 			path_exists = false;
 		}
-		foreach (var chapter in chapters)
+		if (path_exists)
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+			foreach (var chapter in chapters)
 			{
-				GD.Print("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-				output.Add("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-			}
-			else
-			{
-				GD.Print("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-				output.Add("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-				path_exists = false;
+				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+				{
+					GD.Print("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					output.Add("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+				}
+				else
+				{
+					GD.Print("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					output.Add("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					patchingdemo = true;
+					break;
+				}
 			}
 		}
 		if (!path_exists)
@@ -915,7 +943,7 @@ public partial class Main : Control
 		}
 		//解压
 		string tempPath = "ExtractTemp";
-		string extractArgs = $"x \"{patchdir}\" -o\"" + GetGameDirPath(tempPath) + "\" -aoa -y";
+		string extractArgs = $"x \"{(patchingdemo ? demopatchdir : patchdir)}\" -o\"" + GetGameDirPath(tempPath) + "\" -aoa -y";
 		GD.Print($"{_7zip} {extractArgs}");
 		var stime7z = DateTime.Now;
 		var extract_process = new Process();
@@ -963,6 +991,10 @@ public partial class Main : Control
 			}
 		}
 		//Patch
+		if (patchingdemo)
+		{
+			patched_count = chapters.Length;
+		}
 		if (FileAccess.FileExists(path + "/main.xdelta"))
 		{
 			string xdelta3Args = $"-f -d -v -s \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"";
@@ -991,35 +1023,38 @@ public partial class Main : Control
 			xdelta3_process.BeginErrorReadLine();
 			//xdelta3_process.WaitForExit();
 		}
-		foreach (var chapter in chapters)
+		if (!patchingdemo)
 		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
+			foreach (var chapter in chapters)
 			{
-				string xdelta3Args = $"-f -d -v -s \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"";
-				GD.Print("Patching chapter" + chapter + " data");
-				output.Add("Patching chapter" + chapter + " data");
-				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+				if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
 				{
-					DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					output.Add("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					string xdelta3Args = $"-f -d -v -s \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"";
+					GD.Print("Patching chapter" + chapter + " data");
+					output.Add("Patching chapter" + chapter + " data");
+					if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+					{
+						DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+						GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+						output.Add("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					}
+					GD.Print($"{xdelta3} {xdelta3Args}");
+					var xdelta3_process = new Process();
+					starti = new ProcessStartInfo();
+					starti.FileName = xdelta3;
+					starti.Arguments = xdelta3Args;
+					starti.RedirectStandardOutput = true;
+					starti.RedirectStandardError = true;
+					xdelta3_process.StartInfo = starti;
+					xdelta3_process.EnableRaisingEvents = true;
+					xdelta3_process.OutputDataReceived += RecivedOutput;
+					xdelta3_process.ErrorDataReceived += RecivedOutput;//RecivedError; FUCK XDELTA3
+					xdelta3_process.Exited += Patched;
+					xdelta3_process.Start();
+					xdelta3_process.BeginOutputReadLine();
+					xdelta3_process.BeginErrorReadLine();
+					//xdelta3_process.WaitForExit();
 				}
-				GD.Print($"{xdelta3} {xdelta3Args}");
-				var xdelta3_process = new Process();
-				starti = new ProcessStartInfo();
-				starti.FileName = xdelta3;
-				starti.Arguments = xdelta3Args;
-				starti.RedirectStandardOutput = true;
-				starti.RedirectStandardError = true;
-				xdelta3_process.StartInfo = starti;
-				xdelta3_process.EnableRaisingEvents = true;
-				xdelta3_process.OutputDataReceived += RecivedOutput;
-				xdelta3_process.ErrorDataReceived += RecivedOutput;//RecivedError; FUCK XDELTA3
-				xdelta3_process.Exited += Patched;
-				xdelta3_process.Start();
-				xdelta3_process.BeginOutputReadLine();
-				xdelta3_process.BeginErrorReadLine();
-				//xdelta3_process.WaitForExit();
 			}
 		}
 		while (patched_count < chapters.Length + 1 && (DateTime.Now - starttime).TotalSeconds < 30)
