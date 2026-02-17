@@ -79,6 +79,7 @@ python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./b
  - [x] \[v2.1.2\] 多线程安装
  - [x] \[v2.1.3\] macOS 平台支持
  - [x] \[v2.2.0\] 高级选项
+ - [ ] 安装 Demo 版 DR 汉化补丁
 
 ## 借物
 
