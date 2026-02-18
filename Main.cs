@@ -967,7 +967,7 @@ public partial class Main : Control
 		var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Write);
 		if (ver != null)
 		{
-			ver.StoreString(patchver);
+			ver.StoreString(patchingdemo ? demopatchver : patchver);
 			ver.Close();
 		}
 		//备份data
