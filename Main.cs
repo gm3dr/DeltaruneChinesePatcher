@@ -655,8 +655,10 @@ public partial class Main : Control
 			DirAccess.RenameAbsolute(GetGameDirPath(file), GetGameDirPath(file.TrimPrefix("_downloadingtemp_")));
 			GD.Print($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
 			output.Add($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
-			nodeBtnUpdatePatch.Text = "locWaiting4Restart";
-			nodeBtnUpdatePatch.TooltipText = "locPleaseRestart";
+			nodeBtnUpdatePatch.Text = "locRestartIn5Sec";
+			nodeBtnUpdatePatch.TooltipText = "locRestartIn5Sec";
+			await ToSignal(GetTree().CreateTimer(5f), "timeout");
+			GetTree().ReloadCurrentScene();
 		}
 	}
 	public void _on_update_patch_browser_pressed(bool demo)

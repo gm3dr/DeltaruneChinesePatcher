@@ -20,6 +20,7 @@ locUpdate, Newer version detected: {VER} , 检测到新版：{VER} , 偵測到�
 locClickToUpdate,Click to download latest version with browser,点击使用浏览器下载最新版本,點擊使用瀏覽器下載最新版本
 locDownloadFailed,Download failed: ,下载失败：,下載失敗：
 locWaiting4Restart, Waiting for restart , 等待重启, 等待重啟
+locRestartIn5Sec,Restarting in 5 seconds,将在 5 秒内重启,將在 5 秒內重啟
 locPleaseRestart,Please restart patcher,请重启安装器,請重啟安裝器
 locTimeout, Connection Timeout , 连接超时, 連線逾時
 locResult,Result,结果,結果
