@@ -64,6 +64,9 @@ locForcePatchType,Force patch type,强制补丁类型,強制補丁類型
 locDisabled,Disabled,已禁用,已禁用
 locFullVersion,Full Version,完整版,完整版
 locDemoVersion,Demo Version,Demo 版,Demo 版
+locFullSteam,Full Version (Through Steam),完整版（通过 Steam）,完整版（透過 Steam）
+locDemoSteam,Demo Version (Through Steam),Demo 版（通过 Steam）,Demo 版（透過 Steam）
+locWithoutSteam,Run without Steam,不通过 Steam 启动,不透過 Steam 啟動
 locXDeltaPath,Override XDelta3 Path,覆盖 XDelta3 路径,覆寫 XDelta3 路徑
 loc7zipPath,Override 7-Zip Path,覆盖 7-Zip 路径,覆寫 7-Zip 路徑
 locEmptyToDisable,Empty to Disable,留空以禁用,留空以禁用

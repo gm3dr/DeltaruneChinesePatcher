@@ -42,6 +42,8 @@ public partial class Main : Control
 	[Export]
 	Button nodeBtnPatch = null!;
 	[Export]
+	OptionButton nodeBtnRun = null!;
+	[Export]
 	Button nodeBtnUnpatch = null!;
 
 	[Export]
@@ -471,9 +473,21 @@ public partial class Main : Control
 		OS.ShellOpen("https://github.com/gm3dr/DeltaruneChinesePatcher");
 	}
 
-	public void _on_rungame_pressed()
+	public void _on_rungame_selected(int selected)
 	{
-		OS.ShellOpen("steam://run/1671210");
+		nodeBtnRun.Selected = 0;
+		switch (selected)
+		{
+			case 1:
+				OS.ShellOpen("steam://run/1671210");
+				break;
+			case 2:
+				OS.ShellOpen("steam://run/1690940");
+				break;
+			case 3:
+				OS.ShellOpen(PathTrim(nodeEditGamePath.Text) + "/DELTARUNE.exe");
+				break;
+		}
 	}
 	public void _on_popup_close_requested()
 	{
@@ -1458,12 +1472,12 @@ public partial class Main : Control
 			output.Add($"Target Path: {path}\nPatcher Path: {patcherpath}");
 			if (path == patcherpath)
 			{
+				nodePathValid.Text = "locPatchInvalidSame";
 				if (patching)
 				{
 					PatchResultHandler(false, "locPatchFailedSamePath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
+					return false;
 				}
-				nodePathValid.Text = "locPatchInvalidSame";
-				return false;
 			}
 		}
 		// path check
@@ -1505,12 +1519,13 @@ public partial class Main : Control
 		}
 		else
 		{
+			nodePathValid.Text = "locPatchInvalid";
 			if (patching)
 			{
 				PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
 			}
-			nodePathValid.Text = "locPatchInvalid";
 		}
+		nodeBtnRun.SetItemDisabled(3, os_name != "Windows" || !path_exists);
 		return path_exists;
 	}
 	// 更新路径文本

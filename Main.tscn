@@ -61,7 +61,7 @@ _data = {
 [sub_resource type="Theme" id="Theme_trn2v"]
 default_font_size = 26
 
-[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodePathValid", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchVBox", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
+[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodePathValid", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnRun", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchVBox", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -84,6 +84,7 @@ nodeEditGamePath = NodePath("CenterContainer/Container/GamePathRow/VBoxContainer
 nodePathValid = NodePath("CenterContainer/Container/GamePathRow/VBoxContainer/RichTextLabel")
 nodeBtnBrowse = NodePath("CenterContainer/Container/GamePathRow/BtnBrowse")
 nodeBtnPatch = NodePath("CenterContainer/Container/PatchButtonRow/Patch")
+nodeBtnRun = NodePath("CenterContainer/Container/PatchButtonRow/BtnRun")
 nodeBtnUnpatch = NodePath("CenterContainer/Container/PatchButtonRow/Unpatch")
 nodeOpenDialog = NodePath("FileDialog")
 nodeWindowReadme = NodePath("Readme")
@@ -247,10 +248,20 @@ size_flags_horizontal = 3
 layout_mode = 2
 text = "locPatch"
 
-[node name="BtnRun" type="Button" parent="CenterContainer/Container/PatchButtonRow" unique_id=2080589915]
+[node name="BtnRun" type="OptionButton" parent="CenterContainer/Container/PatchButtonRow" unique_id=1406964175]
 layout_mode = 2
-tooltip_text = "locRungameTooltip"
-text = "locRungame"
+selected = 0
+fit_to_longest_item = false
+item_count = 4
+popup/item_0/text = "locRungame"
+popup/item_0/id = 0
+popup/item_0/disabled = true
+popup/item_1/text = "locFullSteam"
+popup/item_1/id = 1
+popup/item_2/text = "locDemoSteam"
+popup/item_2/id = 2
+popup/item_3/text = "locWithoutSteam"
+popup/item_3/id = 3
 
 [node name="Unpatch" type="Button" parent="CenterContainer/Container/PatchButtonRow" unique_id=1601507933]
 layout_mode = 2
@@ -722,7 +733,7 @@ placeholder_text = "https://api.github.com"
 [connection signal="text_changed" from="CenterContainer/Container/GamePathRow/VBoxContainer/EditGamePath" to="." method="_on_edit_game_path_text_changed"]
 [connection signal="pressed" from="CenterContainer/Container/GamePathRow/BtnBrowse" to="." method="_on_browse_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Patch" to="." method="_on_patch_pressed"]
-[connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/BtnRun" to="." method="_on_rungame_pressed"]
+[connection signal="item_selected" from="CenterContainer/Container/PatchButtonRow/BtnRun" to="." method="_on_rungame_selected"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Unpatch" to="." method="_on_unpatch_pressed"]
 [connection signal="pressed" from="BottomContainer/Left/TextPatcherVersion" to="." method="_on_text_patcher_version_pressed"]
 [connection signal="pressed" from="BottomContainer/Update" to="." method="_on_update_pressed"]
