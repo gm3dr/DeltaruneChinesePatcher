@@ -291,7 +291,7 @@ public partial class Main : Control
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 		nodeBtnInfo.TooltipText = "locInfo";
-		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + (demopatchver != "" ? (", " + demopatchver.ToString() + " (Demo)") : "") + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
+		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + (demopatchver != "" ? ("]  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
 		//contributors
 		var json = new Json();
 		try
@@ -327,10 +327,10 @@ public partial class Main : Control
 			{
 				latestver = "■■■■";
 			}
-			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver);
+			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
 			if (demopatchver != "")
 			{
-				nodeTextPatchVersion.Text += ", " + demopatchver.ToString() + " (Demo)";
+				nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
 			}
 			nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locLatestVer") + latestver;
 			UpdatePathText(nodeEditGamePath.Text, false);

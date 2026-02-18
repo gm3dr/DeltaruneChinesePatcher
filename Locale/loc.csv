@@ -62,8 +62,8 @@ locBypassTooLong,Bypass TAKING TOO LONG Stopping,绕过 TAKING TOO LONG 终止,�
 locBypassSamePath,Bypass Same Path as DR,绕过与 DR 相同路径检查,繞過與 DR 相同路徑檢查
 locForcePatchType,Force patch type,强制补丁类型,強制補丁類型
 locDisabled,Disabled,已禁用,已禁用
-locFullVersion,Full Version,完整版,完整版
-locDemoVersion,Demo Version,Demo 版,Demo 版
+locFullVersion,Full Ver.,完整版,完整版
+locDemoVersion,Demo Ver.,Demo 版,Demo 版
 locFullSteam,Full Version (Through Steam),完整版（通过 Steam）,完整版（透過 Steam）
 locDemoSteam,Demo Version (Through Steam),Demo 版（通过 Steam）,Demo 版（透過 Steam）
 locWithoutSteam,Run without Steam,不通过 Steam 启动,不透過 Steam 啟動
