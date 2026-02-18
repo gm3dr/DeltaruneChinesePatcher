@@ -61,6 +61,8 @@ public partial class Main : Control
 	[Export]
 	Window nodeWindowPatch = null!;
 	[Export]
+	VBoxContainer nodeWindowPatchVBox = null!;
+	[Export]
 	Label nodeWindowPatchContent = null!;
 	[Export]
 	Window nodeWindowAdvanced = null!;
@@ -466,6 +468,7 @@ public partial class Main : Control
 			}
 			nodeWindowPatchContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 			nodeWindowPatch.Size = new Vector2I(640, 320) * windowScale;
+			nodeWindowPatchVBox.CustomMinimumSize = new Vector2(640, 0) * windowScale;
 			nodeWindowPatch.Show();
 		}
 		else

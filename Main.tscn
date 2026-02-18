@@ -61,7 +61,7 @@ _data = {
 [sub_resource type="Theme" id="Theme_trn2v"]
 default_font_size = 26
 
-[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
+[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchVBox", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -93,6 +93,7 @@ nodeWindowPopup = NodePath("Popup")
 nodeWindowPopupContent = NodePath("Popup/ScrollContainer/Label")
 nodeWindowPopup1225 = NodePath("Popup1225")
 nodeWindowPatch = NodePath("Patch")
+nodeWindowPatchVBox = NodePath("Patch/CenterContainer/VBoxContainer")
 nodeWindowPatchContent = NodePath("Patch/CenterContainer/VBoxContainer/Label")
 nodeWindowAdvanced = NodePath("Advanced")
 nodeContainerAdvanced = NodePath("Advanced/CenterContainer")
