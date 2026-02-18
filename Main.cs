@@ -367,7 +367,7 @@ public partial class Main : Control
 			//nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
 		}
 		//安装器更新
-		if (!OS.HasFeature("editor"))
+		if (!(OS.HasFeature("editor") || ProjectSettings.GetSetting("application/config/version").AsString().Contains("dev")))
 		{
 			json = new Json();
 			try
