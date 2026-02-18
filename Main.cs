@@ -1516,6 +1516,13 @@ public partial class Main : Control
 		{
 			nodePathValid.Text = patchingdemo ? "locPatchValidDemo" : "locPatchValidFull";
 			UpdatePathText(path);
+			//保存游戏路径
+			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
+			if (game_path != null)
+			{
+				game_path.StoreString(path);
+				game_path.Close();
+			}
 		}
 		else
 		{
