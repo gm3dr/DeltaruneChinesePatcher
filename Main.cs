@@ -36,6 +36,8 @@ public partial class Main : Control
 	[Export]
 	LineEdit nodeEditGamePath = null!;
 	[Export]
+	RichTextLabel nodePathValid = null!;
+	[Export]
 	Button nodeBtnBrowse = null!;
 	[Export]
 	Button nodeBtnPatch = null!;
@@ -129,10 +131,12 @@ public partial class Main : Control
 	Godot.Collections.Array output = [];
 	int patched_count = 0;
 	DateTime starttime = DateTime.MinValue;
+	bool patchingdemo = false;
 	// advanced options
 	static bool bypass_hash = false;
 	static bool bypass_too_long = false;
 	static bool bypass_same_path = false;
+	static int force_patch = 0; // 0=disabled, 1=full, 2=demo
 	static string github_api = "https://api.github.com";
 	static string xdelta_override = "";
 	static string _7zip_override = "";
@@ -280,6 +284,7 @@ public partial class Main : Control
 			game_path = FindGamePath();
 		}
 		nodeEditGamePath.Text = game_path;
+		_on_edit_game_path_text_changed(game_path);
 		//HttpClient
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
@@ -326,22 +331,7 @@ public partial class Main : Control
 				nodeTextPatchVersion.Text += ", " + demopatchver.ToString() + " (Demo)";
 			}
 			nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locLatestVer") + latestver;
-			var gamepath = PathTrim(nodeEditGamePath.Text);
-			if (gamepath != "" && FileAccess.FileExists(gamepath + "/backup/version"))
-			{
-				var ver = FileAccess.Open(gamepath + "/backup/version", FileAccess.ModeFlags.Read);
-				if (ver != null)
-				{
-					var vertxt = ver.GetAsText();
-					// 1225 check
-					if (vertxt == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
-					{
-						vertxt = "■■■■";
-					}
-					nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locInstalledVer") + vertxt;
-					ver.Close();
-				}
-			}
+			UpdatePathText(nodeEditGamePath.Text, false);
 			if (patchver != patchreleases["tag_name"].AsString() || demopatchver != patchreleases["tag_name"].AsString())
 			{
 				nodeUpdatePatchRow.Visible = true;
@@ -677,7 +667,7 @@ public partial class Main : Control
 	}
 	public void _on_text_patcher_version_pressed()
 	{
-		nodeWindowAdvanced.Size = new Vector2I(720, 640) * windowScale;
+		nodeWindowAdvanced.Size = new Vector2I(720, 720) * windowScale;
 		nodeContainerAdvanced.Position = Vector2.Zero;
 		nodeContainerAdvanced.Size = nodeWindowAdvanced.Size / windowScale;
 		nodeContainerAdvanced.Scale = new(windowScale, windowScale);
@@ -698,7 +688,7 @@ public partial class Main : Control
 		}
 	}
 
-	public string PathTrim(string originalPath)
+	public static string PathTrim(string originalPath)
 	{
 		var finalPath = originalPath.Replace("\\","/").TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/");
 
@@ -733,21 +723,9 @@ public partial class Main : Control
 		patched_count = 0;
 		nodeWindowPatch.Hide();
 		nodeWindowLogContent.Text = "";
-		var patchingdemo = false;
 		var path = PathTrim(nodeEditGamePath.Text);
 		output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
-		//Same path check
-		if (!bypass_same_path)
-		{
-			var patcherpath = GetGameDirPath().Replace("\\","/").TrimSuffix("/");
-			GD.Print($"Target Path: {path}\nPatcher Path: {patcherpath}");
-			output.Add($"Target Path: {path}\nPatcher Path: {patcherpath}");
-			if (path == patcherpath)
-			{
-				PatchResultHandler(false, "locPatchFailedSamePath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
-				return;
-			}
-		}
+		PathCheck(path, true);
 		//chmod加权限
 		if (os_name == "macOS" || os_name == "Linux")
 		{
@@ -876,41 +854,10 @@ public partial class Main : Control
 			GD.Print("Sha256 check all passed.");
 			output.Add("Sha256 check all passed.");
 		}
-		// path check
-		var path_exists = true;
-		if (FileAccess.FileExists(path + "/" + dataname))
+		// demo override
+		if (force_patch > 0)
 		{
-			GD.Print("Found " + path + "/" + dataname);
-			output.Add("Found " + path + "/" + dataname);
-		}
-		else
-		{
-			GD.Print("Unable to find " + path + "/" + dataname);
-			output.Add("Unable to find " + path + "/" + dataname);
-			path_exists = false;
-		}
-		if (path_exists)
-		{
-			foreach (var chapter in chapters)
-			{
-				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
-				{
-					GD.Print("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					output.Add("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-				}
-				else
-				{
-					GD.Print("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					output.Add("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					patchingdemo = true;
-					break;
-				}
-			}
-		}
-		if (!path_exists)
-		{
-			PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
-			return;
+			patchingdemo = (force_patch == 2);
 		}
 		GD.Print("Extracting...");
 		output.Add("Extracting...");
@@ -1193,8 +1140,9 @@ public partial class Main : Control
 
 	public void _on_edit_game_path_text_changed(string path)
 	{
-		nodeBtnPatch.Disabled = (path == "" || patchver == "locNotFound");
-		nodeBtnUnpatch.Disabled = (path == "");
+		var pathvalid = PathCheck(path);
+		nodeBtnPatch.Disabled = (!pathvalid) || patchver == "locNotFound";
+		nodeBtnUnpatch.Disabled = !pathvalid;
 	}
 
 	public void _on_triggerpathcheck_pressed()
@@ -1225,6 +1173,11 @@ public partial class Main : Control
 	public void _on_bypasssamepath_toggled(bool toggled)
 	{
 		bypass_same_path = toggled;
+	}
+
+	public void _on_force_patch_item_selected(int selected)
+	{
+		force_patch = selected;
 	}
 
 	public void _on_overrideos_text_changed(string os)
@@ -1492,6 +1445,95 @@ public partial class Main : Control
 			}
 		}
 		return game_path;
+	}
+
+	// 检查DR路径
+	internal bool PathCheck(string path, bool patching = false)
+	{
+		//Same path check
+		if (!bypass_same_path)
+		{
+			var patcherpath = GetGameDirPath().Replace("\\","/").TrimSuffix("/");
+			GD.Print($"Target Path: {path}\nPatcher Path: {patcherpath}");
+			output.Add($"Target Path: {path}\nPatcher Path: {patcherpath}");
+			if (path == patcherpath)
+			{
+				if (patching)
+				{
+					PatchResultHandler(false, "locPatchFailedSamePath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
+				}
+				nodePathValid.Text = "locPatchInvalidSame";
+				return false;
+			}
+		}
+		// path check
+		var path_exists = true;
+		if (FileAccess.FileExists(path + "/" + dataname))
+		{
+			GD.Print("Found " + path + "/" + dataname);
+			output.Add("Found " + path + "/" + dataname);
+		}
+		else
+		{
+			GD.Print("Unable to find " + path + "/" + dataname);
+			output.Add("Unable to find " + path + "/" + dataname);
+			path_exists = false;
+		}
+		if (path_exists)
+		{
+			foreach (var chapter in chapters)
+			{
+				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+				{
+					GD.Print("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					output.Add("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					patchingdemo = false;
+				}
+				else
+				{
+					GD.Print("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					output.Add("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					patchingdemo = true;
+					break;
+				}
+			}
+		}
+		if (path_exists)
+		{
+			nodePathValid.Text = patchingdemo ? "locPatchValidDemo" : "locPatchValidFull";
+			UpdatePathText(path);
+		}
+		else
+		{
+			if (patching)
+			{
+				PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
+			}
+			nodePathValid.Text = "locPatchInvalid";
+		}
+		return path_exists;
+	}
+	// 更新路径文本
+	internal void UpdatePathText(string gamepath, bool trimming = true)
+	{
+		if (gamepath != "" && FileAccess.FileExists(gamepath + "/backup/version"))
+		{
+			var ver = FileAccess.Open(gamepath + "/backup/version", FileAccess.ModeFlags.Read);
+			if (ver != null)
+			{
+				var vertxt = ver.GetAsText();
+				// 1225 check
+				var datedict = Time.GetDateDictFromSystem();
+				if (vertxt == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+				{
+					vertxt = "■■■■";
+				}
+				var versiontxt = nodeTextPatchVersion.Text;
+				versiontxt = (trimming ? versiontxt.Substring(0, versiontxt.LastIndexOf("\n")) : versiontxt) + "\n" + TranslationServer.Translate("locInstalledVer") + vertxt;
+				nodeTextPatchVersion.Text = versiontxt;
+				ver.Close();
+			}
+		}
 	}
 
 	//这个奇怪的DTM字体 最小是13 然后是13+14=27

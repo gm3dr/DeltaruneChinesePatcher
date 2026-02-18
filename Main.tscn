@@ -61,7 +61,7 @@ _data = {
 [sub_resource type="Theme" id="Theme_trn2v"]
 default_font_size = 26
 
-[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchVBox", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
+[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodePathValid", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchVBox", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -80,7 +80,8 @@ nodeTextPatchVersion = NodePath("CenterContainer/Container/TextPatchVersion")
 nodeUpdatePatchRow = NodePath("CenterContainer/Container/UpdatePatchRow")
 nodeBtnUpdatePatch = NodePath("CenterContainer/Container/UpdatePatchRow/OptionButton")
 nodeProgress = NodePath("CenterContainer/Container/ProgressBar")
-nodeEditGamePath = NodePath("CenterContainer/Container/GamePathRow/EditGamePath")
+nodeEditGamePath = NodePath("CenterContainer/Container/GamePathRow/VBoxContainer/EditGamePath")
+nodePathValid = NodePath("CenterContainer/Container/GamePathRow/VBoxContainer/RichTextLabel")
 nodeBtnBrowse = NodePath("CenterContainer/Container/GamePathRow/BtnBrowse")
 nodeBtnPatch = NodePath("CenterContainer/Container/PatchButtonRow/Patch")
 nodeBtnUnpatch = NodePath("CenterContainer/Container/PatchButtonRow/Unpatch")
@@ -201,13 +202,35 @@ theme_override_font_sizes/font_size = 27
 custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
 
-[node name="EditGamePath" type="LineEdit" parent="CenterContainer/Container/GamePathRow" unique_id=1055629153]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/Container/GamePathRow" unique_id=292045908]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="CenterContainer/Container/GamePathRow/VBoxContainer" unique_id=394211855]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EditGamePath" type="LineEdit" parent="CenterContainer/Container/GamePathRow/VBoxContainer" unique_id=1055629153]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 13
 placeholder_text = "locDeltaruneDir"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/Container/GamePathRow/VBoxContainer" unique_id=470396737]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 13
+theme_override_font_sizes/bold_font_size = 13
+theme_override_font_sizes/bold_italics_font_size = 13
+theme_override_font_sizes/italics_font_size = 13
+theme_override_font_sizes/mono_font_size = 13
+bbcode_enabled = true
+text = "locPatchInvalid"
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
 
 [node name="BtnBrowse" type="Button" parent="CenterContainer/Container/GamePathRow" unique_id=33479464]
 layout_mode = 2
@@ -449,7 +472,7 @@ autowrap_mode = 3
 oversampling_override = 1.0
 title = "locAdvanced"
 initial_position = 2
-size = Vector2i(720, 640)
+size = Vector2i(720, 720)
 visible = false
 
 [node name="CenterContainer" type="CenterContainer" parent="Advanced" unique_id=1020563971]
@@ -535,6 +558,33 @@ horizontal_alignment = 2
 layout_mode = 2
 
 [node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath" unique_id=1547668283]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ForcePatchType" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=933764066]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/ForcePatchType" unique_id=1961154125]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/ForcePatchType" unique_id=263724436]
+layout_mode = 2
+text = "locForcePatchType"
+horizontal_alignment = 2
+
+[node name="OptionButton" type="OptionButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/ForcePatchType" unique_id=203593559]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "locDisabled"
+popup/item_0/id = 0
+popup/item_1/text = "locFullVersion"
+popup/item_1/id = 1
+popup/item_2/text = "locDemoVersion"
+popup/item_2/id = 2
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/ForcePatchType" unique_id=1546049203]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -669,7 +719,7 @@ text = "https://api.github.com"
 placeholder_text = "https://api.github.com"
 
 [connection signal="item_selected" from="CenterContainer/Container/UpdatePatchRow/OptionButton" to="." method="_on_option_button_item_selected"]
-[connection signal="text_changed" from="CenterContainer/Container/GamePathRow/EditGamePath" to="." method="_on_edit_game_path_text_changed"]
+[connection signal="text_changed" from="CenterContainer/Container/GamePathRow/VBoxContainer/EditGamePath" to="." method="_on_edit_game_path_text_changed"]
 [connection signal="pressed" from="CenterContainer/Container/GamePathRow/BtnBrowse" to="." method="_on_browse_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/Patch" to="." method="_on_patch_pressed"]
 [connection signal="pressed" from="CenterContainer/Container/PatchButtonRow/BtnRun" to="." method="_on_rungame_pressed"]
@@ -692,6 +742,7 @@ placeholder_text = "https://api.github.com"
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash/CheckButton" to="." method="_on_bypasshash_toggled"]
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong/CheckButton" to="." method="_on_bypasstoolong_toggled"]
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath/CheckButton" to="." method="_on_bypasssamepath_toggled"]
+[connection signal="item_selected" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/ForcePatchType/OptionButton" to="." method="_on_force_patch_item_selected"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/LineEdit" to="." method="_on_xdelta_text_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/LineEdit" to="." method="_on_7z_text_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS/LineEdit" to="." method="_on_overrideos_text_changed"]
