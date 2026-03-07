@@ -1,0 +1,1 @@
+sudo "./DELTARUNE Chinese Patcher.app/Contents/MacOS/DELTARUNE Chinese Patcher"
