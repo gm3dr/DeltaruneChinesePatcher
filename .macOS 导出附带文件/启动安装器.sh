@@ -1,0 +1,1 @@
+sudo open -a "./DELTARUNE Chinese Patcher.app"
