@@ -239,6 +239,7 @@ public partial class Main : Control
 					break;
 				}
 			}
+			nodeBtnPatch.Disabled = (patchver == "locNotFound");
 			nodeBtnUpdatePatch.TooltipText = "locUpdatePatchInfo" + (os_name == "macOS" ? "Mac" : "");
 			nodeOverrideOS.PlaceholderText = OS.GetName();
 			nodeOverrideScale.Value = windowScale;
