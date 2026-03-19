@@ -119,6 +119,10 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
         ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "macOS" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
+    
+    - name: Codesign
+      run: |
+          codesign -s - --force --deep "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
 
     - name: Archive and Upload Artifact (macOS)
       run: |
