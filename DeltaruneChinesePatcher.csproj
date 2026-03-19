@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.6.1-rc">
+<Project Sdk="Godot.NET.Sdk/4.6.2-rc">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
