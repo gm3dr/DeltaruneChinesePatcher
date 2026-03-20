@@ -120,15 +120,16 @@ jobs:
         mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
         ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "macOS" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
     
-    - name: Generate Icon
-      run: |
-          brew install iconsur
-          sudo iconsur set "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app" -l -i "${{ env.SOURCE_PATH }}/patcher_icon.png"
-    
     - name: Codesign
       run: |
           sudo xattr -cr "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
           codesign -s - --force --deep "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
+    
+    - name: Generate Icon
+      run: |
+          brew install iconsur
+          sudo iconsur set "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app" -l -i "${{ env.SOURCE_PATH }}/patcher_icon.png"
+          sudo iconsur cache
 
     - name: Archive and Upload Artifact (macOS)
       run: |
