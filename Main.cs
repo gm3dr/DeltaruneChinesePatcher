@@ -111,6 +111,13 @@ public partial class Main : Control
 				{"macOS", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/Library/Application Support/Steam/steamapps/common/DELTARUNE/DELTARUNE.app/Contents/Resources"},
 				{"Linux", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/.local/share/Steam/steamapps/common/DELTARUNE"}
 			}
+		},
+		{"deltarune_demo", new()
+			{
+				{"Windows", "{STEAMPATH}/steamapps/common/DELTARUNEdemo"},
+				{"macOS", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/Library/Application Support/Steam/steamapps/common/DELTARUNEdemo/DELTARUNE.app/Contents/Resources"},
+				{"Linux", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/.local/share/Steam/steamapps/common/DELTARUNEdemo"}
+			}
 		}
 	};
 	static string game_path_file = GetGameDirPath("game_path.txt");
@@ -1410,9 +1417,10 @@ public partial class Main : Control
 	}
 
 	//寻找游戏路径
-	internal static string FindGamePath()
+	internal static string FindGamePath(string ver = "deltarune")
 	{
-		var game_path = default_paths["deltarune"][os_name];
+		var is_demo = (ver == "deltarune_demo");
+		var game_path = default_paths[ver][os_name];
 		if (DirAccess.DirExistsAbsolute(game_path))
 		{
 			GD.Print("Found " + game_path);
@@ -1423,7 +1431,7 @@ public partial class Main : Control
 			//Windows读取注册表获取Steam目录
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				string[] paths = [default_paths["deltarune"][os_name], default_paths["libraryfolders"][os_name]];
+				string[] paths = [default_paths[ver][os_name], default_paths["libraryfolders"][os_name]];
 				var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
 				var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
 				if (regkey != null)
@@ -1431,7 +1439,7 @@ public partial class Main : Control
 					steampath = regkey.GetValue("SteamPath").ToString().Replace("\\", "/");
 					regkey.Close();
 				}
-				default_paths["deltarune"][os_name] = paths[0].Replace("{STEAMPATH}", steampath);
+				default_paths[ver][os_name] = paths[0].Replace("{STEAMPATH}", steampath);
 				default_paths["libraryfolders"][os_name] = paths[1].Replace("{STEAMPATH}", steampath);
 			}
 			if (FileAccess.FileExists(default_paths["libraryfolders"][os_name]))
@@ -1445,9 +1453,9 @@ public partial class Main : Control
 					{
 						VObject ii = (VObject)i.Value;
 						VObject apps = (VObject)ii["apps"];
-						if (apps.ContainsKey("1671210"))
+						if (apps.ContainsKey(is_demo ? "1690940" : "1671210"))
 						{
-							game_path = ii["path"].ToString().Replace("\\", "/") + "/steamapps/common/DELTARUNE" + (os_name == "macOS" ? "/DELTARUNE.app/Contents/Resources" : "");
+							game_path = ii["path"].ToString().Replace("\\", "/") + "/steamapps/common/DELTARUNE" + (is_demo ? "demo" : "") + (os_name == "macOS" ? "/DELTARUNE.app/Contents/Resources" : "");
 							if (DirAccess.DirExistsAbsolute(game_path))
 							{
 								GD.Print("Found " + game_path);
@@ -1460,6 +1468,10 @@ public partial class Main : Control
 					}
 				}
 			}
+		}
+		if (!is_demo && game_path.IsNullOrEmpty())
+		{
+			game_path = FindGamePath("deltarune_demo");
 		}
 		return game_path;
 	}
