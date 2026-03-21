@@ -1469,7 +1469,7 @@ public partial class Main : Control
 				}
 			}
 		}
-		if (!is_demo && game_path.IsNullOrEmpty())
+		if ((!is_demo) && string.IsNullOrEmpty(game_path))
 		{
 			game_path = FindGamePath("deltarune_demo");
 		}
