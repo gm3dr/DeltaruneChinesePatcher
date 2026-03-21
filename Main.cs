@@ -88,9 +88,9 @@ public partial class Main : Control
 	};
 	static readonly Godot.Collections.Dictionary<string, string> externals_hash = new()
 	{
-		{GetGameDirPath("externals/7zip/7z"), "9a556170350dafb60a97348b86a94b087d97fd36007760691576cac0d88b132b"},
-		{GetGameDirPath("externals/7zip/7z.exe"), "d2c0045523cf053a6b43f9315e9672fc2535f06aeadd4ffa53c729cd8b2b6dfe"},
-		{GetGameDirPath("externals/7zip/7z_mac"), "bd5765978a541323758d82ad1d30df76a2e3c86341f12d6b0524d837411e9b4a"},
+		{GetGameDirPath("externals/7zip/7z"), "57b73a4bf122b8d7e69c4c04a478f258b03f1515feebe1e70f190432710b3a3b"},
+		{GetGameDirPath("externals/7zip/7z.exe"), "4bec0bc59836a890a11568b58bd12a3e7b23a683557340562da211b6088058ba"},
+		{GetGameDirPath("externals/7zip/7z_mac"), "a00f6d085a82a95f6dfc69ea150e05234a12b6d5d134325dddb964cae6817488"},
 		{GetGameDirPath("externals/xdelta3/xdelta3"), "709f63ebb9655dc3b5c84f17e11217494eb34cf00c009a026386e4c8617ea903"},
 		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "6855c01cf4a1662ba421e6f95370cf9afa2b3ab6c148473c63efe60d634dfb9a"},
 		{GetGameDirPath("externals/xdelta3/xdelta3_mac_x86"), "8fe489366837b96709f2b1627c309b29b977522ced5e2e62fbffca85233529fe"},
