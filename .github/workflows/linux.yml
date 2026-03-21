@@ -27,9 +27,9 @@ jobs:
     - name: Download UPX
       run: |
         mkdir -p ${{ github.workspace }}/upx
-        wget -O ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v5.0.2/upx-5.0.2-amd64_linux.tar.xz
-        xz -d ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar.xz
-        tar -xvf ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux.tar -C ${{ github.workspace }}/upx
+        wget -O ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v5.1.1/upx-5.1.1-amd64_linux.tar.xz
+        xz -d ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux.tar.xz
+        tar -xvf ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux.tar -C ${{ github.workspace }}/upx
       
     - name: Cache Godot Build Artifacts
       id: godot-cache
@@ -133,7 +133,7 @@ jobs:
 
     - name: UPX Compressing
       run: |
-        ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
+        ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
     
     - name: Process files
       run: |
