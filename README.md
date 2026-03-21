@@ -21,8 +21,8 @@
 - [Godot Engine](https://godotengine.org) *(修改只需要使用 4.6 Stable Mono，`csproj` 中的 SDK 版本号是用于压缩文件大小的[自定义导出模板](#编辑器与自定义导出模板构建脚本))*
 - [.NET 8 SDK](https://dotnet.microsoft.com)
 - [Gameloop.Vdf](https://www.nuget.org/packages/Gameloop.Vdf)
-- [rcedit](https://github.com/electron/rcedit) *(非必须, 用于 Windows 平台导出时修改 exe 资源)*
 - [UPX](https://github.com/upx/upx/releases) *(非必须, 用于压缩可执行文件大小)*
+- [IconSur](https://github.com/rikumi/iconsur) *(非必须, 用于 macOS 平台图标优化)*
 
 ### 编辑器与自定义导出模板构建脚本
 `scons` 开头的指令都需要在最后加上[通用参数](#通用参数)的内容
@@ -121,8 +121,8 @@ python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./b
 		<td>Markus & Laszlo & John</td>
 	</tr>
 	</tr>
-		<td>rcedit</td>
-		<td>electron 开源贡献者</td>
+		<td>IconSur</td>
+		<td>Rikumi</td>
 	</tr>
 	</tr>
 		<td>Gameloop.Vdf</td>
