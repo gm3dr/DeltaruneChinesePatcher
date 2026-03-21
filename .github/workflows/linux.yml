@@ -142,13 +142,12 @@ jobs:
           cp "${{ env.SOURCE_PATH }}/externals/7zip/7z" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/7zip/"
           cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/xdelta3/"
 
-    - name: Archive and Upload Artifact (Linux)
+    - name: Archive
       run: |
-        cd ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux
-        zip -r ../DeltaruneChinesePatcher_Linux.zip .
+        tar -czvf "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux.tar.gz" -C "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux" .
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Linux
-        path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux.zip
+        path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux.tar.gz
