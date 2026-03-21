@@ -1165,7 +1165,7 @@ public partial class Main : Control
 	public void _on_edit_game_path_text_changed(string path)
 	{
 		var pathvalid = PathCheck(path);
-		nodeBtnPatch.Disabled = (!pathvalid) || patchver == "locNotFound";
+		nodeBtnPatch.Disabled = (!pathvalid) || (patchver == "locNotFound" && !patchingdemo) || (string.IsNullOrEmpty(demopatchver) && patchingdemo);
 		nodeBtnUnpatch.Disabled = !pathvalid;
 	}
 
