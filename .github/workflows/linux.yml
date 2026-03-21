@@ -134,6 +134,13 @@ jobs:
     - name: UPX Compressing
       run: |
         ${{ github.workspace }}/upx/upx-5.0.2-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
+    
+    - name: Process files
+      run: |
+          mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/7zip"
+          mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/xdelta3"
+          cp "${{ env.SOURCE_PATH }}/externals/7zip/7z" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/7zip/"
+          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/xdelta3/"
 
     - name: Archive and Upload Artifact (Linux)
       run: |

@@ -120,16 +120,26 @@ jobs:
         mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
         ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "macOS" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
     
-    - name: Codesign
-      run: |
-          sudo xattr -cr "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
-          codesign -s - --force --deep "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
-    
     - name: Generate Icon
       run: |
           brew install iconsur
           sudo iconsur set "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app" -l -i "${{ env.SOURCE_PATH }}/patcher_icon.png"
           sudo iconsur cache
+    
+    - name: Process files
+      run: |
+          rm -rf "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/Resources/data_DeltaruneChinesePatcher_macos_arm64/DeltaruneChinesePatcher.dylib.dsym"
+          rm -rf "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/Resources/data_DeltaruneChinesePatcher_macos_x86_64/DeltaruneChinesePatcher.dylib.dsym"
+          mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/MacOS/externals/7zip"
+          mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/MacOS/externals/xdelta3"
+          cp "${{ env.SOURCE_PATH }}/externals/7zip/7z_mac" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/MacOS/externals/7zip/"
+          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3_mac_arm" "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3_mac_x86" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/MacOS/externals/xdelta3/"
+          cp "${{ env.SOURCE_PATH }}/.macOS 导出附带文件/遇到问题读我.txt" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/"
+    
+    - name: Codesign
+      run: |
+          sudo xattr -cr "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
+          codesign -s - --force --deep "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
 
     - name: Archive and Upload Artifact (macOS)
       run: |
