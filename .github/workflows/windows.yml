@@ -15,12 +15,12 @@ jobs:
 
     steps:
     - name: Checkout Project
-      uses: actions\checkout@v4
+      uses: actions/checkout@v4
       with:
         path: ${{ env.SOURCE_PATH }}
 
     - name: Setup .NET 8
-      uses: actions\setup-dotnet@v3
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: |
           8.0.x
@@ -34,7 +34,7 @@ jobs:
 
     - name: Cache Godot Build Artifacts
       id: godot-cache
-      uses: actions\cache@v4
+      uses: actions/cache@v4
       with:
         path: |
           ${{ env.GODOT_SOURCE_PATH }}\bin
@@ -45,7 +45,7 @@ jobs:
           godot-build-${{ runner.os }}-4.6-
 
     - name: Set up MinGW
-      uses: egor-tensin\setup-mingw@v3
+      uses: egor-tensin/setup-mingw@v3
       with:
         platform: x64
 
@@ -60,7 +60,7 @@ jobs:
 
     - name: Clone Godot Engine
       if: steps.godot-cache.outputs.cache-hit != 'true'
-      uses: actions\checkout@v4
+      uses: actions/checkout@v4
       with:
         repository: godotengine\godot
         path: ${{ env.GODOT_SOURCE_PATH }}
@@ -141,7 +141,7 @@ jobs:
         ${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows\externals\7zip\7z.exe a "DeltaruneChinesePatcher_Windows.7z" "DeltaruneChinesePatcher_Windows\*"
 
     - name: Upload Artifact
-      uses: actions\upload-artifact@v4
+      uses: actions/upload-artifact@v4
       with:
         name: Windows
         path: ${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows.7z
