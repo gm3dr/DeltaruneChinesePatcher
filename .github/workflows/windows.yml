@@ -28,7 +28,7 @@ jobs:
     - name: Download UPX
       run: |
         mkdir ${{ github.workspace }}\upx
-        curl -L -o ${{ github.workspace }}\upx\upx-5.1.1-win64.zip https:\\github.com\upx\upx\releases\download\v5.1.1\upx-5.1.1-win64.zip
+        curl -L -o ${{ github.workspace }}\upx\upx-5.1.1-win64.zip https://github.com/upx/upx/releases/download/v5.1.1/upx-5.1.1-win64.zip
         cd ${{ github.workspace }}\upx
         unzip upx-5.1.1-win64.zip
 
@@ -54,7 +54,7 @@ jobs:
       run: |
         pip install scons
         mkdir -p ${{ env.ANGLE_LIB_PATH }}
-        curl -L -o ${{ github.workspace }}\angle-lib.zip https:\\github.com\godotengine\godot-angle-static\releases\latest\download\godot-angle-static-x86_64-msvc-release.zip
+        curl -L -o ${{ github.workspace }}\angle-lib.zip https://github.com/godotengine/godot-angle-static/releases/latest/download/godot-angle-static-x86_64-msvc-release.zip
         cd ${{ env.ANGLE_LIB_PATH }}
         unzip ${{ github.workspace }}\angle-lib.zip
 
