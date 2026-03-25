@@ -62,7 +62,7 @@ jobs:
       if: steps.godot-cache.outputs.cache-hit != 'true'
       uses: actions/checkout@v4
       with:
-        repository: godotengine\godot
+        repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
         ref: '4.6'
 
@@ -87,22 +87,22 @@ jobs:
         <?xml version="1.0" encoding="utf-8"?>
         <configuration>
           <packageSources>
-            <clear \>
-            <add key="local-godot" value="${{ env.LOCAL_NUGET_PATH }}" \>
-            <add key="nuget.org" value="https:\\api.nuget.org\v3\index.json" \>
-          <\packageSources>
+            <clear />
+            <add key="local-godot" value="${{ env.LOCAL_NUGET_PATH }}" />
+            <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+          </packageSources>
           <packageSourceMapping>
             <packageSource key="local-godot">
-              <package pattern="Godot.NET.Sdk" \>
-              <package pattern="Godot.SourceGenerators" \>
-              <package pattern="GodotSharp" \>
-              <package pattern="GodotSharpEditor" \>
-            <\packageSource>
+              <package pattern="Godot.NET.Sdk" />
+              <package pattern="Godot.SourceGenerators" />
+              <package pattern="GodotSharp" />
+              <package pattern="GodotSharpEditor" />
+            </packageSource>
             <packageSource key="nuget.org">
-              <package pattern="*" \>
-            <\packageSource>
-          <\packageSourceMapping>
-        <\configuration>
+              <package pattern="*" />
+            </packageSource>
+          </packageSourceMapping>
+        </configuration>
         "@ | Out-File -FilePath nuget.config -Encoding UTF8
 
     - name: .NET Restore
