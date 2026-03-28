@@ -136,10 +136,10 @@ jobs:
     #       sudo iconsur set "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app" -l -i "${{ env.SOURCE_PATH }}/patcher_icon.png"
     #       sudo iconsur cache
     
-    # - name: Codesign
-    #   run: |
-    #       sudo xattr -cr "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
-    #       codesign -s - --force --deep "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
+    - name: Codesign
+      run: |
+          sudo xattr -cr "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
+          codesign -s - "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/DELTARUNE Chinese Patcher"
 
     - name: Archive
       run: |
