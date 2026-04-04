@@ -8,8 +8,10 @@ jobs:
     name: Export Linux
     env:
       SOURCE_PATH: ${{ github.workspace }}/DeltaruneChinesePatcher
-      GODOT_SOURCE_PATH: ${{ github.workspace }}/godot
-      GODOT_EDITOR_PATH: ${{ github.workspace }}/godot/bin/godot.linuxbsd.editor.x86_64.mono
+      GODOT_SOURCE_PATH: ${{ github.workspace }}/godot/latest
+      GODOT_EDITOR_PATH: ${{ github.workspace }}/godot/latest/bin/godot.linuxbsd.editor.x86_64.mono
+      GODOT_44_SOURCE_PATH: ${{ github.workspace }}/godot/4.4/
+      GODOT_44_EDITOR_PATH: ${{ github.workspace }}/godot/4.4/bin/godot.linuxbsd.editor.x86_64.mono
       LOCAL_NUGET_PATH: ${{ github.workspace }}/local-nuget
 
     steps:
@@ -42,6 +44,18 @@ jobs:
         key: godot-build-${{ runner.os }}-4.6-${{ steps.godot_commit.outputs.hash }}
         restore-keys: |
           godot-build-${{ runner.os }}-4.6-
+      
+    - name: Cache Godot 4.4 Build Artifacts
+      id: godot-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ env.GODOT_44_SOURCE_PATH }}/bin
+          ${{ env.GODOT_44_SOURCE_PATH }}/modules/mono/glue
+          ${{ env.LOCAL_NUGET_PATH }}
+        key: godot-build-${{ runner.os }}-4.4-${{ steps.godot_commit.outputs.hash }}
+        restore-keys: |
+          godot-build-${{ runner.os }}-4.4-
 
     - name: Install Godot Build Dependencies
       if: steps.godot-cache.outputs.cache-hit != 'true'
@@ -72,6 +86,14 @@ jobs:
         path: ${{ env.GODOT_SOURCE_PATH }}
         ref: '4.6'
 
+    - name: Clone Godot Engine 4.4
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      uses: actions/checkout@v4
+      with:
+        repository: godotengine/godot
+        path: ${{ env.GODOT_44_SOURCE_PATH }}
+        ref: '4.4'
+
     - name: Build Godot
       if: steps.godot-cache.outputs.cache-hit != 'true'
       working-directory: ${{ env.GODOT_SOURCE_PATH }}
@@ -85,6 +107,21 @@ jobs:
       run: |
         mkdir -p ${{ env.LOCAL_NUGET_PATH }}
         ${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
+        python3 ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
+
+    - name: Build Godot 4.4
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      working-directory: ${{ env.GODOT_44_SOURCE_PATH }}
+      run: |
+        scons platform=linuxbsd arch=x86_64 target=editor module_mono_enabled=yes lto=full module_astcenc_enabled=no production=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no module_text_server_fb_enabled=yes module_godot_physics_2d_enabled=no module_godot_physics_3d_enabled=no module_jolt_enabled=no module_basis_universal_enabled=no module_bcdec_enabled=no module_bmp_enabled=no module_camera_enabled=no module_csg_enabled=no module_dds_enabled=no module_enet_enabled=no module_etcpak_enabled=no module_fbx_enabled=no module_gltf_enabled=no module_gridmap_enabled=no module_hdr_enabled=no module_interactive_music_enabled=no module_jsonrpc_enabled=no module_ktx_enabled=no module_mbedtls_enabled=no module_meshoptimizer_enabled=no module_minimp3_enabled=no module_mobile_vr_enabled=no module_msdfgen_enabled=no module_multiplayer_enabled=no module_noise_enabled=no module_navigation_2d_enabled=no module_navigation_3d_enabled=no module_ogg_enabled=no module_openxr_enabled=no module_raycast_enabled=no module_tga_enabled=no module_theora_enabled=no module_tinyexr_enabled=no module_upnp_enabled=no module_vhacd_enabled=no module_vorbis_enabled=no module_webrtc_enabled=no module_websocket_enabled=no module_webxr_enabled=no module_zip_enabled=no -j$(nproc)
+        scons platform=linuxbsd arch=x86_64 target=template_release module_mono_enabled=yes lto=full disable_3d=yes module_astcenc_enabled=no module_regex_enabled=no module_svg_enabled=no production=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no module_text_server_fb_enabled=yes module_godot_physics_2d_enabled=no module_godot_physics_3d_enabled=no module_jolt_enabled=no disable_physics_2d=yes disable_physics_3d=yes module_basis_universal_enabled=no module_bcdec_enabled=no module_bmp_enabled=no module_camera_enabled=no module_csg_enabled=no module_dds_enabled=no module_enet_enabled=no module_etcpak_enabled=no module_fbx_enabled=no module_gltf_enabled=no module_gridmap_enabled=no module_hdr_enabled=no module_interactive_music_enabled=no module_jsonrpc_enabled=no module_ktx_enabled=no module_mbedtls_enabled=no module_meshoptimizer_enabled=no module_minimp3_enabled=no module_mobile_vr_enabled=no module_msdfgen_enabled=no module_multiplayer_enabled=no module_noise_enabled=no module_navigation_2d_enabled=no module_navigation_3d_enabled=no module_ogg_enabled=no module_openxr_enabled=no module_raycast_enabled=no module_tga_enabled=no module_theora_enabled=no module_tinyexr_enabled=no module_upnp_enabled=no module_vhacd_enabled=no module_vorbis_enabled=no module_webrtc_enabled=no module_websocket_enabled=no module_webxr_enabled=no module_zip_enabled=no -j$(nproc)
+
+    - name: Generate Mono Glue & Build Assemblies 4.4
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      working-directory: ${{ env.GODOT_44_SOURCE_PATH }}
+      run: |
+        mkdir -p ${{ env.LOCAL_NUGET_PATH }}
+        ${{ env.GODOT_44_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
         python3 ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
         
     - name: Configure Local NuGet Source
@@ -125,15 +162,28 @@ jobs:
         TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.6.3.rc.mono"
         mkdir -p "$TEMPLATE_DIR"
         cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot.linuxbsd.template_release.x86_64.mono "${TEMPLATE_DIR}/linux_release.x86_64"
+        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.4.2.rc.mono"
+        mkdir -p "$TEMPLATE_DIR"
+        cp ${{ env.GODOT_44_SOURCE_PATH }}/bin/godot.linuxbsd.template_release.x86_64.mono "${TEMPLATE_DIR}/linux_release.x86_64"
 
     - name: Export Project
       run: |
         mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux
         ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
 
+    - name: Export Project (Outdated)
+      run: |
+        project="${{ env.SOURCE_PATH }}/project.godot"
+        sed -i 's|config/features=PackedStringArray("4\.6"|config/features=PackedStringArray("4.4"|g' "$project"
+        csproj="${{ env.SOURCE_PATH }}/DeltaruneChinesePatcher.csproj"
+        sed -i 's|Godot.NET.Sdk/4\.6\.3-rc|Godot.NET.Sdk/4.4.2-rc|g' "$csproj"
+        mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated
+        ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/DELTARUNE Chinese Patcher.x86_64"
+
     - name: UPX Compressing
       run: |
         ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
+        ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/DELTARUNE Chinese Patcher.x86_64"
     
     - name: Process files
       run: |
@@ -141,13 +191,24 @@ jobs:
           mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/xdelta3"
           cp "${{ env.SOURCE_PATH }}/externals/7zip/7z" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/7zip/"
           cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/xdelta3/"
+          mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/7zip"
+          mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/xdelta3"
+          cp "${{ env.SOURCE_PATH }}/externals/7zip/7z" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/7zip/"
+          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/xdelta3/"
 
     - name: Archive
       run: |
         tar -czvf "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux.tar.gz" -C "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux" .
+        tar -czvf "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated.tar.gz" -C "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated" .
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Linux
         path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux.tar.gz
+        
+    - name: Upload Artifact (Outdated)
+      uses: actions/upload-artifact@v4
+      with:
+        name: Linux (Outdated)
+        path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated.tar.gz
