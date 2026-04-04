@@ -122,7 +122,7 @@ jobs:
       
     - name: Install Custom Export Template
       run: |
-        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.6.2.rc.mono"
+        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.6.3.rc.mono"
         mkdir -p "$TEMPLATE_DIR"
         cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot.linuxbsd.template_release.x86_64.mono "${TEMPLATE_DIR}/linux_release.x86_64"
 
