@@ -170,15 +170,23 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux
         ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
-
-    - name: Export Project (Outdated)
+  
+    - name: Change for 4.4
       run: |
         project="${{ env.SOURCE_PATH }}/project.godot"
         sed -i 's|config/features=PackedStringArray("4\.6"|config/features=PackedStringArray("4.4"|g' "$project"
         csproj="${{ env.SOURCE_PATH }}/DeltaruneChinesePatcher.csproj"
         sed -i 's|Godot.NET.Sdk/4\.6\.3-rc|Godot.NET.Sdk/4.4.2-rc|g' "$csproj"
+        maincs="${{ env.SOURCE_PATH }}/Main.cs"
+        sed -i 's|TranslationServer\.FindTranslations(current, true)\[0\]|TranslationServer.GetTranslationObject(current)|g' "$maincs"
+        dotnet restore
+        dotnet build
+      working-directory: ${{ env.SOURCE_PATH }}
+
+    - name: Export Project (Outdated)
+      run: |
         mkdir -p ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated
-        ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/DELTARUNE Chinese Patcher.x86_64"
+        ${{ env.GODOT_44_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --export-release "Linux" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/DELTARUNE Chinese Patcher.x86_64"
 
     - name: UPX Compressing
       run: |
