@@ -120,7 +120,6 @@ public partial class Main : Control
 			}
 		}
 	};
-	static readonly bool is_outdated_ver = Engine.GetVersionInfo()["major"].AsInt32() <= 4 && Engine.GetVersionInfo()["minor"].AsInt32() <= 4;
 	static string game_path_file = GetGameDirPath("game_path.txt");
 	static string patchdir = GetGameDirPath("patch");
 	static string patchver = "locNotFound";
@@ -132,6 +131,8 @@ public partial class Main : Control
 	static readonly Architecture os_arch = RuntimeInformation.ProcessArchitecture;
 	static string osname = (os_name == "macOS" ? "mac" : "windows");
 	static string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
+	static readonly bool is_outdated_ver = Engine.GetVersionInfo()["major"].AsInt32() <= 4 && Engine.GetVersionInfo()["minor"].AsInt32() <= 4;
+	static readonly bool is_self_extract = os_name == "Windows" && GetGameDirPath().Replace("/","\\").Contains(System.IO.Path.GetTempPath().TrimSuffix("\\"));
 	string[] locales;
 	bool inited = false;
 	static Vector2 windowDesignSize = new Vector2(640, 480);
@@ -266,7 +267,7 @@ public partial class Main : Control
 		nodeBtnUpdatePatcher.Visible = false;
 		nodeBtnUpdatePatcher.Disabled = false;
 		//安装器版本号
-		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString() + (is_outdated_ver ? "-Outdated" : "");
+		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString() + (is_self_extract ? "-SelfExtract" : "") + (is_outdated_ver ? "-Outdated" : "");
 		// 1225 check
 		if (patchver == "1225" || patchver == "■■■■" || (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25"))
 		{
@@ -310,7 +311,7 @@ public partial class Main : Control
 		var httpc = new System.Net.Http.HttpClient();
 		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 		nodeBtnInfo.TooltipText = "locInfo";
-		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]" + (!string.IsNullOrEmpty(demopatchver) ? ("  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
+		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]" + (!string.IsNullOrEmpty(demopatchver) ? ("  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + (is_self_extract ? "" : "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting"));
 		//contributors
 		var json = new Json();
 		try
@@ -335,27 +336,38 @@ public partial class Main : Control
 		json = new Json();
 		try
 		{
-			if (!inited)
+			if (is_self_extract)
 			{
-				json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinese/releases/latest"));
-				patchreleases = json.Data.AsGodotDictionary();
+				nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
+				if (!string.IsNullOrEmpty(demopatchver))
+				{
+					nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
+				}
 			}
-			var latestver = patchreleases["tag_name"].AsString();
-			// 1225 check
-			if (latestver == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+			else
 			{
-				latestver = "■■■■";
-			}
-			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
-			if (!string.IsNullOrEmpty(demopatchver))
-			{
-				nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
-			}
-			nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locLatestVer") + latestver;
-			UpdatePathText(nodeEditGamePath.Text, false);
-			if (patchver != patchreleases["tag_name"].AsString() || demopatchver != patchreleases["tag_name"].AsString())
-			{
-				nodeUpdatePatchRow.Visible = true;
+				if (!inited)
+				{
+					json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinese/releases/latest"));
+					patchreleases = json.Data.AsGodotDictionary();
+				}
+				var latestver = patchreleases["tag_name"].AsString();
+				// 1225 check
+				if (latestver == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+				{
+					latestver = "■■■■";
+				}
+				nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
+				if (!string.IsNullOrEmpty(demopatchver))
+				{
+					nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
+				}
+				nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locLatestVer") + latestver;
+				UpdatePathText(nodeEditGamePath.Text, false);
+				if (patchver != patchreleases["tag_name"].AsString() || demopatchver != patchreleases["tag_name"].AsString())
+				{
+					nodeUpdatePatchRow.Visible = true;
+				}
 			}
 			if (nodeWindowReadmeContent.Text != "")
 			{
@@ -386,7 +398,7 @@ public partial class Main : Control
 			//nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
 		}
 		//安装器更新
-		if (!(OS.HasFeature("editor") || ProjectSettings.GetSetting("application/config/version").AsString().Contains("dev")))
+		if (!(OS.HasFeature("editor") || ProjectSettings.GetSetting("application/config/version").AsString().Contains("dev") || is_self_extract))
 		{
 			json = new Json();
 			try
