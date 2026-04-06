@@ -550,7 +550,8 @@ public partial class Main : Control
 	{
 		foreach (var asset in patcherreleases["assets"].AsGodotArray())
 		{
-			if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains(os_name.ToLower()))
+			var name = asset.AsGodotDictionary()["name"].AsString().ToLower();
+			if (name.Contains(os_name.ToLower()) && (((!is_outdated_ver) && (!name.Contains("outdated"))) || (is_outdated_ver && name.Contains("outdated"))))
 			{
 				OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
 				break;
