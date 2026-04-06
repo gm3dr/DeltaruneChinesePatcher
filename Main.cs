@@ -120,6 +120,7 @@ public partial class Main : Control
 			}
 		}
 	};
+	static readonly bool is_outdated_ver = Engine.GetVersionInfo()["major"].AsInt32() <= 4 && Engine.GetVersionInfo()["minor"].AsInt32() <= 4;
 	static string game_path_file = GetGameDirPath("game_path.txt");
 	static string patchdir = GetGameDirPath("patch");
 	static string patchver = "locNotFound";
@@ -157,6 +158,16 @@ public partial class Main : Control
 		//首次初始化
 		if (!inited)
 		{
+			// Outdated notification
+			if (is_outdated_ver)
+			{
+				nodeWindowPopupContent.Text = "locOutdatedVer";
+				nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+				nodeWindowPopup.Size = new Vector2I(TranslationServer.GetLocale().StartsWith("en") ? 960 : 640, 270) * windowScale;
+				nodeWindowPopup.Title = "locCaution";
+				nodeWindowPopup.Show();
+			}
+
 			osname = (os_name == "macOS" ? "mac" : "windows");
 			dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 			nodeBgAnim.Play("bg_anim");
@@ -255,7 +266,7 @@ public partial class Main : Control
 		nodeBtnUpdatePatcher.Visible = false;
 		nodeBtnUpdatePatcher.Disabled = false;
 		//安装器版本号
-		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString();
+		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString() + (is_outdated_ver ? "-Outdated" : "");
 		// 1225 check
 		if (patchver == "1225" || patchver == "■■■■" || (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25"))
 		{
@@ -1134,6 +1145,7 @@ public partial class Main : Control
 			nodeWindowPopupContent.Text = "locNoBakDetected";
 			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 			nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
+			nodeWindowPopup.Title = "locResult";
 			nodeWindowPopup.Show();
 			return;
 		}
@@ -1152,6 +1164,7 @@ public partial class Main : Control
 			nodeWindowPopupContent.Text = "locOldBakDetected";
 			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 			nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
+			nodeWindowPopup.Title = "locResult";
 			nodeWindowPopup.Show();
 			return;
 		}
@@ -1159,6 +1172,7 @@ public partial class Main : Control
 		nodeWindowPopupContent.Text = "locUnpatched";
 		nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 		nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
+		nodeWindowPopup.Title = "locResult";
 		nodeWindowPopup.Show();
 	}
 
@@ -1295,6 +1309,7 @@ public partial class Main : Control
 		nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}", usedtime);
 		nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 		nodeWindowPopup.Size = popup_size * windowScale;
+		nodeWindowPopup.Title = "locResult";
 		if (success)
 		{
 			var gamepath = nodeEditGamePath.Text;
