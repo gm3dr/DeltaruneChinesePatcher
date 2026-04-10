@@ -445,6 +445,7 @@ public partial class Main : Control
 	public void _on_file_dialog_dir_selected(string dir)
 	{
 		nodeEditGamePath.Text = dir;
+		_on_edit_game_path_text_changed(dir);
 	}
 	public void _on_window_close_requested()
 	{
