@@ -1508,6 +1508,26 @@ public partial class Main : Control
 	// 检查DR路径
 	internal bool PathCheck(string path, bool patching = false)
 	{
+		//file check
+		if (FileAccess.FileExists(path))
+		{
+			nodePathValid.Text = "locPatchInvalidFile";
+			if (patching)
+			{
+				PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
+			}
+			return false;
+		}
+		//path check
+		if (!DirAccess.DirExistsAbsolute(path))
+		{
+			nodePathValid.Text = "locPatchInvalidExists";
+			if (patching)
+			{
+				PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
+			}
+			return false;
+		}
 		//Same path check
 		if (!bypass_same_path)
 		{
@@ -1520,9 +1540,19 @@ public partial class Main : Control
 				if (patching)
 				{
 					PatchResultHandler(false, "locPatchFailedSamePath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
-					return false;
 				}
+				return false;
 			}
+		}
+		//UT path check
+		if (path.ToLower().TrimSuffix("/").TrimSuffix(".app").EndsWith("undertale") || FileAccess.FileExists(path + "/UNDERTALE.exe"))
+		{
+			nodePathValid.Text = "locPatchInvalidUT";
+			if (patching)
+			{
+				PatchResultHandler(false, "locPatchFailedUT", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 270));
+			}
+			return false;
 		}
 		// path check
 		var path_exists = true;
