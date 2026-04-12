@@ -177,8 +177,8 @@ public partial class Main : Control
 			if (os_name == "macOS")
 			{
 				window.Unresizable = true;
-				nodeBtnInfo.Position += new Vector2(0, 32);
-				nodeComboLanguage.Position += new Vector2(0, 32);
+				nodeBtnInfo.Position = new Vector2(nodeBtnInfo.Position.X, 32);
+				nodeComboLanguage.Position = new Vector2(nodeComboLanguage.Position.X, 32);
 				nodeTitleBar.Visible = true;
 				if (OS.IsDebugBuild())
 				{
