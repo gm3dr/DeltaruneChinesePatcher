@@ -61,7 +61,7 @@ _data = {
 [sub_resource type="Theme" id="Theme_trn2v"]
 default_font_size = 26
 
-[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodePathValid", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnRun", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchVBox", "nodeWindowPatchContent", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
+[node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodePathValid", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnRun", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchVBox", "nodeWindowPatchContent", "nodeWindowTutorial", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -97,6 +97,7 @@ nodeWindowPopup1225 = NodePath("Popup1225")
 nodeWindowPatch = NodePath("Patch")
 nodeWindowPatchVBox = NodePath("Patch/CenterContainer/VBoxContainer")
 nodeWindowPatchContent = NodePath("Patch/CenterContainer/VBoxContainer/Label")
+nodeWindowTutorial = NodePath("Tutorial")
 nodeWindowAdvanced = NodePath("Advanced")
 nodeContainerAdvanced = NodePath("Advanced/CenterContainer")
 nodeOverrideOS = NodePath("Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS/LineEdit")
@@ -478,6 +479,40 @@ layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 
+[node name="Tutorial" type="Window" parent="." unique_id=1916577584]
+auto_translate_mode = 1
+oversampling_override = 1.0
+title = "locTutorial"
+initial_position = 2
+size = Vector2i(640, 240)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Tutorial" unique_id=637644696]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tutorial/ScrollContainer" unique_id=460877508]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Tutorial/ScrollContainer/VBoxContainer" unique_id=80893516]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "locTutorialLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Button" type="Button" parent="Tutorial/ScrollContainer/VBoxContainer" unique_id=1390538790]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "locOpenTutorial"
+
 [node name="Advanced" type="Window" parent="." unique_id=1720558407]
 oversampling_override = 1.0
 title = "locAdvanced"
@@ -747,6 +782,8 @@ placeholder_text = "https://api.github.com"
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="_on_patch_updated_pressed"]
 [connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/GameUpdated" to="." method="_on_game_updated_pressed"]
 [connection signal="close_requested" from="Readme" to="." method="_on_readme_close_requested"]
+[connection signal="close_requested" from="Tutorial" to="." method="_on_tutorial_close_requested"]
+[connection signal="pressed" from="Tutorial/ScrollContainer/VBoxContainer/Button" to="." method="_on_tutorial_pressed"]
 [connection signal="close_requested" from="Advanced" to="." method="_on_advanced_close_requested"]
 [connection signal="pressed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/TriggerPath/Button" to="." method="_on_triggerpathcheck_pressed"]
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash/CheckButton" to="." method="_on_bypasshash_toggled"]

@@ -69,6 +69,8 @@ public partial class Main : Control
 	[Export]
 	Label nodeWindowPatchContent = null!;
 	[Export]
+	Window nodeWindowTutorial = null!;
+	[Export]
 	Window nodeWindowAdvanced = null!;
 	[Export]
 	CenterContainer nodeContainerAdvanced = null!;
@@ -541,11 +543,19 @@ public partial class Main : Control
 	{
 		nodeWindowReadme.Hide();
 	}
+	public void _on_tutorial_close_requested()
+	{
+		nodeWindowTutorial.Hide();
+	}
 	public void _on_advanced_close_requested()
 	{
 		nodeWindowAdvanced.Hide();
 		inited = false;
 		_Ready();
+	}
+	public void _on_tutorial_pressed()
+	{
+		OS.ShellOpen("https://www.bilibili.com/video/BV1AuZcBJE56");
 	}
 	public void _on_update_pressed()
 	{

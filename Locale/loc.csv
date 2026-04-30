@@ -61,6 +61,9 @@ locPatchInvalidUT,   [color=red]Path Invalid: UNDERTALE instead of DELTARUNE[/co
 locPatchInvalidSame,   [color=red]Path not recommended: Same path as patcher[/color],   [color=red]路径不推荐：与安装器相同路径[/color],   [color=red]路徑不推薦：與安裝器相同路徑[/color]
 locPatchValidFull,   [color=green]Path Valid: Full Version[/color],   [color=green]路径有效：完整版[/color],   [color=green]路徑有效：完整版[/color]
 locPatchValidDemo,   [color=green]Path Valid: Demo Version[/color],   [color=green]路径有效：Demo 版[/color],   [color=green]路徑有效：Demo 版[/color]
+locTutorial,How to patch?,如何安装？,如何安裝？
+locTutorialLabel,Press button below for patch tutorial\nIf you encounter any problem when patching\nPlease check the video first\n You can restart patcher to find this again,按下下方按钮打开安装教程\n如果在安装过程中出现任何问题\n也请优先查阅此视频\n你可以通过重启安装器来再次找到此窗口,按下下方按鈕開啟安裝教程\n如果在安裝過程中出現任何問題\n也請優先查閱此影片\n你可以透過重啟安裝器來再次找到此視窗
+locOpenTutorial, Open Tutorial Video , 打开安装教程 , 打開安裝教程 
 locAdvanced,Advanced Options,高级选项,高級選項
 locAdvancedTooltip,Click to open Advanced Options\nWarning: Please ensure that you know what you are doing\nbefore using these options,点击打开高级选项\n警告：请确保你知道你在做什么的情况下\n才使用这些选项,點擊打開高級選項\n警告：請確保你知道你在做什麼的情況下\n才使用這些選項
 locTriggerPathDetect,Trigger DR Path Detect & Save it,触发 DR 路径检测并储存,觸發 DR 路徑檢測並儲存
