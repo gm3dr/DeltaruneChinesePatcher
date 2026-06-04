@@ -12,6 +12,10 @@
 > 可以通过手动方法来进行安装<br>
 > 手动安装方式见 **[此处](https://github.com/gm3dr/DeltaruneChinese/blob/main/README.md#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85)**
 
+> [!IMPORTANT]
+> 对于 macOS 平台，安装器包需要放置到 `Applications` 目录下才可正常运作<br>
+> 目前透过网盘配布的安装器已经使用了 `.dmg` 格式，可以快捷完成此行为<br>
+> 对于在本仓库 Release 下载的安装器，则需要手动放置
 ## 截图
 
 ![Screenshot](./screenshot.png)
