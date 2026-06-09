@@ -463,8 +463,7 @@ public partial class Main : Control
 		var path = PathTrim(nodeEditGamePath.Text);
 
 		nodeEditGamePath.Text = path;
-		bool found = DirAccess.DirExistsAbsolute(path + "/backup");
-		if (found)
+		if (DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
 			if (path != "" && FileAccess.FileExists(path + "/backup/version"))
 			{
