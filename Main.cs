@@ -80,7 +80,7 @@ public partial class Main : Control
 	SpinBox nodeOverrideScale = null!;
 
 
-	static readonly string[] chapters = ["1", "2", "3", "4"];
+	static string[] chapters = [];
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
@@ -463,16 +463,7 @@ public partial class Main : Control
 		var path = PathTrim(nodeEditGamePath.Text);
 
 		nodeEditGamePath.Text = path;
-		bool found = FileAccess.FileExists(path + "/" + dataname + ".bak") || DirAccess.DirExistsAbsolute(path + "/backup");
-		foreach (var chapter in chapters)
-		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak"))
-			{
-				GD.Print("Found: " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak");
-				found = true;
-				break;
-			}
-		}
+		bool found = DirAccess.DirExistsAbsolute(path + "/backup");
 		if (found)
 		{
 			if (path != "" && FileAccess.FileExists(path + "/backup/version"))
@@ -920,36 +911,6 @@ public partial class Main : Control
 		}
 		GD.Print("Extracting...");
 		output.Add("Extracting...");
-		if (use_backup)
-		{
-			//恢复备份
-			if (DirAccess.DirExistsAbsolute(path + "/backup"))
-			{
-				output += RestoreData(path);
-			}
-			//兼容v2.1.0以前版本的bak备份
-			if (FileAccess.FileExists(path + "/" + dataname + ".bak"))
-			{
-				DirAccess.RenameAbsolute(path + "/" + dataname + ".bak", path + "/" + dataname);
-				GD.Print("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
-				output.Add("Renamed " + path + "/" + dataname + ".bak to " + path + "/" + dataname);
-			}
-			foreach (var chapter in chapters)
-			{
-				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak"))
-				{
-					DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak", path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak to " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak to " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-				}
-			}
-		}
-		else
-		{
-			OS.MoveToTrash(path + "/backup");
-			GD.Print("Removed " + path + "/backup");
-			output.Add("Removed " + path + "/backup");
-		}
 		//解压
 		string tempPath = "ExtractTemp";
 		string extractArgs = $"x \"{(patchingdemo ? demopatchdir : patchdir)}\" -o\"" + GetGameDirPath(tempPath) + "\" -aoa -y";
@@ -971,6 +932,29 @@ public partial class Main : Control
 		extract_process.WaitForExit();
 		GD.Print($"{pname} elapsed {(DateTime.Now - stime7z).TotalSeconds}s");
 		output.Add($"{pname} elapsed {(DateTime.Now - stime7z).TotalSeconds}s");
+		// 检查补丁内包含章节
+		chapters = [];
+		foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(tempPath)))
+		{
+			if (file.EndsWith(".xdelta") && file.StartsWith("chapter"))
+			{
+				chapters = (string[])chapters.Append(file.TrimSuffix(".xdelta").TrimPrefix("chapter"));
+			}
+		}
+		if (use_backup)
+		{
+			//恢复备份
+			if (DirAccess.DirExistsAbsolute(path + "/backup"))
+			{
+				output += RestoreData(path);
+			}
+		}
+		else
+		{
+			OS.MoveToTrash(path + "/backup");
+			GD.Print("Removed " + path + "/backup");
+			output.Add("Removed " + path + "/backup");
+		}
 		output += MoveAfterExtracted(GetGameDirPath(tempPath), "", path);
 		OS.MoveToTrash(GetGameDirPath(tempPath));
 		var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Write);
@@ -1167,25 +1151,6 @@ public partial class Main : Control
 		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
 			nodeWindowPopupContent.Text = "locNoBakDetected";
-			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-			nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
-			nodeWindowPopup.Title = "locResult";
-			nodeWindowPopup.Show();
-			return;
-		}
-		bool found = FileAccess.FileExists(path + "/" + dataname + ".bak");
-		foreach (var chapter in chapters)
-		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak"))
-			{
-				GD.Print("Found: " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + ".bak");
-				found = true;
-				break;
-			}
-		}
-		if (found)
-		{
-			nodeWindowPopupContent.Text = "locOldBakDetected";
 			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 			nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
 			nodeWindowPopup.Title = "locResult";
@@ -1579,19 +1544,14 @@ public partial class Main : Control
 		}
 		if (path_exists)
 		{
-			foreach (var chapter in chapters)
+			patchingdemo = true;
+			foreach (var folder in DirAccess.GetDirectoriesAt(path))
 			{
-				if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
+				if (folder.StartsWith("chapter") && FileAccess.FileExists(path + "/" + folder + "/" + dataname))
 				{
-					GD.Print("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					output.Add("Found " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
+					GD.Print("Found " + path + "/" + folder);
+					output.Add("Found " + path + "/" + folder);
 					patchingdemo = false;
-				}
-				else
-				{
-					GD.Print("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					output.Add("Unable to find " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					patchingdemo = true;
 					break;
 				}
 			}
