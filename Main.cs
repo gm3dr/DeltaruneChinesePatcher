@@ -592,16 +592,6 @@ public partial class Main : Control
 		nodeBtnUpdatePatch.Disabled = true;
 		nodeProgress.Visible = true;
 		Godot.Collections.Array output = [];
-		//删除旧patch
-		foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
-		{
-			if (fff.StartsWith("patch_") && ((demo && fff.Contains("demo")) || ((!demo) && !fff.Contains("demo"))))
-			{
-				DirAccess.RemoveAbsolute(GetGameDirPath(fff));
-				GD.Print("Removed " + GetGameDirPath(fff));
-				output.Add("Removed " + GetGameDirPath(fff));
-			}
-		}
 		//下载patch
 		var url = "";
 		var file = "";
@@ -685,6 +675,16 @@ public partial class Main : Control
 			fileStream = null;
 			GD.Print($"Download {file} finished.");
 			output.Add($"Download {file} finished.");
+			//删除旧patch
+			foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
+			{
+				if (fff.StartsWith("patch_") && ((demo && fff.Contains("demo")) || ((!demo) && !fff.Contains("demo"))))
+				{
+					DirAccess.RemoveAbsolute(GetGameDirPath(fff));
+					GD.Print("Removed " + GetGameDirPath(fff));
+					output.Add("Removed " + GetGameDirPath(fff));
+				}
+			}
 			DirAccess.RenameAbsolute(GetGameDirPath(file), GetGameDirPath(file.TrimPrefix("_downloadingtemp_")));
 			GD.Print($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
 			output.Add($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
