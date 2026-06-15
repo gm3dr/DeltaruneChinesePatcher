@@ -1423,6 +1423,12 @@ public partial class Main : Control
 	internal static string FindGamePath(string ver = "deltarune")
 	{
 		var is_demo = (ver == "deltarune_demo");
+		var steampath = ""; // Variable only for windows
+		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+		{
+			steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
+			default_paths[ver][os_name] = default_paths[ver][os_name].Replace("{STEAMPATH}", steampath);
+		}
 		var game_path = default_paths[ver][os_name];
 		if (DirAccess.DirExistsAbsolute(game_path))
 		{
@@ -1436,7 +1442,6 @@ public partial class Main : Control
 			{
 				string[] paths = [default_paths[ver][os_name], default_paths["libraryfolders"][os_name]];
 				var regkey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
-				var steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
 				if (regkey != null)
 				{
 					steampath = regkey.GetValue("SteamPath").ToString().Replace("\\", "/");
