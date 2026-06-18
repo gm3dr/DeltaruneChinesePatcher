@@ -41,9 +41,9 @@ jobs:
           ${{ env.GODOT_SOURCE_PATH }}/bin
           ${{ env.GODOT_SOURCE_PATH }}/modules/mono/glue
           ${{ env.LOCAL_NUGET_PATH }}
-        key: godot-build-${{ runner.os }}-4.6-${{ steps.godot_commit.outputs.hash }}
+        key: godot-build-${{ runner.os }}-4.7-${{ steps.godot_commit.outputs.hash }}
         restore-keys: |
-          godot-build-${{ runner.os }}-4.6-
+          godot-build-${{ runner.os }}-4.7-
 
     - name: Clone Godot Engine
       if: steps.godot-cache.outputs.cache-hit != 'true'
@@ -51,7 +51,7 @@ jobs:
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
-        ref: '4.6'
+        ref: '4.7'
           
     - name: Install Godot Build Dependencies
       if: steps.godot-cache.outputs.cache-hit != 'true'
@@ -111,7 +111,7 @@ jobs:
       
     - name: Install Custom Export Template
       run: |
-        TEMPLATE_DIR="/Users/runner/Library/Application Support/Godot/export_templates/4.6.3.rc.mono"
+        TEMPLATE_DIR="/Users/runner/Library/Application Support/Godot/export_templates/4.7.rc.mono"
         mkdir -p "$TEMPLATE_DIR"
         cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot_macos_mono.zip "${TEMPLATE_DIR}/macos.zip"
 

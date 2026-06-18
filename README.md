@@ -22,7 +22,7 @@
 
 ## 开发工具
 
-- [Godot Engine](https://godotengine.org) *(修改只需要使用 4.6 Stable Mono，`csproj` 中的 SDK 版本号是用于压缩文件大小的[自定义导出模板](#编辑器与自定义导出模板构建脚本))*
+- [Godot Engine](https://godotengine.org) *(修改只需要使用 4.7 Stable Mono，`csproj` 中的 SDK 版本号是用于压缩文件大小的[自定义导出模板](#编辑器与自定义导出模板构建脚本))*
 - [.NET 8 SDK](https://dotnet.microsoft.com)
 - [Gameloop.Vdf](https://www.nuget.org/packages/Gameloop.Vdf)
 - [UPX](https://github.com/upx/upx/releases) *(非必须, 用于压缩可执行文件大小)*

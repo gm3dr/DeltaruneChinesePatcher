@@ -42,9 +42,9 @@ jobs:
           ${{ env.GODOT_SOURCE_PATH }}\bin
           ${{ env.GODOT_SOURCE_PATH }}\modules\mono\glue
           ${{ env.LOCAL_NUGET_PATH }}
-        key: godot-build-${{ runner.os }}-4.6-${{ steps.godot_commit.outputs.hash }}
+        key: godot-build-${{ runner.os }}-4.7-${{ steps.godot_commit.outputs.hash }}
         restore-keys: |
-          godot-build-${{ runner.os }}-4.6-
+          godot-build-${{ runner.os }}-4.7-
 
     - name: Cache Godot 4.4 Build Artifacts
       id: godot-cache-44
@@ -78,7 +78,7 @@ jobs:
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
-        ref: '4.6'
+        ref: '4.7'
 
     - name: Clone Godot Engine 4.4
       if: steps.godot-cache-44.outputs.cache-hit != 'true'
@@ -152,7 +152,7 @@ jobs:
 
     - name: Install Custom Export Template
       run: |
-        $TEMPLATE_DIR = "$env:APPDATA\Godot\export_templates\4.6.3.rc.mono"
+        $TEMPLATE_DIR = "$env:APPDATA\Godot\export_templates\4.7.rc.mono"
         mkdir $TEMPLATE_DIR
         cp ${{ env.GODOT_SOURCE_PATH }}\bin\godot.windows.template_release.x86_64.mono.exe "$TEMPLATE_DIR\windows_release_x86_64.exe"
         $TEMPLATE_DIR = "$env:APPDATA\Godot\export_templates\4.4.2.rc.mono"
