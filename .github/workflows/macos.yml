@@ -151,7 +151,7 @@ jobs:
         brew install create-dmg
         create-dmg \
           --volname "DELTARUNE Chinese Patcher" \
-          --background "${{ github.workspace }}/arrow.png" \
+          --background "${{ env.SOURCE_PATH }}/arrow.png" \
           --window-pos 200 120 \
           --window-size 800 400 \
           --icon-size 100 \
