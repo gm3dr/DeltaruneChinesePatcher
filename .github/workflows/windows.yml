@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: Checkout Project
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         path: ${{ env.SOURCE_PATH }}
 
@@ -30,13 +30,13 @@ jobs:
     - name: Download UPX
       run: |
         mkdir ${{ github.workspace }}\upx
-        curl -L -o ${{ github.workspace }}\upx\upx-5.1.1-win64.zip https://github.com/upx/upx/releases/download/v5.1.1/upx-5.1.1-win64.zip
+        curl -L -o ${{ github.workspace }}\upx\upx-5.2.0-win64.zip https://github.com/upx/upx/releases/download/v5.2.0/upx-5.2.0-win64.zip
         cd ${{ github.workspace }}\upx
-        unzip upx-5.1.1-win64.zip
+        unzip upx-5.2.0-win64.zip
 
     - name: Cache Godot Build Artifacts
       id: godot-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ${{ env.GODOT_SOURCE_PATH }}\bin
@@ -48,7 +48,7 @@ jobs:
 
     - name: Cache Godot 4.4 Build Artifacts
       id: godot-cache-44
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ${{ env.GODOT_44_SOURCE_PATH }}\bin
@@ -74,7 +74,7 @@ jobs:
 
     - name: Clone Godot Engine
       if: steps.godot-cache.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
@@ -82,7 +82,7 @@ jobs:
 
     - name: Clone Godot Engine 4.4
       if: steps.godot-cache-44.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_44_SOURCE_PATH }}
@@ -183,8 +183,8 @@ jobs:
 
     - name: UPX Compressing
       run: |
-        ${{ github.workspace }}\upx\upx-5.1.1-win64\upx.exe "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows\DELTARUNE Chinese Patcher.exe"
-        ${{ github.workspace }}\upx\upx-5.1.1-win64\upx.exe "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated\DELTARUNE Chinese Patcher.exe"
+        ${{ github.workspace }}\upx\upx-5.2.0-win64\upx.exe "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows\DELTARUNE Chinese Patcher.exe"
+        ${{ github.workspace }}\upx\upx-5.2.0-win64\upx.exe "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated\DELTARUNE Chinese Patcher.exe"
 
     - name: Process files
       run: |
@@ -205,13 +205,13 @@ jobs:
         ${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated\externals\7zip\7z.exe a "DeltaruneChinesePatcher_Windows_Outdated.7z" "DeltaruneChinesePatcher_Windows_Outdated\*"
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Windows
         path: ${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows.7z
 
     - name: Upload Artifact (Outdated)
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Windows (Outdated)
         path: ${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated.7z

@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Checkout Project
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         path: ${{ env.SOURCE_PATH }}
 
@@ -35,7 +35,7 @@ jobs:
 
     - name: Cache Godot Build Artifacts
       id: godot-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ${{ env.GODOT_SOURCE_PATH }}/bin
@@ -47,7 +47,7 @@ jobs:
 
     - name: Clone Godot Engine
       if: steps.godot-cache.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
@@ -162,7 +162,7 @@ jobs:
           "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/"
         
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: macOS
         path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS.dmg

@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Checkout Project
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         path: ${{ env.SOURCE_PATH }}
 
@@ -29,13 +29,13 @@ jobs:
     - name: Download UPX
       run: |
         mkdir -p ${{ github.workspace }}/upx
-        wget -O ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v5.1.1/upx-5.1.1-amd64_linux.tar.xz
-        xz -d ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux.tar.xz
-        tar -xvf ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux.tar -C ${{ github.workspace }}/upx
+        wget -O ${{ github.workspace }}/upx/upx-5.2.0-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v5.2.0/upx-5.2.0-amd64_linux.tar.xz
+        xz -d ${{ github.workspace }}/upx/upx-5.2.0-amd64_linux.tar.xz
+        tar -xvf ${{ github.workspace }}/upx/upx-5.2.0-amd64_linux.tar -C ${{ github.workspace }}/upx
       
     - name: Cache Godot Build Artifacts
       id: godot-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ${{ env.GODOT_SOURCE_PATH }}/bin
@@ -47,7 +47,7 @@ jobs:
       
     - name: Cache Godot 4.4 Build Artifacts
       id: godot-cache-44
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ${{ env.GODOT_44_SOURCE_PATH }}/bin
@@ -80,7 +80,7 @@ jobs:
 
     - name: Clone Godot Engine
       if: steps.godot-cache.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_SOURCE_PATH }}
@@ -88,7 +88,7 @@ jobs:
 
     - name: Clone Godot Engine 4.4
       if: steps.godot-cache-44.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: godotengine/godot
         path: ${{ env.GODOT_44_SOURCE_PATH }}
@@ -190,8 +190,8 @@ jobs:
 
     - name: UPX Compressing
       run: |
-        ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
-        ${{ github.workspace }}/upx/upx-5.1.1-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/DELTARUNE Chinese Patcher.x86_64"
+        ${{ github.workspace }}/upx/upx-5.2.0-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/DELTARUNE Chinese Patcher.x86_64"
+        ${{ github.workspace }}/upx/upx-5.2.0-amd64_linux/upx "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/DELTARUNE Chinese Patcher.x86_64"
     
     - name: Process files
       run: |
@@ -210,13 +210,13 @@ jobs:
         tar -czvf "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated.tar.gz" -C "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated" .
         
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Linux
         path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux.tar.gz
         
     - name: Upload Artifact (Outdated)
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Linux (Outdated)
         path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated.tar.gz
