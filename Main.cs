@@ -265,6 +265,8 @@ public partial class Main : Control
 			nodeOverrideOS.PlaceholderText = OS.GetName();
 			nodeOverrideScale.Value = windowScale;
 		}
+		DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal);
+		DisplayServer.WindowSetTaskbarProgressValue(0);
 		DisplayServer.WindowSetTitle(TranslationServer.Translate("locTitle"), wid);
 		nodeBtnUpdatePatcher.Visible = false;
 		nodeBtnUpdatePatcher.Disabled = false;
@@ -455,6 +457,7 @@ public partial class Main : Control
 	}
 	public void _on_patch_pressed()
 	{
+		DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Indeterminate);
 		nodeBtnPatch.Disabled = true;
 		nodeBtnUnpatch.Disabled = true;
 		nodeEditGamePath.Editable = false;
@@ -515,6 +518,7 @@ public partial class Main : Control
 	}
 	public void _on_popup_close_requested()
 	{
+		DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
 		nodeWindowPopup.Hide();
 	}
 	public void _on_popup_1225_close_requested()
@@ -523,6 +527,7 @@ public partial class Main : Control
 	}
 	public void _on_patch_close_requested()
 	{
+		DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
 		nodeWindowPatch.Hide();
 		nodeBtnPatch.Disabled = false;
 		nodeBtnUnpatch.Disabled = false;
@@ -624,6 +629,8 @@ public partial class Main : Control
 						var buffer = new byte[4096];
 						double totalRead = 0;
 						int bytesRead;
+						DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal);
+						DisplayServer.WindowSetTaskbarProgressValue(0);
 						while ((bytesRead = await bodyStream.ReadAsync(buffer)) > 0)
 						{
 							await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
@@ -651,6 +658,7 @@ public partial class Main : Control
 									sizee += "0";
 								}
 								nodeBtnUpdatePatch.Text = $"{progress} / {sizee} MiB";
+								DisplayServer.WindowSetTaskbarProgressValue((float)(totalRead / size));
 								if (OS.IsStdOutVerbose())
 								{
 									GD.Print($"Downloaded: {totalRead} / {size}");
@@ -669,10 +677,12 @@ public partial class Main : Control
 				nodeBtnUpdatePatch.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
 				nodeBtnUpdatePatch.TooltipText = exc.Message;
 				GD.PushError("Exception catched when updating patch: " + exc.ToString() + " (" + exc.Message + ")");
+				DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Error);
 				return;
 			}
 			fileStream.Dispose();
 			fileStream = null;
+			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
 			GD.Print($"Download {file} finished.");
 			output.Add($"Download {file} finished.");
 			//删除旧patch
@@ -1146,7 +1156,7 @@ public partial class Main : Control
 	public void _on_unpatch_pressed()
 	{
 		var path = PathTrim(nodeEditGamePath.Text);
-
+		DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Indeterminate);
 		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
 			nodeWindowPopupContent.Text = "locNoBakDetected";
@@ -1300,6 +1310,7 @@ public partial class Main : Control
 		nodeWindowPopup.Title = "locResult";
 		if (success)
 		{
+			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
 			var gamepath = nodeEditGamePath.Text;
 			//保存游戏路径
 			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
@@ -1311,6 +1322,7 @@ public partial class Main : Control
 		}
 		else
 		{
+			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Error);
 			//回退安装
 			output += RestoreData(path);
 		}

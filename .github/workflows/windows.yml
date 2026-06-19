@@ -172,6 +172,7 @@ jobs:
         (Get-Content $csproj) -replace 'Godot.NET.Sdk/4\.6\.3-rc', 'Godot.NET.Sdk/4.4.2-rc' | Set-Content $csproj
         $maincs = "${{ env.SOURCE_PATH }}\Main.cs"
         (Get-Content $maincs) -replace 'TranslationServer\.FindTranslations\(current, true\)\[0\]', 'TranslationServer.GetTranslationObject(current)' | Set-Content $maincs
+        (Get-Content $maincs) | Where-Object { $_ -notmatch '^\s*DisplayServer\.WindowSetTaskbarProgress' } | Set-Content $maincs
         dotnet restore
         dotnet build
       working-directory: ${{ env.SOURCE_PATH }}

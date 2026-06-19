@@ -179,6 +179,7 @@ jobs:
         sed -i 's|Godot.NET.Sdk/4\.6\.3-rc|Godot.NET.Sdk/4.4.2-rc|g' "$csproj"
         maincs="${{ env.SOURCE_PATH }}/Main.cs"
         sed -i 's|TranslationServer\.FindTranslations(current, true)\[0\]|TranslationServer.GetTranslationObject(current)|g' "$maincs"
+        sed -i '/^[[:space:]]*DisplayServer\.WindowSetTaskbarProgress/d' "$maincs"
         dotnet restore
         dotnet build
       working-directory: ${{ env.SOURCE_PATH }}
