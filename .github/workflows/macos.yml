@@ -141,10 +141,10 @@ jobs:
           sudo xattr -cr "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
           codesign -s - "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/DELTARUNE Chinese Patcher"
 
-    # - name: Archive
-    #   run: |
-    #     cd ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
-    #     zip -r ../DeltaruneChinesePatcher_macOS.zip .
+    - name: Archive
+      run: |
+        cd ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS
+        zip -r ../DeltaruneChinesePatcher_macOS.zip .
 
     - name: Create DMG
       run: |
@@ -161,8 +161,14 @@ jobs:
           "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS.dmg" \
           "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/"
         
-    - name: Upload Artifact
+    - name: Upload Artifact (DMG)
       uses: actions/upload-artifact@v7
       with:
         name: macOS
         path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS.dmg
+        
+    - name: Upload Artifact (ZIP)
+      uses: actions/upload-artifact@v7
+      with:
+        name: macOS
+        path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS.zip
