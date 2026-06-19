@@ -58,9 +58,8 @@ scons platform=macos target=template_release arch=x86_64 generate_bundle=yes mod
 ##### 参数差异原因
 Direct3D 12 与 ANGLE 为 Windows 独占所以只有其包含 `d3d12=yes angle_libs=${{ env.ANGLE_LIB_PATH }}`<br>
 Windows 包含 ANGLE 库需要 ASTC Encoding 所以不含 `module_astcenc_enabled=no`<br>
-Windows 需要使用 MinGW 而非 MSVC 才能使用 LTO 所以只有其包含 `use_mingw=yes`<br>
 编辑器需要 3D 、RegEX 、物理 和 SVG 支援所以不含 `disable_3d=yes module_regex_enabled=no module_svg_enabled=no disable_physics_2d=yes disable_physics_3d=yes`<br>
-macOS 不支援链接时优化所以不含 `lto=full`
+macOS 不支援链接时优化，Windows 使用 MSVC + 链接时优化时存在奇妙 Bug，所以都不含 `lto=full`
 #### 生成C#胶水与构建
 ```
 ${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
