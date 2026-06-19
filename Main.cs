@@ -937,7 +937,7 @@ public partial class Main : Control
 		{
 			if (file.EndsWith(".xdelta") && file.StartsWith("chapter"))
 			{
-				chapters = (string[])chapters.Append(file.TrimSuffix(".xdelta").TrimPrefix("chapter"));
+				chapters = chapters.Append(file.TrimSuffix(".xdelta").TrimPrefix("chapter")).ToArray();
 			}
 		}
 		if (use_backup)
