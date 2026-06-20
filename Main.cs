@@ -348,6 +348,7 @@ public partial class Main : Control
 				{
 					nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
 				}
+				UpdatePathText(nodeEditGamePath.Text, false);
 			}
 			else
 			{
