@@ -79,7 +79,7 @@ public partial class Main : Control
 	[Export]
 	SpinBox nodeOverrideScale = null!;
 
-
+	static readonly System.Net.Http.HttpClient httpc = new();
 	static string[] chapters = [];
 	static int patch_count_except_chapters = 0; // chapterX.xdelta 以外的 xdelta 数量，目前只有 main.xdelta
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
@@ -162,6 +162,7 @@ public partial class Main : Control
 		//首次初始化
 		if (!inited)
 		{
+			httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 			// Outdated notification
 			if (is_outdated_ver)
 			{
@@ -313,8 +314,6 @@ public partial class Main : Control
 		nodeEditGamePath.Text = game_path;
 		_on_edit_game_path_text_changed(game_path);
 		//HttpClient
-		var httpc = new System.Net.Http.HttpClient();
-		httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 		nodeBtnInfo.TooltipText = "locInfo";
 		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]" + (!string.IsNullOrEmpty(demopatchver) ? ("  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + (is_self_extract ? "" : "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting"));
 		//contributors
@@ -425,7 +424,6 @@ public partial class Main : Control
 				GD.PushError("Exception catched when requesting patcher latest: " + exc.ToString() + " (" + exc.Message + ")");
 			}
 		}
-		httpc.Dispose();
 
 		if (!inited)
 		{
@@ -621,55 +619,52 @@ public partial class Main : Control
 			output.Add("Downloading " + url + " to " + GetGameDirPath(file));
 			try
 			{
-				using (var httpClient = new System.Net.Http.HttpClient())
+				using (var response = await httpc.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
 				{
-					using (var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+					response.EnsureSuccessStatusCode();
+					using var bodyStream = await response.Content.ReadAsStreamAsync();
+					fileStream = new System.IO.FileStream(GetGameDirPath(file), System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None);
+					var buffer = new byte[4096];
+					double totalRead = 0;
+					int bytesRead;
+					DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal);
+					DisplayServer.WindowSetTaskbarProgressValue(0);
+					while ((bytesRead = await bodyStream.ReadAsync(buffer)) > 0)
 					{
-						response.EnsureSuccessStatusCode();
-						using var bodyStream = await response.Content.ReadAsStreamAsync();
-						fileStream = new System.IO.FileStream(GetGameDirPath(file), System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None);
-						var buffer = new byte[4096];
-						double totalRead = 0;
-						int bytesRead;
-						DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal);
-						DisplayServer.WindowSetTaskbarProgressValue(0);
-						while ((bytesRead = await bodyStream.ReadAsync(buffer)) > 0)
+						await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+						totalRead += bytesRead;
+						if (size > 0)
 						{
-							await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-							totalRead += bytesRead;
-							if (size > 0)
+							nodeProgress.Value = totalRead;
+							//nodeProgress.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
+							var progress = Math.Round(totalRead / 1024d / 1024d, 2).ToString();
+							var sizee = Math.Round(size / 1024d / 1024d, 2).ToString();
+							if (!progress.Contains("."))
 							{
-								nodeProgress.Value = totalRead;
-								//nodeProgress.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
-								var progress = Math.Round(totalRead / 1024d / 1024d, 2).ToString();
-								var sizee = Math.Round(size / 1024d / 1024d, 2).ToString();
-								if (!progress.Contains("."))
-								{
-									progress += ".00";
-								}
-								else if (progress.Split(".")[1].Length == 1)
-								{
-									progress += "0";
-								}
-								if (!sizee.Contains("."))
-								{
-									sizee += ".00";
-								}
-								else if (sizee.Split(".")[1].Length == 1)
-								{
-									sizee += "0";
-								}
-								nodeBtnUpdatePatch.Text = $"{progress} / {sizee} MiB";
-								DisplayServer.WindowSetTaskbarProgressValue((float)(totalRead / size));
-								if (OS.IsStdOutVerbose())
-								{
-									GD.Print($"Downloaded: {totalRead} / {size}");
-								}
+								progress += ".00";
 							}
-							if (totalRead >= size)
+							else if (progress.Split(".")[1].Length == 1)
 							{
-								break;
+								progress += "0";
 							}
+							if (!sizee.Contains("."))
+							{
+								sizee += ".00";
+							}
+							else if (sizee.Split(".")[1].Length == 1)
+							{
+								sizee += "0";
+							}
+							nodeBtnUpdatePatch.Text = $"{progress} / {sizee} MiB";
+							DisplayServer.WindowSetTaskbarProgressValue((float)(totalRead / size));
+							if (OS.IsStdOutVerbose())
+							{
+								GD.Print($"Downloaded: {totalRead} / {size}");
+							}
+						}
+						if (totalRead >= size)
+						{
+							break;
 						}
 					}
 				}
