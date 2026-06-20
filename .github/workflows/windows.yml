@@ -162,9 +162,9 @@ jobs:
     - name: Change for 4.4
       run: |
         $project = "${{ env.SOURCE_PATH }}\project.godot"
-        (Get-Content $project) -replace 'config/features=PackedStringArray\("4\.6"', 'config/features=PackedStringArray("4.4"' | Set-Content $project
+        (Get-Content $project) -replace 'config/features=PackedStringArray\("4\.7"', 'config/features=PackedStringArray("4.4"' | Set-Content $project
         $csproj = "${{ env.SOURCE_PATH }}\DeltaruneChinesePatcher.csproj"
-        (Get-Content $csproj) -replace 'Godot.NET.Sdk/4\.6\.3-rc', 'Godot.NET.Sdk/4.4.2-rc' | Set-Content $csproj
+        (Get-Content $csproj) -replace 'Godot.NET.Sdk/4\.7\.1-rc', 'Godot.NET.Sdk/4.4.2-rc' | Set-Content $csproj
         $maincs = "${{ env.SOURCE_PATH }}\Main.cs"
         (Get-Content $maincs) -replace 'TranslationServer\.FindTranslations\(current, true\)\[0\]', 'TranslationServer.GetTranslationObject(current)' | Set-Content $maincs
         (Get-Content $maincs) | Where-Object { $_ -notmatch '^\s*DisplayServer\.WindowSetTaskbarProgress' } | Set-Content $maincs
