@@ -81,6 +81,7 @@ public partial class Main : Control
 
 
 	static string[] chapters = [];
+	static int patch_count_except_chapters = 0; // chapterX.xdelta 以外的 xdelta 数量，目前只有 main.xdelta
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
@@ -997,8 +998,10 @@ public partial class Main : Control
 		{
 			patched_count = chapters.Length;
 		}
+		patch_count_except_chapters = 0;
 		if (FileAccess.FileExists(path + "/main.xdelta"))
 		{
+			patch_count_except_chapters += 1;
 			string xdelta3Args = $"-f -d -v -s \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"";
 			GD.Print("Patching main data");
 			output.Add("Patching main data");
@@ -1059,11 +1062,11 @@ public partial class Main : Control
 				}
 			}
 		}
-		while (patched_count < chapters.Length + 1 && (DateTime.Now - starttime).TotalSeconds < 30)
+		while (patched_count < chapters.Length + patch_count_except_chapters && (DateTime.Now - starttime).TotalSeconds < 30)
 		{
 			await Task.Delay(100);
 		}
-		if (patched_count >= chapters.Length + 1)
+		if (patched_count >= chapters.Length + patch_count_except_chapters)
 		{
 			CallDeferred("Ending");
 			return;
@@ -1393,7 +1396,7 @@ public partial class Main : Control
 		{
 			PatchResultHandler(false, "locPatchFailedInvalidInput", usedtime, new Vector2I(640, 480));
 		}
-		else if (logtext.Contains("cannot find the path specified") || logtext.Contains("找不到指定的路径") || logtext.Contains("找不到指定的路徑"))
+		else if (logtext.Contains("cannot find the path specified") || logtext.Contains("找不到指定的路径") || logtext.Contains("找不到指定的路徑") || logtext.Contains("No such file or directory"))
 		{
 			PatchResultHandler(false, "locPatchFailedCantFind", usedtime, new Vector2I(640, 360));
 		}
