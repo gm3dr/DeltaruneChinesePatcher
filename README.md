@@ -40,8 +40,8 @@ production=yes debug_symbols=no optimize=size module_text_server_adv_enabled=no 
 #### 构建编辑器
 ##### Windows
 ```
-scons platform=windows arch=x86_64 target=editor module_mono_enabled=yes d3d12=yes angle_libs=${{ env.ANGLE_LIB_PATH }} use_mingw=yes lto=full
-scons platform=windows arch=x86_64 target=template_release module_mono_enabled=yes d3d12=yes angle_libs=${{ env.ANGLE_LIB_PATH }} use_mingw=yes disable_3d=yes lto=full module_regex_enabled=no module_svg_enabled=no disable_physics_2d=yes disable_physics_3d=yes
+scons platform=windows arch=x86_64 target=editor module_mono_enabled=yes accesskit=no winrt=no
+scons platform=windows arch=x86_64 target=template_release module_mono_enabled=yes accesskit=no winrt=no disable_3d=yes module_regex_enabled=no module_svg_enabled=no disable_physics_2d=yes disable_physics_3d=yes
 ```
 ##### Linux
 ```
@@ -50,13 +50,14 @@ scons platform=linuxbsd arch=x86_64 target=template_release module_mono_enabled=
 ```
 ##### macOS
 ```
-scons platform=macos arch=arm64 target=editor module_mono_enabled=yes module_astcenc_enabled=no
-scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes disable_3d=yes module_astcenc_enabled=no module_regex_enabled=no module_svg_enabled=no disable_physics_2d=yes disable_physics_3d=yes
-scons platform=macos target=template_release arch=x86_64 generate_bundle=yes module_mono_enabled=yes disable_3d=yes module_astcenc_enabled=no module_regex_enabled=no module_svg_enabled=no disable_physics_2d=yes disable_physics_3d=yes
+scons platform=macos arch=arm64 target=editor module_mono_enabled=yes accesskit=no
+scons platform=macos target=template_release arch=arm64 module_mono_enabled=yes disable_3d=yes module_regex_enabled=no module_svg_enabled=no disable_physics_2d=yes disable_physics_3d=yes accesskit=no
+scons platform=macos target=template_release arch=x86_64 generate_bundle=yes module_mono_enabled=yes disable_3d=yes module_regex_enabled=no module_svg_enabled=no disable_physics_2d=yes disable_physics_3d=yes accesskit=no
 ```
 ##### 参数差异原因
-Direct3D 12 与 ANGLE 为 Windows 独占所以只有其包含 `d3d12=yes angle_libs=${{ env.ANGLE_LIB_PATH }}`<br>
-Windows 包含 ANGLE 库需要 ASTC Encoding 所以不含 `module_astcenc_enabled=no`<br>
+Windows 与 macOS 包含 ANGLE 库需要 ASTC Encoding 所以不含 `module_astcenc_enabled=no`<br>
+Windows 需要单独禁用 WinRT 所以只有其包含 `winrt=no`<br>
+Windows 与 macOS 需要单独禁用 AccessKit 所以包含 `accesskit=no`<br>
 编辑器需要 3D 、RegEX 、物理 和 SVG 支援所以不含 `disable_3d=yes module_regex_enabled=no module_svg_enabled=no disable_physics_2d=yes disable_physics_3d=yes`<br>
 macOS 不支援链接时优化，Windows 使用 MSVC + 链接时优化时存在奇妙 Bug，所以都不含 `lto=full`
 #### 生成C#胶水与构建
