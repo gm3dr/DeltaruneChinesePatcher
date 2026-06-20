@@ -164,11 +164,11 @@ jobs:
     - name: Upload Artifact (DMG)
       uses: actions/upload-artifact@v7
       with:
-        name: macOS
+        name: macOS (DMG)
         path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS.dmg
         
     - name: Upload Artifact (ZIP)
       uses: actions/upload-artifact@v7
       with:
-        name: macOS
+        name: macOS (ZIP)
         path: ${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS.zip
