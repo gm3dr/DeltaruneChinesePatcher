@@ -14,8 +14,7 @@
 
 > [!IMPORTANT]
 > 对于 macOS 平台，安装器包需要放置到 `Applications` 目录下才可正常运作<br>
-> 目前透过网盘配布的安装器已经使用了 `.dmg` 格式，可以快捷完成此行为<br>
-> 对于在本仓库 Release 下载的安装器，则需要手动放置
+> `.dmg` 格式配布的安装包可以快捷完成此行为
 ## 截图
 
 ![Screenshot](./screenshot.png)
