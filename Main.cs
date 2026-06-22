@@ -512,7 +512,16 @@ public partial class Main : Control
 				OS.ShellOpen("steam://run/1690940");
 				break;
 			case 3:
-				OS.ShellOpen(PathTrim(nodeEditGamePath.Text) + "/DELTARUNE.exe");
+				if (os_name == "Windows")
+				{
+					OS.ShellOpen(PathTrim(nodeEditGamePath.Text) + "/DELTARUNE.exe");
+				}
+				else if (os_name == "macOS")
+				{
+					var executable = PathTrim(nodeEditGamePath.Text) + "../MacOS/Mac_Runner";
+					OS.Execute("chmod", ["+x", executable]);
+					OS.ShellOpen(executable);
+				}
 				break;
 		}
 	}
@@ -1591,7 +1600,7 @@ public partial class Main : Control
 				PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
 			}
 		}
-		nodeBtnRun.SetItemDisabled(3, os_name != "Windows" || !path_exists);
+		nodeBtnRun.SetItemDisabled(3, (os_name != "Windows" && os_name != "macOS") || !path_exists);
 		return path_exists;
 	}
 	// 更新路径文本
