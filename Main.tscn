@@ -95,8 +95,8 @@ nodeWindowPopup = NodePath("Popup")
 nodeWindowPopupContent = NodePath("Popup/ScrollContainer/Label")
 nodeWindowPopup1225 = NodePath("Popup1225")
 nodeWindowPatch = NodePath("Patch")
-nodeWindowPatchVBox = NodePath("Patch/CenterContainer/VBoxContainer")
-nodeWindowPatchContent = NodePath("Patch/CenterContainer/VBoxContainer/Label")
+nodeWindowPatchVBox = NodePath("Patch/VBoxContainer/VBoxContainer")
+nodeWindowPatchContent = NodePath("Patch/VBoxContainer/VBoxContainer/Label")
 nodeWindowTutorial = NodePath("Tutorial")
 nodeWindowAdvanced = NodePath("Advanced")
 nodeContainerAdvanced = NodePath("Advanced/CenterContainer")
@@ -423,41 +423,48 @@ initial_position = 2
 size = Vector2i(640, 320)
 visible = false
 
-[node name="CenterContainer" type="CenterContainer" parent="Patch" unique_id=455539197]
+[node name="VBoxContainer" type="VBoxContainer" parent="Patch" unique_id=1700443914]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Patch/CenterContainer" unique_id=2048459124]
-custom_minimum_size = Vector2(640, 0)
+[node name="Control" type="Control" parent="Patch/VBoxContainer" unique_id=1601726238]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Patch/VBoxContainer" unique_id=2048459124]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Patch/CenterContainer/VBoxContainer" unique_id=533468687]
+[node name="Label" type="Label" parent="Patch/VBoxContainer/VBoxContainer" unique_id=533468687]
 layout_mode = 2
 text = "locBakDetected"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Patch/CenterContainer/VBoxContainer" unique_id=172987040]
+[node name="HBoxContainer" type="HBoxContainer" parent="Patch/VBoxContainer/VBoxContainer" unique_id=172987040]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer" unique_id=714320452]
+[node name="Control" type="Control" parent="Patch/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=714320452]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PatchUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1915341865]
+[node name="PatchUpdated" type="Button" parent="Patch/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1915341865]
 layout_mode = 2
 text = "locPatchBackup"
 
-[node name="GameUpdated" type="Button" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1826513750]
+[node name="GameUpdated" type="Button" parent="Patch/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1826513750]
 layout_mode = 2
 text = "locPatchDirectly"
 
-[node name="Control2" type="Control" parent="Patch/CenterContainer/VBoxContainer/HBoxContainer" unique_id=5045741]
+[node name="Control2" type="Control" parent="Patch/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=5045741]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Control2" type="Control" parent="Patch/VBoxContainer" unique_id=2141619615]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Readme" type="Window" parent="." unique_id=1143884703]
 auto_translate_mode = 1
@@ -822,8 +829,8 @@ placeholder_text = "https://api.github.com"
 [connection signal="close_requested" from="Popup" to="." method="_on_popup_close_requested"]
 [connection signal="close_requested" from="Popup1225" to="." method="_on_popup_1225_close_requested"]
 [connection signal="close_requested" from="Patch" to="." method="_on_patch_close_requested"]
-[connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="_on_patch_updated_pressed"]
-[connection signal="pressed" from="Patch/CenterContainer/VBoxContainer/HBoxContainer/GameUpdated" to="." method="_on_game_updated_pressed"]
+[connection signal="pressed" from="Patch/VBoxContainer/VBoxContainer/HBoxContainer/PatchUpdated" to="." method="_on_patch_updated_pressed"]
+[connection signal="pressed" from="Patch/VBoxContainer/VBoxContainer/HBoxContainer/GameUpdated" to="." method="_on_game_updated_pressed"]
 [connection signal="close_requested" from="Readme" to="." method="_on_readme_close_requested"]
 [connection signal="close_requested" from="Tutorial" to="." method="_on_tutorial_close_requested"]
 [connection signal="pressed" from="Tutorial/ScrollContainer/VBoxContainer/Button" to="." method="_on_tutorial_pressed"]
