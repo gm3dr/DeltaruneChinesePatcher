@@ -70,6 +70,8 @@ locTriggerPathDetect,Trigger DR Path Detect & Save it,触发 DR 路径检测并�
 locBypassHash,Bypass Hash Check,绕过散列值检查,繞過雜湊值檢查
 locBypassTooLong,Bypass TAKING TOO LONG Stopping,绕过 TAKING TOO LONG 终止,繞過 TAKING TOO LONG 終止
 locBypassSamePath,Bypass Same Path as DR,绕过与 DR 相同路径检查,繞過與 DR 相同路徑檢查
+locBypassExternalXDelta,Bypass external XDelta3 checking,绕过外部 XDelta3 检测,繞過外部 XDelta3 檢測
+locBypassExternal7Zip,Bypass external 7-Zip checking,绕过外部 7-Zip 检测,繞過外部 7-Zip 檢測
 locForcePatchType,Force patch type,强制补丁类型,強制補丁類型
 locDisabled,Disabled,已禁用,已禁用
 locFullVersion,Full Ver.,完整版,完整版

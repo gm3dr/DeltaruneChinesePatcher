@@ -522,7 +522,7 @@ text = "locConfirmRead"
 oversampling_override = 1.0
 title = "locAdvanced"
 initial_position = 2
-size = Vector2i(720, 720)
+size = Vector2i(720, 800)
 visible = false
 
 [node name="CenterContainer" type="CenterContainer" parent="Advanced" unique_id=1020563971]
@@ -608,6 +608,44 @@ horizontal_alignment = 2
 layout_mode = 2
 
 [node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath" unique_id=1547668283]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BypassExternalXDeltaCheck" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=1554555563]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternalXDeltaCheck" unique_id=1334953148]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternalXDeltaCheck" unique_id=964493634]
+layout_mode = 2
+text = "locBypassExternalXDelta"
+horizontal_alignment = 2
+
+[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternalXDeltaCheck" unique_id=1388291129]
+layout_mode = 2
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternalXDeltaCheck" unique_id=1024734245]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BypassExternal7ZipCheck" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=980103966]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternal7ZipCheck" unique_id=613873005]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternal7ZipCheck" unique_id=885234289]
+layout_mode = 2
+text = "locBypassExternal7Zip"
+horizontal_alignment = 2
+
+[node name="CheckButton" type="CheckButton" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternal7ZipCheck" unique_id=950632011]
+layout_mode = 2
+
+[node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternal7ZipCheck" unique_id=1968949417]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -795,6 +833,8 @@ placeholder_text = "https://api.github.com"
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassHash/CheckButton" to="." method="_on_bypasshash_toggled"]
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassTooLong/CheckButton" to="." method="_on_bypasstoolong_toggled"]
 [connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassSamePath/CheckButton" to="." method="_on_bypasssamepath_toggled"]
+[connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternalXDeltaCheck/CheckButton" to="." method="_on_bypassexternalxdelta_toggled"]
+[connection signal="toggled" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/BypassExternal7ZipCheck/CheckButton" to="." method="_on_bypassexternal7zip_toggled"]
 [connection signal="item_selected" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/ForcePatchType/OptionButton" to="." method="_on_force_patch_item_selected"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer/LineEdit" to="." method="_on_xdelta_text_changed"]
 [connection signal="text_changed" from="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer/LineEdit" to="." method="_on_7z_text_changed"]

@@ -150,6 +150,8 @@ public partial class Main : Control
 	static bool bypass_hash = false;
 	static bool bypass_too_long = false;
 	static bool bypass_same_path = false;
+	static bool bypass_externals_xdelta = false;
+	static bool bypass_externals_7zip = false;
 	static int force_patch = 0; // 0=disabled, 1=full, 2=demo
 	static string github_api = "https://api.github.com";
 	static string xdelta_override = "";
@@ -810,54 +812,70 @@ public partial class Main : Control
 		//外部程序检查
 		Godot.Collections.Array externalcheckoutput;
 		int external_check_return;
-		foreach (var __7z in available_externals["7z"])
+		if (bypass_externals_7zip)
 		{
-			externalcheckoutput = [];
-			GD.Print("Checking " + __7z);
-			output.Add("Checking " + __7z);
-			if (os_name == "Windows")
+			GD.Print("External 7-Zip check bypassed.");
+			output.Add("External 7-Zip check bypassed.");
+		}
+		else
+		{
+			foreach (var __7z in available_externals["7z"])
 			{
-				external_check_return = OS.Execute("where", [__7z], externalcheckoutput);
-			}
-			else
-			{
-				external_check_return = OS.Execute("command", ["-v", __7z], externalcheckoutput);
-			}
-			GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
-			output.Add($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
-			GD.Print(externalcheckoutput);
-			output.Add(externalcheckoutput);
-			if (external_check_return == 0)
-			{
-				_7zip = __7z;
-				GD.Print("Found " + __7z);
-				output.Add("Found " + __7z);
-				break;
+				externalcheckoutput = [];
+				GD.Print("Checking " + __7z);
+				output.Add("Checking " + __7z);
+				if (os_name == "Windows")
+				{
+					external_check_return = OS.Execute("where", [__7z], externalcheckoutput);
+				}
+				else
+				{
+					external_check_return = OS.Execute("command", ["-v", __7z], externalcheckoutput);
+				}
+				GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
+				output.Add($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
+				GD.Print(externalcheckoutput);
+				output.Add(externalcheckoutput);
+				if (external_check_return == 0)
+				{
+					_7zip = __7z;
+					GD.Print("Found " + __7z);
+					output.Add("Found " + __7z);
+					break;
+				}
 			}
 		}
-		foreach (var __xdelta in available_externals["xdelta"])
+		if (bypass_externals_xdelta)
 		{
-			externalcheckoutput = [];
-			GD.Print("Checking " + __xdelta);
-			output.Add("Checking " + __xdelta);
-			if (os_name == "Windows")
+			GD.Print("External XDelta3 check bypassed.");
+			output.Add("External XDelta3 check bypassed.");
+		}
+		else
+		{
+			foreach (var __xdelta in available_externals["xdelta"])
 			{
-				external_check_return = OS.Execute("where", [__xdelta], externalcheckoutput);
-			}
-			else
-			{
-				external_check_return = OS.Execute("command", ["-v", __xdelta], externalcheckoutput);
-			}
-			GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
-			output.Add($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
-			GD.Print(externalcheckoutput);
-			output.Add(externalcheckoutput);
-			if (external_check_return == 0)
-			{
-				xdelta3 = __xdelta;
-				GD.Print("Found " + __xdelta);
-				output.Add("Found " + __xdelta);
-				break;
+				externalcheckoutput = [];
+				GD.Print("Checking " + __xdelta);
+				output.Add("Checking " + __xdelta);
+				if (os_name == "Windows")
+				{
+					external_check_return = OS.Execute("where", [__xdelta], externalcheckoutput);
+				}
+				else
+				{
+					external_check_return = OS.Execute("command", ["-v", __xdelta], externalcheckoutput);
+				}
+				GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
+				output.Add($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
+				GD.Print(externalcheckoutput);
+				output.Add(externalcheckoutput);
+				if (external_check_return == 0)
+				{
+					xdelta3 = __xdelta;
+					GD.Print("Found " + __xdelta);
+					output.Add("Found " + __xdelta);
+					break;
+				}
 			}
 		}
 		// path override
@@ -1217,6 +1235,16 @@ public partial class Main : Control
 	public void _on_bypasssamepath_toggled(bool toggled)
 	{
 		bypass_same_path = toggled;
+	}
+
+	public void _on_bypassexternal7zip_toggled(bool toggled)
+	{
+		bypass_externals_7zip = toggled;
+	}
+
+	public void _on_bypassexternalxdelta_toggled(bool toggled)
+	{
+		bypass_externals_xdelta = toggled;
 	}
 
 	public void _on_force_patch_item_selected(int selected)
