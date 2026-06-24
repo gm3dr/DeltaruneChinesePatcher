@@ -152,6 +152,7 @@ public partial class Main : Control
 	static bool bypass_same_path = false;
 	static bool bypass_externals_xdelta = false;
 	static bool bypass_externals_7zip = false;
+	static bool bypass_restore_when_failed = false;
 	static int force_patch = 0; // 0=disabled, 1=full, 2=demo
 	static string github_api = "https://api.github.com";
 	static string xdelta_override = "";
@@ -734,7 +735,7 @@ public partial class Main : Control
 	}
 	public void _on_text_patcher_version_pressed()
 	{
-		nodeWindowAdvanced.Size = new Vector2I(720, 720) * windowScale;
+		nodeWindowAdvanced.Size = new Vector2I(720, 860) * windowScale;
 		nodeContainerAdvanced.Position = Vector2.Zero;
 		nodeContainerAdvanced.Size = nodeWindowAdvanced.Size / windowScale;
 		nodeContainerAdvanced.Scale = new(windowScale, windowScale);
@@ -1247,6 +1248,11 @@ public partial class Main : Control
 		bypass_externals_xdelta = toggled;
 	}
 
+	public void _on_bypassrestorewhenfailed_toggled(bool toggled)
+	{
+		bypass_restore_when_failed = toggled;
+	}
+
 	public void _on_force_patch_item_selected(int selected)
 	{
 		force_patch = selected;
@@ -1360,7 +1366,15 @@ public partial class Main : Control
 		{
 			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Error);
 			//回退安装
-			output += RestoreData(path);
+			if (bypass_restore_when_failed)
+			{
+				GD.Print("Restoring backup bypassed.");
+				output.Add("Restoring backup bypassed.");
+			}
+			else
+			{
+				output += RestoreData(path);
+			}
 		}
 		output.Add("Patched at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]);
 		var logtext = "";

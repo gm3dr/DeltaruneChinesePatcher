@@ -72,6 +72,7 @@ locBypassTooLong,Bypass TAKING TOO LONG Stopping,绕过 TAKING TOO LONG 终止,�
 locBypassSamePath,Bypass Same Path as DR,绕过与 DR 相同路径检查,繞過與 DR 相同路徑檢查
 locBypassExternalXDelta,Bypass external XDelta3 checking,绕过外部 XDelta3 检测,繞過外部 XDelta3 檢測
 locBypassExternal7Zip,Bypass external 7-Zip checking,绕过外部 7-Zip 检测,繞過外部 7-Zip 檢測
+locBypassRestoreWhenFailed,Bypass Restore Backup when failed,绕过失败时的备份还原,繞過失敗時的備份還原
 locForcePatchType,Force patch type,强制补丁类型,強制補丁類型
 locDisabled,Disabled,已禁用,已禁用
 locFullVersion,Full Ver.,完整版,完整版
