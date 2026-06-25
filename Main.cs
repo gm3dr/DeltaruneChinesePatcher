@@ -521,9 +521,8 @@ public partial class Main : Control
 				}
 				else if (os_name == "macOS")
 				{
-					var executable = PathTrim(nodeEditGamePath.Text) + "../MacOS/Mac_Runner";
-					OS.Execute("chmod", ["+x", executable]);
-					OS.ShellOpen(executable);
+					var appBundlePath = System.IO.Path.GetFullPath(PathTrim(nodeEditGamePath.Text) + "/../..");
+					OS.Execute("/usr/bin/open", ["-a", appBundlePath]);
 				}
 				break;
 		}
