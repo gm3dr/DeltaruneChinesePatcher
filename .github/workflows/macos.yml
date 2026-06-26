@@ -128,7 +128,7 @@ jobs:
           mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/7zip"
           mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/xdelta3"
           cp "${{ env.SOURCE_PATH }}/externals/7zip/7z_mac" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/7zip/"
-          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3_mac_arm" "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3_mac_x86" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/xdelta3/"
+          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3_mac" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/xdelta3/"
           cp "${{ env.SOURCE_PATH }}/.macOS 导出附带文件/遇到问题读我.txt" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/"
     
     # - name: Generate Icon
