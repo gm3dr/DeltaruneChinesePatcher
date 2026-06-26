@@ -96,8 +96,7 @@ public partial class Main : Control
 		{GetGameDirPath("externals/7zip/7z_mac"), "113122403b762d2f838aff4e68cbd37066cdb7e585e655ff1155f846287c5b8a"},
 		{GetGameDirPath("externals/xdelta3/xdelta3"), "709f63ebb9655dc3b5c84f17e11217494eb34cf00c009a026386e4c8617ea903"},
 		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "6855c01cf4a1662ba421e6f95370cf9afa2b3ab6c148473c63efe60d634dfb9a"},
-		{GetGameDirPath("externals/xdelta3/xdelta3_mac_x86"), "59865d3eed4e5443f830a982748e284ded9f1e1800dd397ee39c42e73215c533"},
-		{GetGameDirPath("externals/xdelta3/xdelta3_mac_arm"), "d0196eb1bf6741734edb6e3e79cff4445f7ff7b13e742da00719cd7ea60f6f28"}
+		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), "a425bc68caec30b075d4f4c94f4042ad421c6477ed4903f4594a32446cd59b79"}
 	};
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Dictionary<string, string>> default_paths = new()
 	{
@@ -291,7 +290,7 @@ public partial class Main : Control
 		}
 		else if (os_name == "macOS")
 		{
-			xdelta3 = GetGameDirPath(os_arch == Architecture.Arm64 ? "externals/xdelta3/xdelta3_mac_arm" : "externals/xdelta3/xdelta3_mac_x86");
+			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3_mac");
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
 		}
 		//语言选项
