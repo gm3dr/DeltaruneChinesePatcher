@@ -58,6 +58,18 @@ _data = {
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6i3y"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ogq8d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hyap7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_irt5y"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nr3fk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nae50"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yrrhc"]
+
 [sub_resource type="Theme" id="Theme_trn2v"]
 default_font_size = 26
 
@@ -350,6 +362,7 @@ access = 2
 use_native_dialog = true
 
 [node name="Log" type="Window" parent="." unique_id=333583143]
+oversampling_override = 1.0
 title = "locLog"
 initial_position = 2
 size = Vector2i(960, 600)
@@ -368,6 +381,21 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 13
 autowrap_mode = 3
+
+[node name="Copy" type="Button" parent="Log/ScrollContainer/Label" unique_id=1299310260]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+tooltip_text = "locClick2Copy"
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ogq8d")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_hyap7")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_irt5y")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_nr3fk")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_nae50")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_yrrhc")
 
 [node name="Popup" type="Window" parent="." unique_id=1819862319]
 oversampling_override = 1.0
@@ -845,6 +873,7 @@ placeholder_text = "https://api.github.com"
 [connection signal="gui_input" from="TitleBar" to="." method="_on_title_bar_gui_input"]
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="close_requested" from="Log" to="." method="_on_window_close_requested"]
+[connection signal="pressed" from="Log/ScrollContainer/Label/Copy" to="." method="_on_copy_pressed"]
 [connection signal="close_requested" from="Popup" to="." method="_on_popup_close_requested"]
 [connection signal="close_requested" from="Popup1225" to="." method="_on_popup_1225_close_requested"]
 [connection signal="close_requested" from="Patch" to="." method="_on_patch_close_requested"]

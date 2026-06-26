@@ -1294,6 +1294,11 @@ public partial class Main : Control
 		_7zip_override = path;
 	}
 
+	public void _on_copy_pressed()
+	{
+		DisplayServer.ClipboardSet(nodeWindowLogContent.Text);
+	}
+
 	internal void RecivedOutput(object process, DataReceivedEventArgs recived)
 	{
 		var result = recived.Data;
