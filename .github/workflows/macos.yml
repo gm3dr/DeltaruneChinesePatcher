@@ -3,7 +3,7 @@ on:
 
 jobs:
   export_macos:
-    runs-on: macos-14
+    runs-on: macos-latest
     permissions: write-all
     name: Export macOS
     env:
@@ -19,10 +19,10 @@ jobs:
       with:
         path: ${{ env.SOURCE_PATH }}
 
-    - name: Setup .NET Download DIR & Change XCode Version
+    - name: Setup .NET Download DIR & Change Xcode Version
       run: |
         mkdir ${{ env.DOTNET_DOWNLOAD_PATH }}
-        sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+        sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
 
     - name: Setup .NET 8
       working-directory: ${{ env.DOTNET_DOWNLOAD_PATH }}
@@ -130,12 +130,6 @@ jobs:
           cp "${{ env.SOURCE_PATH }}/externals/7zip/7z_mac" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/7zip/"
           cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3_mac_arm" "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3_mac_x86" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/xdelta3/"
           cp "${{ env.SOURCE_PATH }}/.macOS 导出附带文件/遇到问题读我.txt" "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/"
-    
-    # - name: Generate Icon
-    #   run: |
-    #       brew install iconsur
-    #       sudo iconsur set "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app" -l -i "${{ env.SOURCE_PATH }}/patcher_icon.png"
-    #       sudo iconsur cache
     
     - name: Codesign
       run: |
