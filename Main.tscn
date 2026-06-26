@@ -519,7 +519,7 @@ auto_translate_mode = 1
 oversampling_override = 1.0
 title = "locPleaseRead"
 initial_position = 2
-size = Vector2i(720, 540)
+size = Vector2i(720, 600)
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Tutorial" unique_id=637644696]
 anchors_preset = 15
@@ -534,10 +534,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Control" type="Control" parent="Tutorial/ScrollContainer/VBoxContainer" unique_id=324354156]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="Label" type="Label" parent="Tutorial/ScrollContainer/VBoxContainer" unique_id=80893516]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 text = "locPleaseReadLabel"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -552,6 +555,10 @@ text = "locOpenTutorial"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "locConfirmRead"
+
+[node name="Control2" type="Control" parent="Tutorial/ScrollContainer/VBoxContainer" unique_id=1125717606]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Advanced" type="Window" parent="." unique_id=1720558407]
 oversampling_override = 1.0
