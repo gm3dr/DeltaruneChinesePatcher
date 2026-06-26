@@ -22,7 +22,7 @@ jobs:
     - name: Setup .NET Download DIR & Change XCode Version
       run: |
         mkdir ${{ env.DOTNET_DOWNLOAD_PATH }}
-        sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+        sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
 
     - name: Setup .NET 8
       working-directory: ${{ env.DOTNET_DOWNLOAD_PATH }}
