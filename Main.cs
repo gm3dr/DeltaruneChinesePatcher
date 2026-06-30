@@ -86,7 +86,6 @@ public partial class Main : Control
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
 	static bool used_fallback = false; // ws3917 - 是否使用了備用安裝補丁
 	static bool patch_failed = false; // ws3917 - 补丁安装失败的信号
-	static string fail_reason = "";
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
 	{
 		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za", "7zz"]},
@@ -1042,7 +1041,6 @@ public partial class Main : Control
 						GD.Print($"No data.win found.");
 						output.Add($"No data.win found.");
 						patch_failed = true;
-						fail_reason = "locPatchFailedInvalidInput";
 						return;
 					}
 					string shaPrefix = sha256Full.Substring(0, 8);
@@ -1087,7 +1085,6 @@ public partial class Main : Control
 								GD.Print($"Fallback patch still FAILED for {shaPrefix}.");
 								output.Add($"Fallback patch still FAILED for {shaPrefix}.");
 								patch_failed = true;
-								fail_reason = "locPatchFailedInvalidInput";
 								return;
 							}
 						};
@@ -1101,7 +1098,6 @@ public partial class Main : Control
 						GD.Print($"No fallback patch found for {shaPrefix}.");
 						output.Add($"No fallback patch found for {shaPrefix}.");
 						patch_failed = true;
-						fail_reason = "locPatchFailedInvalidInput";
 						return;
 					}
 				}
@@ -1211,9 +1207,13 @@ public partial class Main : Control
 			// ws3917 - 等一下保证进程退出
 			await Task.Delay(200); 
 			if (patch_failed)
-				CallDeferred("PatchResultHandler", false, fail_reason, (DateTime.Now - starttime).TotalSeconds, new Vector2I(640, 480));
+			{
+				CallDeferred("PatchResultHandler", false, "locPatchFailedInvalidInput", (DateTime.Now - starttime).TotalSeconds, new Vector2I(640, 480));
+			}
 			else
+			{
 				CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "30", new Vector2I(480, 240));
+			}
 				
 		}
 	}
