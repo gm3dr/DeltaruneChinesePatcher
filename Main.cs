@@ -1211,7 +1211,7 @@ public partial class Main : Control
 			// ws3917 - 等一下保证进程退出
 			await Task.Delay(200); 
 			if (patch_failed)
-				CallDeferred("PatchResultHandler", false, fail_reason, (DateTime.Now - starttime).TotalSeconds, new Vector2I(480, 240));
+				CallDeferred("PatchResultHandler", false, fail_reason, (DateTime.Now - starttime).TotalSeconds, new Vector2I(640, 480));
 			else
 				CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "30", new Vector2I(480, 240));
 				
