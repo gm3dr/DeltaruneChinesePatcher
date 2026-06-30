@@ -378,26 +378,26 @@ public partial class Main : Control
 				{
 					nodeUpdatePatchRow.Visible = true;
 				}
-			}
-			if (nodeWindowReadmeContent.Text != "")
-			{
-				foreach (var asset in patchreleases["assets"].AsGodotArray())
+				if (nodeWindowReadmeContent.Text != "")
 				{
-					if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains("readme"))
+					foreach (var asset in patchreleases["assets"].AsGodotArray())
 					{
-						var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
-						var readme = FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write);
-						if (readme != null)
+						if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains("readme"))
 						{
-							readme.StoreString(text);
-							nodeWindowReadmeContent.Text = text;
-							nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-							nodeWindowReadme.Title = "readme.txt";
-							nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
-							nodeWindowReadme.Show();
-							readme.Close();
+							var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
+							var readme = FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write);
+							if (readme != null)
+							{
+								readme.StoreString(text);
+								nodeWindowReadmeContent.Text = text;
+								nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+								nodeWindowReadme.Title = "readme.txt";
+								nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
+								nodeWindowReadme.Show();
+								readme.Close();
+							}
+							break;
 						}
-						break;
 					}
 				}
 			}
