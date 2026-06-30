@@ -84,6 +84,9 @@ public partial class Main : Control
 	static int patch_count_except_chapters = 0; // chapterX.xdelta 以外的 xdelta 数量，目前只有 main.xdelta
 	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
+	static bool used_fallback = false; // ws3917 - 是否使用了備用安裝補丁
+	static bool patch_failed = false; // ws3917 - 补丁安装失败的信号
+	static string fail_reason = "";
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
 	{
 		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za", "7zz"]},
@@ -787,6 +790,7 @@ public partial class Main : Control
 	}
 	public async void Patch(bool use_backup = true)
 	{
+		patch_failed = false;
 		starttime = DateTime.Now;
 		patched_count = 0;
 		nodeWindowPatch.Hide();
@@ -970,7 +974,7 @@ public partial class Main : Control
 		chapters = [];
 		foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(tempPath)))
 		{
-			if (file.EndsWith(".xdelta") && file.StartsWith("chapter"))
+			if (System.Text.RegularExpressions.Regex.IsMatch(file, @"^chapter\d+\.xdelta$"))
 			{
 				chapters = chapters.Append(file.TrimSuffix(".xdelta").TrimPrefix("chapter")).ToArray();
 			}
@@ -1022,6 +1026,92 @@ public partial class Main : Control
 		{
 			patched_count = chapters.Length;
 		}
+		System.EventHandler CreateFallbackHandler(string backupDataPath, string failedDataPath, string fallbackNamePrefix)
+		{
+			return (sender, e) =>
+			{
+				if (patch_failed) return;
+				var originalProc = (Process)sender;
+				if (originalProc.ExitCode != 0)
+				{
+					GD.Print($"{fallbackNamePrefix} xdelta3 failed. Attempting fallback...");
+					output.Add($"{fallbackNamePrefix} xdelta3 failed. Attempting fallback...");
+					string sha256Full = FileAccess.GetSha256(backupDataPath);
+					if (sha256Full == "")
+					{
+						GD.Print($"No data.win found.");
+						output.Add($"No data.win found.");
+						patch_failed = true;
+						fail_reason = "locPatchFailedInvalidInput";
+						return;
+					}
+					string shaPrefix = sha256Full.Substring(0, 8);
+					string fallbackPatchPath = $"{path}/{fallbackNamePrefix}{shaPrefix}.xdelta";
+
+					if (FileAccess.FileExists(fallbackPatchPath))
+					{
+						GD.Print($"Fallback patch found: {fallbackPatchPath}");
+						output.Add($"Fallback patch found: {fallbackPatchPath}");
+
+						//清理
+						if (FileAccess.FileExists(failedDataPath))
+						{
+							DirAccess.RemoveAbsolute(failedDataPath);
+						}
+
+						string fallbackArgs = $"-f -d -v -s \"{backupDataPath}\" \"{fallbackPatchPath}\" \"{failedDataPath}\"";
+						GD.Print($"{xdelta3} {fallbackArgs}");
+
+						var fallback_process = new Process();
+						fallback_process.StartInfo = new ProcessStartInfo
+						{
+							FileName = xdelta3,
+							Arguments = fallbackArgs,
+							RedirectStandardOutput = true,
+							RedirectStandardError = true
+						};
+						fallback_process.EnableRaisingEvents = true;
+						fallback_process.OutputDataReceived += RecivedOutput;
+						fallback_process.ErrorDataReceived += RecivedOutput;
+
+						fallback_process.Exited += (f_sender, f_e) =>
+						{
+							if (fallback_process.ExitCode == 0)
+							{
+								// 标一下不是正版游戏，用来结尾提示
+								used_fallback = true; 
+								Patched(f_sender, f_e);
+							}
+							else
+							{
+								GD.Print($"Fallback patch still FAILED for {shaPrefix}.");
+								output.Add($"Fallback patch still FAILED for {shaPrefix}.");
+								patch_failed = true;
+								fail_reason = "locPatchFailedInvalidInput";
+								return;
+							}
+						};
+
+						fallback_process.Start();
+						fallback_process.BeginOutputReadLine();
+						fallback_process.BeginErrorReadLine();
+					}
+					else
+					{
+						GD.Print($"No fallback patch found for {shaPrefix}.");
+						output.Add($"No fallback patch found for {shaPrefix}.");
+						patch_failed = true;
+						fail_reason = "locPatchFailedInvalidInput";
+						return;
+					}
+				}
+				else
+				{
+					// 第一次没报错，直接成功
+					Patched(sender, e);
+				}
+			};
+		}
 		patch_count_except_chapters = 0;
 		if (FileAccess.FileExists(path + "/main.xdelta"))
 		{
@@ -1046,7 +1136,9 @@ public partial class Main : Control
 			xdelta3_process.EnableRaisingEvents = true;
 			xdelta3_process.OutputDataReceived += RecivedOutput;
 			xdelta3_process.ErrorDataReceived += RecivedOutput;//RecivedError; Xdelta3你神经病吧报错了吗你就返回Error
-			xdelta3_process.Exited += Patched;
+			string backupPath = $"{path}/backup/{dataname}";
+			string destPath = $"{path}/{dataname}";
+			xdelta3_process.Exited += CreateFallbackHandler(backupPath, destPath, "main_");
 			xdelta3_process.Start();
 			xdelta3_process.BeginOutputReadLine();
 			xdelta3_process.BeginErrorReadLine();
@@ -1078,7 +1170,10 @@ public partial class Main : Control
 					xdelta3_process.EnableRaisingEvents = true;
 					xdelta3_process.OutputDataReceived += RecivedOutput;
 					xdelta3_process.ErrorDataReceived += RecivedOutput;//RecivedError; FUCK XDELTA3
-					xdelta3_process.Exited += Patched;
+					// ws3917 - 新增xdelta3的fall back，用于旧版游戏安装补丁
+					string backupPath = $"{path}/backup/chapter{chapter}_{osname}/{dataname}";
+					string destPath = $"{path}/chapter{chapter}_{osname}/{dataname}";
+					xdelta3_process.Exited += CreateFallbackHandler(backupPath, destPath, $"chapter{chapter}_");
 					xdelta3_process.Start();
 					xdelta3_process.BeginOutputReadLine();
 					xdelta3_process.BeginErrorReadLine();
@@ -1086,7 +1181,7 @@ public partial class Main : Control
 				}
 			}
 		}
-		while (patched_count < chapters.Length + patch_count_except_chapters && (DateTime.Now - starttime).TotalSeconds < 30)
+		while (patched_count < chapters.Length + patch_count_except_chapters && !patch_failed && (DateTime.Now - starttime).TotalSeconds < 30)
 		{
 			await Task.Delay(100);
 		}
@@ -1095,7 +1190,7 @@ public partial class Main : Control
 			CallDeferred("Ending");
 			return;
 		}
-		if ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= 30))
+		if (patch_failed || ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= 30)))
 		{
 			Godot.Collections.Array<string> externals = [];
 			foreach (var programs in available_externals.Values)
@@ -1113,7 +1208,13 @@ public partial class Main : Control
 					OS.Execute("killall", [external]);
 				}
 			}
-			CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "30", new Vector2I(480, 240));
+			// ws3917 - 等一下保证进程退出
+			await Task.Delay(200); 
+			if (patch_failed)
+				CallDeferred("PatchResultHandler", false, fail_reason, (DateTime.Now - starttime).TotalSeconds, new Vector2I(480, 240));
+			else
+				CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "30", new Vector2I(480, 240));
+				
 		}
 	}
 	internal static Godot.Collections.Array MoveAfterExtracted(string dir, string relative_dir, string drsdir)
@@ -1444,7 +1545,7 @@ public partial class Main : Control
 		{
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
-		if (logtext.Contains("XD3_INVALID_INPUT"))
+		if (logtext.Contains("XD3_INVALID_INPUT") && !used_fallback)
 		{
 			PatchResultHandler(false, "locPatchFailedInvalidInput", usedtime, new Vector2I(640, 480));
 		}
@@ -1470,7 +1571,8 @@ public partial class Main : Control
 		}
 		else
 		{
-			PatchResultHandler(true, "locPatched", usedtime, new Vector2I(480, 240));
+			string resultKey = used_fallback ? "locPatchedFallback" : "locPatched";
+			PatchResultHandler(true, resultKey, usedtime, new Vector2I(480, 240));
 		}
 	}
 

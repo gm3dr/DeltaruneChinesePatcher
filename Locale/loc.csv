@@ -27,6 +27,7 @@ locTimeout, Connection Timeout , 连接超时, 連線逾時
 locResult,Result,结果,結果
 locCaution,Caution,注意,注意
 locPatched,"Patched!\nElapsed {USEDTIME}s\nOriginal files was moved to\nDELTARUNE/backup as backup",安装完成！\n总共耗时 {USEDTIME} 秒\n原本的文件已经移动到了\nDELTARUNE/backup 作为备份,安裝完成！\n總共耗時 {USEDTIME} 秒\n原本的檔案已經移動到了\nDELTARUNE/backup 作為備份
+locPatchedFallback,"Patched!\nElapsed {USEDTIME}s\nOld version detected.\nYou can still play, but\nupdate game ASAP is recommended",安装完成！\n总共耗时 {USEDTIME} 秒\n检测到游戏是旧版\n您仍可游玩，但推荐尽快更新,安裝完成！\n總共耗時 {USEDTIME} 秒\n檢測到遊戲是舊版\n您仍可遊玩，但推薦儘快更新
 locPatchFailedPath,Patch failed after {USEDTIME}s\nYou might selected incorrect DELTARUNE path,耗时 {USEDTIME} 秒后安装失败\n你可能选择了一个错误的 DELTARUNE 路径,耗時 {USEDTIME} 秒後安裝失敗\n你可能選擇了一個錯誤的 DELTARUNE 路徑
 locPatchFailedSamePath,Patch failed after {USEDTIME}s\nThe patcher seems to be in the DELTARUNE path\nPlease move to prevent potential errors,耗时 {USEDTIME} 秒后安装失败\n安装器似乎在 DELTARUNE 路径中\n请移动以防止潜在错误,耗時 {USEDTIME} 秒後安裝失敗\n安裝器似乎在 DR 路徑中\n請移動以防止潛在錯誤
 locPatchFailedUT,Patch failed after {USEDTIME}s\nYou might selected an UNDERTALE path\nPlease visit Baidu Tieba for UNDERTALE patch,耗时 {USEDTIME} 秒后安装失败\n你可能选择了一个 UNDERTALE 路径\nUNDERTALE 汉化补丁请前往百度贴吧 undertale 吧精华帖,耗時 {USEDTIME} 秒後安裝失敗\n你可能選擇了一個 UNDERTALE 路徑\nUNDERTALE 漢化補丁請前往百度貼吧 undertale 精華帖\n或是前往巴哈姆特尋找他人製作的繁中補丁
