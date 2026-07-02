@@ -104,14 +104,20 @@ jobs:
       run: |
         ${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules\mono\glue
         python .\modules\mono\build_scripts\build_assemblies.py --godot-output-dir=.\bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
-    - name: Upload Artifact
+    - name: Upload Latest
       uses: actions/upload-artifact@v7
       with:
         name: latest
         path: ${{ env.GODOT_SOURCE_PATH }}\bin
 
-    - name: Upload Artifact
+    - name: Upload 4.4
       uses: actions/upload-artifact@v7
       with:
         name: 4.4
         path: ${{ env.GODOT_44_SOURCE_PATH }}\bin
+
+    - name: Upload Nuget
+      uses: actions/upload-artifact@v7
+      with:
+        name: Nuget
+        path: ${{ env.LOCAL_NUGET_PATH }}
