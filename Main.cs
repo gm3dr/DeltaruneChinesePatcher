@@ -208,7 +208,7 @@ public partial class Main : Control
 				string quarantineDate = "";
 				try
 				{
-					var psi = new ProcessStartInfo("xattr", "-p com.apple.quarantine \"" + execPath + "\"")
+					var psi = new ProcessStartInfo("/usr/bin/xattr", "-p com.apple.quarantine \"" + execPath + "\"")
 					{
 						RedirectStandardOutput = true,
 						RedirectStandardError = true,
