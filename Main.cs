@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 public partial class Main : Control
 {
@@ -199,7 +200,7 @@ public partial class Main : Control
 
 				// macOS 隔离检测
 				var execPath = OS.GetExecutablePath();
-				var hasAppTranslocation = execPath.Contains("AppTranslocation");
+				var hasAppTranslocation = Regex.IsMatch(execPath, "^/private/var/folders/(?:[^/]+/)+AppTranslocation/[0-9a-fA-F-]+/");
 				GD.Print("macOS AppTranslocation: " + (hasAppTranslocation ? "Detected (" + execPath + ")" : "Not detected"));
 				output.Add("macOS AppTranslocation: " + (hasAppTranslocation ? "Detected (" + execPath + ")" : "Not detected"));
 				bool hasQuarantine = false;
@@ -252,13 +253,16 @@ public partial class Main : Control
 					GD.PushError("Exception when checking com.apple.quarantine: " + exc.ToString() + " (" + exc.Message + ")");
 				}
 				// 弹出检测结果
-				if (hasAppTranslocation || hasQuarantine)
+				if (hasAppTranslocation)
 				{
-					var transMsg = "AppTranslocation: " + (hasAppTranslocation ? "Yes" : "No");
-					var xattrMsg = "Quarantine: " + (hasQuarantine ? "Yes (" + quarantineApp + ", " + quarantineDate + ")" : "No");
+					string quarantineInfo;
+					if (hasQuarantine && !string.IsNullOrEmpty(quarantineApp))
+						quarantineInfo = TranslationServer.Translate("locMacQuarantineXattrInfo").ToString()
+							.Replace("{0}", quarantineApp).Replace("{1}", quarantineDate);
+					else
+						quarantineInfo = "";
 					nodeWindowPopupContent.Text = TranslationServer.Translate("locMacQuarantineFound").ToString()
-						.Replace("{0}", transMsg)
-						.Replace("{1}", xattrMsg);
+						.Replace("{0}", quarantineInfo);
 					nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 					nodeWindowPopup.Size = new Vector2I(640, 360) * windowScale;
 					nodeWindowPopup.Title = "locMacQuarantineTitle";
