@@ -201,6 +201,7 @@ public partial class Main : Control
 				var execPath = OS.GetExecutablePath();
 				var hasAppTranslocation = execPath.Contains("AppTranslocation");
 				GD.Print("macOS AppTranslocation: " + (hasAppTranslocation ? "Detected (" + execPath + ")" : "Not detected"));
+				output.Add("macOS AppTranslocation: " + (hasAppTranslocation ? "Detected (" + execPath + ")" : "Not detected"));
 				bool hasQuarantine = false;
 				string quarantineDetail = "";
 				string quarantineApp = "";
@@ -232,10 +233,12 @@ public partial class Main : Control
 								quarantineDate = DateTimeOffset.FromUnixTimeSeconds(ts).ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
 							}
 							GD.Print("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
+							output.Add("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
 						}
 						else
 						{
 							GD.Print("macOS quarantine xattr: Not detected" + (stderr.Trim() != "" ? " - " + stderr.Trim() : ""));
+							output.Add("macOS quarantine xattr: Not detected" + (stderr.Trim() != "" ? " - " + stderr.Trim() : ""));
 						}
 					}
 				}
