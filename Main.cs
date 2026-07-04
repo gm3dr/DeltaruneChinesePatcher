@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 public partial class Main : Control
 {
@@ -195,6 +196,77 @@ public partial class Main : Control
 				else
 				{
 					nodeTitleBar.Color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+				}
+
+				// macOS 隔离检测
+				var execPath = OS.GetExecutablePath();
+				var hasAppTranslocation = Regex.IsMatch(execPath, "^/private/var/folders/(?:[^/]+/)+AppTranslocation/[0-9a-fA-F-]+/");
+				GD.Print("macOS AppTranslocation: " + (hasAppTranslocation ? "Detected (" + execPath + ")" : "Not detected"));
+				output.Add("macOS AppTranslocation: " + (hasAppTranslocation ? "Detected (" + execPath + ")" : "Not detected"));
+				bool hasQuarantine = false;
+				string quarantineDetail = "";
+				string quarantineApp = "";
+				string quarantineDate = "";
+				try
+				{
+					var psi = new ProcessStartInfo("/usr/bin/xattr", "-p com.apple.quarantine \"" + execPath + "\"")
+					{
+						RedirectStandardOutput = true,
+						RedirectStandardError = true,
+						UseShellExecute = false,
+						CreateNoWindow = true
+					};
+					using var proc = Process.Start(psi);
+					if (proc != null)
+					{
+						var stdout = proc.StandardOutput.ReadToEnd();
+						var stderr = proc.StandardError.ReadToEnd();
+						proc.WaitForExit();
+						hasQuarantine = proc.ExitCode == 0 && !string.IsNullOrEmpty(stdout.Trim());
+						if (hasQuarantine)
+						{
+							quarantineDetail = stdout.Trim();
+							// 解析 xattr 格式: <flags_hex>;<timestamp_hex>;<app_name>
+							var qParts = quarantineDetail.Split(';');
+							if (qParts.Length >= 3 && long.TryParse(qParts[1], System.Globalization.NumberStyles.HexNumber, null, out var ts))
+							{
+								quarantineApp = qParts[2];
+								quarantineDate = DateTimeOffset.FromUnixTimeSeconds(ts).ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
+								GD.Print("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
+								output.Add("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
+							}
+							else
+							{
+								GD.Print("macOS quarantine xattr: Detected (Raw: " + quarantineDetail + ")");
+								output.Add("macOS quarantine xattr: Detected (Raw: " + quarantineDetail + ")");
+							}
+						}
+						else
+						{
+							GD.Print("macOS quarantine xattr: Not detected" + (stderr.Trim() != "" ? " - " + stderr.Trim() : ""));
+							output.Add("macOS quarantine xattr: Not detected" + (stderr.Trim() != "" ? " - " + stderr.Trim() : ""));
+						}
+					}
+				}
+				catch (Exception exc)
+				{
+					GD.PushError("Exception when checking com.apple.quarantine: " + exc.ToString() + " (" + exc.Message + ")");
+				}
+				// 弹出检测结果
+				if (hasAppTranslocation)
+				{
+					string quarantineInfo;
+					if (hasQuarantine && !string.IsNullOrEmpty(quarantineApp))
+						quarantineInfo = TranslationServer.Translate("locMacQuarantineXattrInfo").ToString()
+							.Replace("{0}", quarantineApp).Replace("{1}", quarantineDate);
+					else
+						quarantineInfo = "";
+					nodeWindowPopupContent.Text = TranslationServer.Translate("locMacQuarantineFound").ToString()
+						.Replace("{0}", quarantineInfo);
+					nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+					nodeWindowPopup.Size = new Vector2I(640, 360) * windowScale;
+					nodeWindowPopup.Title = "locMacQuarantineTitle";
+					nodeWindowPopup.Show();
 				}
 			}
 
