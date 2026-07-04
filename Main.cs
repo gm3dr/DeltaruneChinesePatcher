@@ -236,15 +236,15 @@ public partial class Main : Control
 			// macOS 隔离检测
 			var execPath = OS.GetExecutablePath();
 			var hasAppTranslocation = Regex.IsMatch(execPath, "^/private/var/folders/(?:[^/]+/)+AppTranslocation/[0-9a-fA-F-]+/");
-			GD.Print("macOS AppTranslocation: " + (hasAppTranslocation ? "Detected (" + execPath + ")" : "Not detected"));
-			output.Add("macOS AppTranslocation: " + (hasAppTranslocation ? "Detected (" + execPath + ")" : "Not detected"));
+			GD.Print($"macOS AppTranslocation: {(hasAppTranslocation ? $"Detected ({execPath})" : "Not detected")}");
+			output.Add($"macOS AppTranslocation: {(hasAppTranslocation ? $"Detected ({execPath})" : "Not detected")}");
 			bool hasQuarantine = false;
 			string quarantineDetail = "";
 			string quarantineApp = "";
 			string quarantineDate = "";
 			try
 			{
-				var psi = new ProcessStartInfo("/usr/bin/xattr", "-p com.apple.quarantine \"" + execPath + "\"")
+				var psi = new ProcessStartInfo("/usr/bin/xattr", $"-p com.apple.quarantine \"{execPath}\"")
 				{
 					RedirectStandardOutput = true,
 					RedirectStandardError = true,
@@ -256,7 +256,11 @@ public partial class Main : Control
 				{
 					var stdout = proc.StandardOutput.ReadToEnd();
 					var stderr = proc.StandardError.ReadToEnd();
-					proc.WaitForExit();
+					if (!proc.WaitForExit(5000))
+					{
+						proc.Kill();
+						proc.WaitForExit();
+					}
 					hasQuarantine = proc.ExitCode == 0 && !string.IsNullOrEmpty(stdout.Trim());
 					if (hasQuarantine)
 					{
@@ -266,25 +270,25 @@ public partial class Main : Control
 						{
 							quarantineApp = qParts[2];
 							quarantineDate = DateTimeOffset.FromUnixTimeSeconds(ts).ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
-							GD.Print("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
-							output.Add("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
+							GD.Print($"macOS quarantine xattr: Detected (App: {quarantineApp}, Date: {quarantineDate})");
+							output.Add($"macOS quarantine xattr: Detected (App: {quarantineApp}, Date: {quarantineDate})");
 						}
 						else
 						{
-							GD.Print("macOS quarantine xattr: Detected (Raw: " + quarantineDetail + ")");
-							output.Add("macOS quarantine xattr: Detected (Raw: " + quarantineDetail + ")");
+							GD.Print($"macOS quarantine xattr: Detected (Raw: {quarantineDetail})");
+							output.Add($"macOS quarantine xattr: Detected (Raw: {quarantineDetail})");
 						}
 					}
 					else
 					{
-						GD.Print("macOS quarantine xattr: Not detected" + (stderr.Trim() != "" ? " - " + stderr.Trim() : ""));
-						output.Add("macOS quarantine xattr: Not detected" + (stderr.Trim() != "" ? " - " + stderr.Trim() : ""));
+						GD.Print($"macOS quarantine xattr: Not detected{(stderr.Trim() != "" ? $" - {stderr.Trim()}" : "")}");
+						output.Add($"macOS quarantine xattr: Not detected{(stderr.Trim() != "" ? $" - {stderr.Trim()}" : "")}");
 					}
 				}
 			}
 			catch (Exception exc)
 			{
-				GD.PushError("Exception when checking com.apple.quarantine: " + exc.ToString() + " (" + exc.Message + ")");
+				GD.PushError($"Exception when checking com.apple.quarantine: {exc} ({exc.Message})");
 			}
 			if (hasAppTranslocation)
 			{
