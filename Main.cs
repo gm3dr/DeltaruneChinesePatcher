@@ -106,22 +106,22 @@ public partial class Main : Control
 		{"libraryfolders", new()
 			{
 				{"Windows", "{STEAMPATH}/steamapps/libraryfolders.vdf"},
-				{"macOS", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/Library/Application Support/Steam/steamapps/libraryfolders.vdf"},
-				{"Linux", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/.local/share/Steam/steamapps/libraryfolders.vdf"}
+				{"macOS", $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)}/Library/Application Support/Steam/steamapps/libraryfolders.vdf"},
+				{"Linux", $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)}/.local/share/Steam/steamapps/libraryfolders.vdf"}
 			}
 		},
 		{"deltarune", new()
 			{
 				{"Windows", "{STEAMPATH}/steamapps/common/DELTARUNE"},
-				{"macOS", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/Library/Application Support/Steam/steamapps/common/DELTARUNE/DELTARUNE.app/Contents/Resources"},
-				{"Linux", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/.local/share/Steam/steamapps/common/DELTARUNE"}
+				{"macOS", $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)}/Library/Application Support/Steam/steamapps/common/DELTARUNE/DELTARUNE.app/Contents/Resources"},
+				{"Linux", $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)}/.local/share/Steam/steamapps/common/DELTARUNE"}
 			}
 		},
 		{"deltarune_demo", new()
 			{
 				{"Windows", "{STEAMPATH}/steamapps/common/DELTARUNEdemo"},
-				{"macOS", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/Library/Application Support/Steam/steamapps/common/DELTARUNEdemo/DELTARUNE.app/Contents/Resources"},
-				{"Linux", System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/.local/share/Steam/steamapps/common/DELTARUNEdemo"}
+				{"macOS", $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)}/Library/Application Support/Steam/steamapps/common/DELTARUNEdemo/DELTARUNE.app/Contents/Resources"},
+				{"Linux", $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)}/.local/share/Steam/steamapps/common/DELTARUNEdemo"}
 			}
 		}
 	};
@@ -132,12 +132,18 @@ public partial class Main : Control
 	static string demopatchdir = GetGameDirPath("patch");
 	static Godot.Collections.Dictionary patcherreleases = new();
 	static Godot.Collections.Dictionary patchreleases = new();
-	static string os_name = OS.GetName();
+	internal static string GetOSName()
+	{
+		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return "Windows";
+		if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return "macOS";
+		return "Linux";
+	}
+	static string os_name = GetOSName();
 	static readonly Architecture os_arch = RuntimeInformation.ProcessArchitecture;
-	static string osname = (os_name == "macOS" ? "mac" : "windows");
-	static string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
+	static string osname = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "mac" : "windows";
+	static string dataname = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "game.ios" : "data.win";
 	static readonly bool is_outdated_ver = Engine.GetVersionInfo()["major"].AsInt32() <= 4 && Engine.GetVersionInfo()["minor"].AsInt32() <= 4;
-	static readonly bool is_self_extract = os_name == "Windows" && GetGameDirPath().Replace("/","\\").Contains(System.IO.Path.GetTempPath().TrimSuffix("\\"));
+	static readonly bool is_self_extract = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && GetGameDirPath().Replace("/", "\\").Contains(System.IO.Path.GetTempPath().TrimSuffix("\\"));
 	string[] locales;
 	bool inited = false;
 	static Vector2 windowDesignSize = new Vector2(640, 480);
@@ -161,279 +167,290 @@ public partial class Main : Control
 	static string _7zip_override = "";
 	public override async void _Ready()
 	{
-		var window = GetWindow();
-		var wid = window.GetWindowId();
-		var datedict = Time.GetDateDictFromSystem();
-		//首次初始化
-		if (!inited)
+		try
 		{
-			httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
-			// Outdated notification
-			if (is_outdated_ver)
+			var window = GetWindow();
+			var wid = window.GetWindowId();
+			var datedict = Time.GetDateDictFromSystem();
+			//首次初始化
+			if (!inited)
 			{
-				nodeWindowPopupContent.Text = "locOutdatedVer";
-				nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-				nodeWindowPopup.Size = new Vector2I(TranslationServer.GetLocale().StartsWith("en") ? 960 : 640, 270) * windowScale;
-				nodeWindowPopup.Title = "locCaution";
-				nodeWindowPopup.Show();
-			}
-
-			osname = (os_name == "macOS" ? "mac" : "windows");
-			dataname = (os_name == "macOS" ? "game.ios" : "data.win");
-			nodeBgAnim.Play("bg_anim");
-			nodeComboLanguage.Disabled = true;
-
-			if (os_name == "macOS")
-			{
-				window.Unresizable = true;
-				nodeBtnInfo.Position = new Vector2(nodeBtnInfo.Position.X, 32);
-				nodeComboLanguage.Position = new Vector2(nodeComboLanguage.Position.X, 32);
-				nodeTitleBar.Visible = true;
-				if (OS.IsDebugBuild())
+				httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
+				// Outdated notification
+				if (is_outdated_ver)
 				{
-					nodeTitleBar.Color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+					nodeWindowPopupContent.Text = "locOutdatedVer";
+					nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+					nodeWindowPopup.Size = new Vector2I(TranslationServer.GetLocale().StartsWith("en") ? 960 : 640, 270) * windowScale;
+					nodeWindowPopup.Title = "locCaution";
+					nodeWindowPopup.Show();
+				}
+
+				nodeBgAnim.Play("bg_anim");
+				nodeComboLanguage.Disabled = true;
+
+				if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+				{
+					window.Unresizable = true;
+					nodeBtnInfo.Position = new Vector2(nodeBtnInfo.Position.X, 32);
+					nodeComboLanguage.Position = new Vector2(nodeComboLanguage.Position.X, 32);
+					nodeTitleBar.Visible = true;
+					if (OS.IsDebugBuild())
+					{
+						nodeTitleBar.Color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+					}
+					else
+					{
+						nodeTitleBar.Color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+					}
+				}
+
+				var windowNewSize = (Vector2I)((windowDesignSize * windowScale).Round());
+				DisplayServer.WindowSetSize(windowNewSize, wid);
+				window.MoveToCenter();
+				nodeOverrideScale.Value = windowScale;
+
+				//Tooltip与下拉菜单大小
+				/*
+				var theme = Theme;
+				theme.SetFontSize("font_size", "PopupMenu", FontSize(theme.GetFontSize("font_size", "PopupMenu"), windowScale));
+				theme.SetFontSize("font_size", "TooltipLabel", FontSize(theme.GetFontSize("font_size", "TooltipLabel"), windowScale));
+				Theme = theme;
+				*/
+				//最大帧率
+				Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(window.CurrentScreen));
+				//根据系统语言切换语言
+				if (OS.GetLocale() == "zh_TW" || OS.GetLocale() == "zh_HK" || OS.GetLocale() == "zh_MO")
+				{
+					TranslationServer.SetLocale("zh_TW");
+				}
+				else if (OS.GetLocaleLanguage() == "zh" || OS.GetLocale() == "zh_CN" || OS.GetLocale() == "zh_SG")
+				{
+					TranslationServer.SetLocale("zh_CN");
 				}
 				else
 				{
-					nodeTitleBar.Color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+					TranslationServer.SetLocale(OS.GetLocale());
 				}
-			}
-
-			var windowNewSize = (Vector2I)((windowDesignSize * windowScale).Round());
-			DisplayServer.WindowSetSize(windowNewSize, wid);
-			window.MoveToCenter();
-			nodeOverrideScale.Value = windowScale;
-
-			//Tooltip与下拉菜单大小
-			/*
-			var theme = Theme;
-			theme.SetFontSize("font_size", "PopupMenu", FontSize(theme.GetFontSize("font_size", "PopupMenu"), windowScale));
-			theme.SetFontSize("font_size", "TooltipLabel", FontSize(theme.GetFontSize("font_size", "TooltipLabel"), windowScale));
-			Theme = theme;
-			*/
-			//最大帧率
-			Engine.MaxFps = Mathf.RoundToInt(DisplayServer.ScreenGetRefreshRate(window.CurrentScreen));
-			//根据系统语言切换语言
-			if (OS.GetLocale() == "zh_TW" || OS.GetLocale() == "zh_HK" || OS.GetLocale() == "zh_MO")
-			{
-				TranslationServer.SetLocale("zh_TW");
-			}
-			else if (OS.GetLocaleLanguage() == "zh" || OS.GetLocale() == "zh_CN" || OS.GetLocale() == "zh_SG")
-			{
-				TranslationServer.SetLocale("zh_CN");
-			}
-			else
-			{
-				TranslationServer.SetLocale(OS.GetLocale());
-			}
-			//寻找patch档案
-			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
-			{
-				if (file.StartsWith("patch_"))
+				//寻找patch档案
+				foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()) ?? [])
 				{
-					if (file.Contains("demo"))
+					if (file.StartsWith("patch_"))
 					{
-						demopatchdir = GetGameDirPath(file);
-						demopatchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
-						GD.Print("Found demo patch file " + patchdir);
+						if (file.Contains("demo"))
+						{
+							demopatchdir = GetGameDirPath(file);
+							demopatchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
+							GD.Print($"Found demo patch file {patchdir}");
+							continue;
+						}
+						patchdir = GetGameDirPath(file);
+						patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
+						// 1225 check
+						if (patchver == "1225" && IsChristmas())
+						{
+							patchver = "■■■■";
+						}
+						GD.Print($"Found patch file {patchdir}");
 						continue;
 					}
-					patchdir = GetGameDirPath(file);
-					patchver = System.IO.Path.GetFileNameWithoutExtension(file).Split("_")[^1];
-					// 1225 check
-					if (patchver == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
-					{
-						patchver = "■■■■";
-					}
-					GD.Print("Found patch file " + patchdir);
-					continue;
 				}
-			}
-			//自动显示readme
-			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("")))
-			{
-				if (file.ToLower().Contains("readme") && !file.EndsWith(".md"))
+				//自动显示readme
+				foreach (var file in DirAccess.GetFilesAt(GetGameDirPath("")) ?? [])
 				{
-					var readme = FileAccess.Open(GetGameDirPath(file), FileAccess.ModeFlags.Read);
-					if (readme != null)
+					if (file.ToLower().Contains("readme") && !file.EndsWith(".md"))
 					{
-						nodeWindowReadmeContent.Text = readme.GetAsText();
-						nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-						nodeWindowReadme.Title = file;
-						nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
-						nodeWindowReadme.Show();
-						readme.Close();
+						var readme = FileAccess.Open(GetGameDirPath(file), FileAccess.ModeFlags.Read);
+						if (readme != null)
+						{
+							nodeWindowReadmeContent.Text = readme.GetAsText();
+							nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+							nodeWindowReadme.Title = file;
+							nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
+							nodeWindowReadme.Show();
+							readme.Close();
+						}
+						break;
 					}
-					break;
 				}
+				nodeBtnPatch.Disabled = (patchver == "locNotFound");
+				nodeBtnUpdatePatch.TooltipText = $"locUpdatePatchInfo{(RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "Mac" : "")}";
+				nodeOverrideOS.PlaceholderText = GetOSName();
+				nodeOverrideScale.Value = windowScale;
 			}
-			nodeBtnPatch.Disabled = (patchver == "locNotFound");
-			nodeBtnUpdatePatch.TooltipText = "locUpdatePatchInfo" + (os_name == "macOS" ? "Mac" : "");
-			nodeOverrideOS.PlaceholderText = OS.GetName();
-			nodeOverrideScale.Value = windowScale;
-		}
-		DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal);
-		DisplayServer.WindowSetTaskbarProgressValue(0);
-		DisplayServer.WindowSetTitle(TranslationServer.Translate("locTitle"), wid);
-		nodeBtnUpdatePatcher.Visible = false;
-		nodeBtnUpdatePatcher.Disabled = false;
-		//安装器版本号
-		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString() + (is_self_extract ? "-SelfExtract" : "") + (is_outdated_ver ? "-Outdated" : "");
-		// 1225 check
-		if (patchver == "1225" || patchver == "■■■■" || (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25"))
-		{
-			nodeTextPatcherVersion.TooltipText = nodeTextPatcherVersion.Text + "\n" + TranslationServer.Translate("locAdvancedTooltip");
-			nodeTextPatcherVersion.Text = "v1225";
-		}
-		//系统特供目录
-		if (os_name == "Windows")
-		{
-			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3.exe");
-			_7zip = GetGameDirPath("externals/7zip/7z.exe");
-		}
-		else if (os_name == "macOS")
-		{
-			xdelta3 = GetGameDirPath(os_arch == Architecture.Arm64 ? "externals/xdelta3/xdelta3_mac_arm" : "externals/xdelta3/xdelta3_mac_x86");
-			_7zip = GetGameDirPath("externals/7zip/7z_mac");
-		}
-		//语言选项
-		locales = TranslationServer.GetLoadedLocales();
-		nodeComboLanguage.ItemCount = locales.Length;
-		foreach (var current in locales)
-		{
-			nodeComboLanguage.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.FindTranslations(current, true)[0].GetMessage("locLanguageName"));
-		}
-		nodeComboLanguage.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
-		//读取之前的游戏路径
-		var game_path_f = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Read);
-		var game_path = "";
-		if (game_path_f != null)
-		{
-			game_path = game_path_f.GetAsText();
-			game_path_f.Close();
-		}
-		else
-		{
-			game_path = FindGamePath();
-		}
-		nodeEditGamePath.Text = game_path;
-		_on_edit_game_path_text_changed(game_path);
-		//HttpClient
-		nodeBtnInfo.TooltipText = "locInfo";
-		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]" + (!string.IsNullOrEmpty(demopatchver) ? ("  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + (is_self_extract ? "" : "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting"));
-		//contributors
-		var json = new Json();
-		try
-		{
-			json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinesePatcher/contributors"));
-			var names = "";
-			foreach (var contributor in json.Data.AsGodotArray<Godot.Collections.Dictionary<string, string>>())
+			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal);
+			DisplayServer.WindowSetTaskbarProgressValue(0);
+			DisplayServer.WindowSetTitle(TranslationServer.Translate("locTitle"), wid);
+			nodeBtnUpdatePatcher.Visible = false;
+			nodeBtnUpdatePatcher.Disabled = false;
+			//安装器版本号
+			nodeTextPatcherVersion.Text = $"v{ProjectSettings.GetSetting("application/config/version").AsString()}{(is_self_extract ? "-SelfExtract" : "")}{(is_outdated_ver ? "-Outdated" : "")}";
+			// 1225 check
+			if (patchver == "1225" || patchver == "■■■■" || IsChristmas())
 			{
-				names += contributor["login"] + ", ";
+				nodeTextPatcherVersion.TooltipText = $"{nodeTextPatcherVersion.Text}\n{TranslationServer.Translate("locAdvancedTooltip")}";
+				nodeTextPatcherVersion.Text = "v1225";
 			}
-			names = names.TrimSuffix(", ");
-			if (names != "")
+			//系统特供目录
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				nodeBtnInfo.TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}", names);
+				xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3.exe");
+				_7zip = GetGameDirPath("externals/7zip/7z.exe");
 			}
-		}
-		catch (Exception exc)
-		{
-			GD.PushError("Exception catched when requesting contributors: " + exc.ToString() + " (" + exc.Message + ")");
-		}
-		//补丁版本号
-		json = new Json();
-		try
-		{
-			if (is_self_extract)
+			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 			{
-				nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
-				if (!string.IsNullOrEmpty(demopatchver))
-				{
-					nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
-				}
-				UpdatePathText(nodeEditGamePath.Text, false);
+				xdelta3 = GetGameDirPath(os_arch == Architecture.Arm64 ? "externals/xdelta3/xdelta3_mac_arm" : "externals/xdelta3/xdelta3_mac_x86");
+				_7zip = GetGameDirPath("externals/7zip/7z_mac");
+			}
+			//语言选项
+			locales = TranslationServer.GetLoadedLocales();
+			nodeComboLanguage.ItemCount = locales.Length;
+			foreach (var current in locales)
+			{
+				nodeComboLanguage.Set($"popup/item_{Array.IndexOf(locales, current)}/text", TranslationServer.FindTranslations(current, true) is { Count: > 0 } trans ? trans[0].GetMessage("locLanguageName") : "");
+			}
+			nodeComboLanguage.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
+			//读取之前的游戏路径
+			var game_path_f = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Read);
+			var game_path = "";
+			if (game_path_f != null)
+			{
+				game_path = game_path_f.GetAsText();
+				game_path_f.Close();
 			}
 			else
 			{
-				if (!inited)
+				game_path = FindGamePath();
+			}
+			nodeEditGamePath.Text = game_path;
+			_on_edit_game_path_text_changed(game_path);
+			//HttpClient
+			nodeBtnInfo.TooltipText = "locInfo";
+			nodeTextPatchVersion.Text = $"{TranslationServer.Translate("locLocalVer")}\n{TranslationServer.Translate("locFullVersion")} [{TranslationServer.Translate(patchver)}]{(!string.IsNullOrEmpty(demopatchver) ? $"  |  {TranslationServer.Translate("locDemoVersion")} [{demopatchver}]" : "")}{(is_self_extract ? "" : $"\n{TranslationServer.Translate("locLatestVer")}{TranslationServer.Translate("locRequesting")}")}";
+			//contributors
+			var json = new Json();
+			try
+			{
+				if (json.Parse(await httpc.GetStringAsync($"{github_api}/repos/gm3dr/DeltaruneChinesePatcher/contributors")) == Error.Ok && json.Data.Obj != null)
 				{
-					json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinese/releases/latest"));
-					patchreleases = json.Data.AsGodotDictionary();
-				}
-				var latestver = patchreleases["tag_name"].AsString();
-				// 1225 check
-				if (latestver == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
-				{
-					latestver = "■■■■";
-				}
-				nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
-				if (!string.IsNullOrEmpty(demopatchver))
-				{
-					nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
-				}
-				nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locLatestVer") + latestver;
-				UpdatePathText(nodeEditGamePath.Text, false);
-				if (patchver != patchreleases["tag_name"].AsString() || demopatchver != patchreleases["tag_name"].AsString())
-				{
-					nodeUpdatePatchRow.Visible = true;
-				}
-				if (nodeWindowReadmeContent.Text != "")
-				{
-					foreach (var asset in patchreleases["assets"].AsGodotArray())
+					var names = "";
+					foreach (var contributor in json.Data.AsGodotArray<Godot.Collections.Dictionary<string, string>>())
 					{
-						if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains("readme"))
+						names += $"{contributor["login"]}, ";
+					}
+					names = names.TrimSuffix(", ");
+					if (names != "")
+					{
+						nodeBtnInfo.TooltipText = TranslationServer.Translate("locInfoContributors").ToString().Replace("{CONTRIBUTORS}", names);
+					}
+				}
+			}
+			catch (Exception exc)
+			{
+				GD.PushError($"Exception catched when requesting contributors: {exc} ({exc.Message})");
+			}
+			//补丁版本号
+			json = new Json();
+			try
+			{
+				if (is_self_extract)
+				{
+					nodeTextPatchVersion.Text = $"{TranslationServer.Translate("locLocalVer")}\n{TranslationServer.Translate("locFullVersion")} [{TranslationServer.Translate(patchver)}]";
+					if (!string.IsNullOrEmpty(demopatchver))
+					{
+						nodeTextPatchVersion.Text += $"  |  {TranslationServer.Translate("locDemoVersion")} [{demopatchver}]";
+					}
+					UpdatePathText(nodeEditGamePath.Text, false);
+				}
+				else
+				{
+					if (!inited)
+					{
+						if (json.Parse(await httpc.GetStringAsync($"{github_api}/repos/gm3dr/DeltaruneChinese/releases/latest")) == Error.Ok && json.Data.Obj != null)
 						{
-							var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
-							var readme = FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write);
-							if (readme != null)
+							patchreleases = json.Data.AsGodotDictionary();
+						}
+					}
+					var latestver = patchreleases.ContainsKey("tag_name") ? patchreleases["tag_name"].AsString() : "";
+					// 1225 check
+					if (latestver == "1225" && IsChristmas())
+					{
+						latestver = "■■■■";
+					}
+					nodeTextPatchVersion.Text = $"{TranslationServer.Translate("locLocalVer")}\n{TranslationServer.Translate("locFullVersion")} [{TranslationServer.Translate(patchver)}]";
+					if (!string.IsNullOrEmpty(demopatchver))
+					{
+						nodeTextPatchVersion.Text += $"  |  {TranslationServer.Translate("locDemoVersion")} [{demopatchver}]";
+					}
+					nodeTextPatchVersion.Text += $"\n{TranslationServer.Translate("locLatestVer")}{latestver}";
+					UpdatePathText(nodeEditGamePath.Text, false);
+					if (patchreleases.ContainsKey("tag_name") && (patchver != patchreleases["tag_name"].AsString() || demopatchver != patchreleases["tag_name"].AsString()))
+					{
+						nodeUpdatePatchRow.Visible = true;
+					}
+					if (nodeWindowReadmeContent.Text != "" && patchreleases.ContainsKey("assets"))
+					{
+						foreach (var asset in patchreleases["assets"].AsGodotArray())
+						{
+							if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains("readme"))
 							{
-								readme.StoreString(text);
-								nodeWindowReadmeContent.Text = text;
-								nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-								nodeWindowReadme.Title = "readme.txt";
-								nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
-								nodeWindowReadme.Show();
-								readme.Close();
+								var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
+								var readme = FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write);
+								if (readme != null)
+								{
+									readme.StoreString(text);
+									nodeWindowReadmeContent.Text = text;
+									nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+									nodeWindowReadme.Title = "readme.txt";
+									nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
+									nodeWindowReadme.Show();
+									readme.Close();
+								}
+								break;
 							}
-							break;
 						}
 					}
 				}
 			}
-		}
-		catch (HttpRequestException exc)
-		{
-			GD.PushError("Exception catched when requesting patch latest: " + exc.ToString() + " (" + exc.Message + ")");
-			//nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
-		}
-		//安装器更新
-		if (!(OS.HasFeature("editor") || ProjectSettings.GetSetting("application/config/version").AsString().Contains("dev") || is_self_extract))
-		{
-			json = new Json();
-			try
-			{
-				if (!inited)
-				{
-					json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinesePatcher/releases/latest"));
-					patcherreleases = json.Data.AsGodotDictionary();
-				}
-				if (patcherreleases["tag_name"].AsString() != "v" + ProjectSettings.GetSetting("application/config/version").AsString())
-				{
-					nodeBtnUpdatePatcher.Text = TranslationServer.Translate("locUpdate").ToString().Replace("{VER}", patcherreleases["tag_name"].AsString());
-					nodeBtnUpdatePatcher.Visible = true;
-				}
-			}
 			catch (HttpRequestException exc)
 			{
-				GD.PushError("Exception catched when requesting patcher latest: " + exc.ToString() + " (" + exc.Message + ")");
+				GD.PushError($"Exception catched when requesting patch latest: {exc} ({exc.Message})");
+				//nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer") + TranslationServer.Translate(patchver) + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locTimeout").ToString().TrimPrefix(" ");
+			}
+			//安装器更新
+			if (!(OS.HasFeature("editor") || ProjectSettings.GetSetting("application/config/version").AsString().Contains("dev") || is_self_extract))
+			{
+				json = new Json();
+				try
+				{
+					if (!inited)
+					{
+						if (json.Parse(await httpc.GetStringAsync($"{github_api}/repos/gm3dr/DeltaruneChinesePatcher/releases/latest")) == Error.Ok && json.Data.Obj != null)
+						{
+							patcherreleases = json.Data.AsGodotDictionary();
+						}
+					}
+					if (patcherreleases.ContainsKey("tag_name") && patcherreleases["tag_name"].AsString() != $"v{ProjectSettings.GetSetting("application/config/version").AsString()}")
+					{
+						nodeBtnUpdatePatcher.Text = TranslationServer.Translate("locUpdate").ToString().Replace("{VER}", patcherreleases["tag_name"].AsString());
+						nodeBtnUpdatePatcher.Visible = true;
+					}
+				}
+				catch (HttpRequestException exc)
+				{
+					GD.PushError($"Exception catched when requesting patcher latest: {exc} ({exc.Message})");
+				}
+			}
+
+			if (!inited)
+			{
+				nodeComboLanguage.Disabled = false;
+				inited = true;
 			}
 		}
-
-		if (!inited)
+		catch (Exception e)
 		{
-			nodeComboLanguage.Disabled = false;
-			inited = true;
+			GD.PushError($"Unhandled exception in _Ready: {e}");
 		}
 	}
 
@@ -471,11 +488,11 @@ public partial class Main : Control
 		var path = PathTrim(nodeEditGamePath.Text);
 
 		nodeEditGamePath.Text = path;
-		if (DirAccess.DirExistsAbsolute(path + "/backup"))
+		if (DirAccess.DirExistsAbsolute($"{path}/backup"))
 		{
-			if (path != "" && FileAccess.FileExists(path + "/backup/version"))
+			if (path != "" && FileAccess.FileExists($"{path}/backup/version"))
 			{
-				var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Read);
+				var ver = FileAccess.Open($"{path}/backup/version", FileAccess.ModeFlags.Read);
 				if (ver != null)
 				{
 					nodeWindowPatchContent.Text = TranslationServer.Translate("locBakVerDetected").ToString().Replace("{VER}", ver.GetAsText());
@@ -517,14 +534,14 @@ public partial class Main : Control
 				OS.ShellOpen("steam://run/1690940");
 				break;
 			case 3:
-				if (os_name == "Windows")
+				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 				{
-					OS.ShellOpen(PathTrim(nodeEditGamePath.Text) + "/DELTARUNE.exe");
+					OS.ShellOpen($"{PathTrim(nodeEditGamePath.Text)}/DELTARUNE.exe");
 				}
-				else if (os_name == "macOS")
+				else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 				{
-					var executable = PathTrim(nodeEditGamePath.Text) + "../MacOS/Mac_Runner";
-					OS.Execute("chmod", ["+x", executable]);
+					var executable = $"{PathTrim(nodeEditGamePath.Text)}../MacOS/Mac_Runner";
+					EnsureExecutable(executable);
 					OS.ShellOpen(executable);
 				}
 				break;
@@ -568,13 +585,16 @@ public partial class Main : Control
 	}
 	public void _on_update_pressed()
 	{
-		foreach (var asset in patcherreleases["assets"].AsGodotArray())
+		if (patcherreleases.ContainsKey("assets"))
 		{
-			var name = asset.AsGodotDictionary()["name"].AsString().ToLower();
-			if (name.Contains(os_name.ToLower()) && (((!is_outdated_ver) && (!name.Contains("outdated"))) || (is_outdated_ver && name.Contains("outdated"))))
+			foreach (var asset in patcherreleases["assets"].AsGodotArray())
 			{
-				OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
-				break;
+				var name = asset.AsGodotDictionary()["name"].AsString().ToLower();
+				if (name.Contains(os_name.ToLower()) && (((!is_outdated_ver) && (!name.Contains("outdated"))) || (is_outdated_ver && name.Contains("outdated"))))
+				{
+					OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
+					break;
+				}
 			}
 		}
 	}
@@ -608,131 +628,142 @@ public partial class Main : Control
 	}
 	public async void _on_update_patch_pressed(bool demo)
 	{
-		nodeBtnUpdatePatch.Disabled = true;
-		nodeProgress.Visible = true;
-		Godot.Collections.Array output = [];
-		//下载patch
-		var url = "";
-		var file = "";
-		var size = 0;
-		foreach (var asset in patchreleases["assets"].AsGodotArray())
+		try
 		{
-			var filename = asset.AsGodotDictionary()["name"].AsString().ToLower();
-			if (filename.Contains(os_name.ToLower()) && ((demo && filename.Contains("demo")) || ((!demo) && !filename.Contains("demo"))))
-			{
-				url = asset.AsGodotDictionary()["browser_download_url"].AsString();
-				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
-				size = asset.AsGodotDictionary()["size"].AsInt32();
-				nodeProgress.MaxValue = size;
-				break;
-			}
-		}
-		if (url != "")
-		{
-			GD.Print("Downloading " + url + " to " + GetGameDirPath(file));
-			output.Add("Downloading " + url + " to " + GetGameDirPath(file));
-			try
-			{
-				using (var response = await httpc.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+			nodeBtnUpdatePatch.Disabled = true;
+			nodeProgress.Visible = true;
+			Godot.Collections.Array output = [];
+			//下载patch
+			var url = "";
+			var file = "";
+			var size = 0;
+var assetUrl = GetReleaseAssetUrl(patchreleases, demo);
+				if (!string.IsNullOrEmpty(assetUrl) && patchreleases.ContainsKey("assets"))
 				{
-					response.EnsureSuccessStatusCode();
-					using var bodyStream = await response.Content.ReadAsStreamAsync();
-					fileStream = new System.IO.FileStream(GetGameDirPath(file), System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None);
-					var buffer = new byte[4096];
-					double totalRead = 0;
-					int bytesRead;
-					DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal);
-					DisplayServer.WindowSetTaskbarProgressValue(0);
-					while ((bytesRead = await bodyStream.ReadAsync(buffer)) > 0)
+					foreach (var asset in patchreleases["assets"].AsGodotArray())
 					{
-						await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-						totalRead += bytesRead;
-						if (size > 0)
+						var fn = asset.AsGodotDictionary()["name"].AsString().ToLower();
+						if (fn.Contains(os_name.ToLower()) && ((demo && fn.Contains("demo")) || ((!demo) && !fn.Contains("demo"))))
 						{
-							nodeProgress.Value = totalRead;
-							//nodeProgress.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
-							var progress = Math.Round(totalRead / 1024d / 1024d, 2).ToString();
-							var sizee = Math.Round(size / 1024d / 1024d, 2).ToString();
-							if (!progress.Contains("."))
-							{
-								progress += ".00";
-							}
-							else if (progress.Split(".")[1].Length == 1)
-							{
-								progress += "0";
-							}
-							if (!sizee.Contains("."))
-							{
-								sizee += ".00";
-							}
-							else if (sizee.Split(".")[1].Length == 1)
-							{
-								sizee += "0";
-							}
-							nodeBtnUpdatePatch.Text = $"{progress} / {sizee} MiB";
-							DisplayServer.WindowSetTaskbarProgressValue((float)(totalRead / size));
-							if (OS.IsStdOutVerbose())
-							{
-								GD.Print($"Downloaded: {totalRead} / {size}");
-							}
-						}
-						if (totalRead >= size)
-						{
-							break;
+									url = asset.AsGodotDictionary()["browser_download_url"].AsString();
+									file = $"_downloadingtemp_{asset.AsGodotDictionary()["name"].AsString()}";
+									size = asset.AsGodotDictionary()["size"].AsInt32();
+									nodeProgress.MaxValue = size;
+									break;
 						}
 					}
 				}
-			}
-			catch (Exception exc)
+			if (url != "")
 			{
-				nodeBtnUpdatePatch.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
-				nodeBtnUpdatePatch.TooltipText = exc.Message;
-				GD.PushError("Exception catched when updating patch: " + exc.ToString() + " (" + exc.Message + ")");
-				DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Error);
-				return;
-			}
-			fileStream.Dispose();
-			fileStream = null;
-			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
-			GD.Print($"Download {file} finished.");
-			output.Add($"Download {file} finished.");
-			//删除旧patch
-			foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
-			{
-				if (fff.StartsWith("patch_") && ((demo && fff.Contains("demo")) || ((!demo) && !fff.Contains("demo"))))
+				GD.Print($"Downloading {url} to {GetGameDirPath(file)}");
+				output.Add($"Downloading {url} to {GetGameDirPath(file)}");
+				try
 				{
-					DirAccess.RemoveAbsolute(GetGameDirPath(fff));
-					GD.Print("Removed " + GetGameDirPath(fff));
-					output.Add("Removed " + GetGameDirPath(fff));
+					using (var response = await httpc.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
+					{
+						response.EnsureSuccessStatusCode();
+						using var bodyStream = await response.Content.ReadAsStreamAsync();
+						fileStream = new System.IO.FileStream(GetGameDirPath(file), System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None);
+						var buffer = new byte[4096];
+						double totalRead = 0;
+						int bytesRead;
+						DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Normal);
+						DisplayServer.WindowSetTaskbarProgressValue(0);
+						while ((bytesRead = await bodyStream.ReadAsync(buffer)) > 0)
+						{
+							await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+							totalRead += bytesRead;
+							if (size > 0)
+							{
+								nodeProgress.Value = totalRead;
+								//nodeProgress.TooltipText = $"{Math.Round(totalRead/1024d/1024d, 2)} / {Math.Round(size/1024d/1024d, 2)} MiB";
+								var progress = Math.Round(totalRead / 1024d / 1024d, 2).ToString();
+								var sizee = Math.Round(size / 1024d / 1024d, 2).ToString();
+								if (!progress.Contains("."))
+								{
+									progress += ".00";
+								}
+								else if (progress.Split(".")[1].Length == 1)
+								{
+									progress += "0";
+								}
+								if (!sizee.Contains("."))
+								{
+									sizee += ".00";
+								}
+								else if (sizee.Split(".")[1].Length == 1)
+								{
+									sizee += "0";
+								}
+								nodeBtnUpdatePatch.Text = $"{progress} / {sizee} MiB";
+								DisplayServer.WindowSetTaskbarProgressValue((float)(totalRead / size));
+								if (OS.IsStdOutVerbose())
+								{
+									GD.Print($"Downloaded: {totalRead} / {size}");
+								}
+							}
+							if (totalRead >= size)
+							{
+								break;
+							}
+						}
+					}
 				}
+				catch (Exception exc)
+				{
+					fileStream?.Dispose();
+					fileStream = null;
+					nodeBtnUpdatePatch.Text = TranslationServer.Translate("locDownloadFailed") + exc.GetType().ToString();
+					nodeBtnUpdatePatch.TooltipText = exc.Message;
+					GD.PushError($"Exception catched when updating patch: {exc} ({exc.Message})");
+					DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Error);
+					return;
+				}
+				fileStream?.Dispose();
+				fileStream = null;
+				DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
+				GD.Print($"Download {file} finished.");
+				output.Add($"Download {file} finished.");
+				//删除旧patch
+				foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()) ?? [])
+				{
+					if (fff.StartsWith("patch_") && ((demo && fff.Contains("demo")) || ((!demo) && !fff.Contains("demo"))))
+					{
+						DirAccess.RemoveAbsolute(GetGameDirPath(fff));
+						GD.Print($"Removed {GetGameDirPath(fff)}");
+						output.Add($"Removed {GetGameDirPath(fff)}");
+					}
+				}
+				DirAccess.RenameAbsolute(GetGameDirPath(file), GetGameDirPath(file.TrimPrefix("_downloadingtemp_")));
+				GD.Print($"Renamed {file} to {file.TrimPrefix("_downloadingtemp_")}.");
+				output.Add($"Renamed {file} to {file.TrimPrefix("_downloadingtemp_")}.");
+				nodeBtnUpdatePatch.Text = "locRestartIn5Sec";
+				nodeBtnUpdatePatch.TooltipText = "locRestartIn5Sec";
+				await ToSignal(GetTree().CreateTimer(5f), "timeout");
+				GetTree().ReloadCurrentScene();
 			}
-			DirAccess.RenameAbsolute(GetGameDirPath(file), GetGameDirPath(file.TrimPrefix("_downloadingtemp_")));
-			GD.Print($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
-			output.Add($"Renamed {file} to " + file.TrimPrefix("_downloadingtemp_") + ".");
-			nodeBtnUpdatePatch.Text = "locRestartIn5Sec";
-			nodeBtnUpdatePatch.TooltipText = "locRestartIn5Sec";
-			await ToSignal(GetTree().CreateTimer(5f), "timeout");
-			GetTree().ReloadCurrentScene();
+		}
+		catch (Exception e)
+		{
+			GD.PushError($"Unhandled exception in _on_update_patch_pressed: {e}");
+			fileStream?.Dispose();
+			fileStream = null;
 		}
 	}
 	public void _on_update_patch_browser_pressed(bool demo)
 	{
-		foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()))
+		foreach (var fff in DirAccess.GetFilesAt(GetGameDirPath()) ?? [])
 		{
 			if (fff.StartsWith("patch_") && ((demo && fff.Contains("demo")) || ((!demo) && !fff.Contains("demo"))))
 			{
 				DirAccess.RemoveAbsolute(GetGameDirPath(fff));
-				GD.Print("Removed " + GetGameDirPath(fff));
+				GD.Print($"Removed {GetGameDirPath(fff)}");
 			}
 		}
-		foreach (var asset in patchreleases["assets"].AsGodotArray())
+		var url = GetReleaseAssetUrl(patchreleases, demo);
+		if (!string.IsNullOrEmpty(url))
 		{
-			var filename = asset.AsGodotDictionary()["name"].AsString().ToLower();
-			if (filename.Contains(os_name.ToLower()) && ((demo && filename.Contains("demo")) || ((!demo) && !filename.Contains("demo"))))
-			{
-				OS.ShellOpen(asset.AsGodotDictionary()["browser_download_url"].AsString());
-				break;
-			}
+			OS.ShellOpen(url);
 		}
 	}
 	public void _on_text_patcher_version_pressed()
@@ -760,15 +791,15 @@ public partial class Main : Control
 
 	public static string PathTrim(string originalPath)
 	{
-		var finalPath = originalPath.Replace("\\","/").TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/");
+		var finalPath = originalPath.Replace("\\", "/").TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/");
 
-		if (os_name != "Windows" && finalPath.StartsWith("~/"))
+		if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && finalPath.StartsWith("~/"))
 		{
 			GD.Print("Non-Windows Home Directory Processing");
 			string homePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
-			finalPath = homePath + finalPath.Substring(1);
+			finalPath = $"{homePath}{finalPath.Substring(1)}";
 		}
-		if (os_name == "macOS")
+		if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 		{
 			if (finalPath.EndsWith("/DELTARUNE"))
 			{
@@ -789,456 +820,405 @@ public partial class Main : Control
 	}
 	public async void Patch(bool use_backup = true)
 	{
-		patch_failed = false;
-		starttime = DateTime.Now;
-		patched_count = 0;
-		nodeWindowPatch.Hide();
-		nodeWindowLogContent.Text = "";
-		var path = PathTrim(nodeEditGamePath.Text);
-		output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
-		PathCheck(path, true);
-		//chmod加权限
-		if (os_name == "macOS" || os_name == "Linux")
+		try
 		{
-			if (xdelta3.Contains("/"))
+			patch_failed = false;
+			starttime = DateTime.Now;
+			patched_count = 0;
+			nodeWindowPatch.Hide();
+			nodeWindowLogContent.Text = "";
+			var path = PathTrim(nodeEditGamePath.Text);
+			output = [$"Patch at {Time.GetDatetimeStringFromSystem(false, true)}, {Time.GetTimeZoneFromSystem()["name"]}"];
+			PathCheck(path, true);
+			//chmod加权限
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 			{
-				OS.Execute("chmod", ["+x", xdelta3]);
-				GD.Print($"chmod +x {xdelta3}");
-				output.Add($"chmod +x {xdelta3}");
-			}
-			if (_7zip.Contains("/"))
-			{
-				OS.Execute("chmod", ["+x", _7zip]);
-				GD.Print($"chmod +x {_7zip}");
-				output.Add($"chmod +x {_7zip}");
-			}
-		}
-		//外部程序检查
-		Godot.Collections.Array externalcheckoutput;
-		int external_check_return;
-		if (bypass_externals_7zip)
-		{
-			GD.Print("External 7-Zip check bypassed.");
-			output.Add("External 7-Zip check bypassed.");
-		}
-		else
-		{
-			foreach (var __7z in available_externals["7z"])
-			{
-				externalcheckoutput = [];
-				GD.Print("Checking " + __7z);
-				output.Add("Checking " + __7z);
-				if (os_name == "Windows")
+				if (xdelta3.Contains("/"))
 				{
-					external_check_return = OS.Execute("where", [__7z], externalcheckoutput);
+EnsureExecutable(xdelta3);
+					GD.Print($"chmod +x {xdelta3}");
+					output.Add($"chmod +x {xdelta3}");
 				}
-				else
+				if (_7zip.Contains("/"))
 				{
-					external_check_return = OS.Execute("command", ["-v", __7z], externalcheckoutput);
-				}
-				GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
-				output.Add($"The result of \"{(os_name == "Windows" ? $"where {__7z}" : $"command -v {__7z}")}\": {external_check_return}");
-				GD.Print(externalcheckoutput);
-				output.Add(externalcheckoutput);
-				if (external_check_return == 0)
-				{
-					_7zip = __7z;
-					GD.Print("Found " + __7z);
-					output.Add("Found " + __7z);
-					break;
+					EnsureExecutable(_7zip);
+					GD.Print($"chmod +x {_7zip}");
+					output.Add($"chmod +x {_7zip}");
 				}
 			}
-		}
-		if (bypass_externals_xdelta)
-		{
-			GD.Print("External XDelta3 check bypassed.");
-			output.Add("External XDelta3 check bypassed.");
-		}
-		else
-		{
-			foreach (var __xdelta in available_externals["xdelta"])
+			//外部程序检查
+			FindExternalTool("7z", bypass_externals_7zip, (found) => _7zip = found);
+			FindExternalTool("xdelta", bypass_externals_xdelta, (found) => xdelta3 = found);
+			// path override
+			if (!string.IsNullOrEmpty(xdelta_override))
 			{
-				externalcheckoutput = [];
-				GD.Print("Checking " + __xdelta);
-				output.Add("Checking " + __xdelta);
-				if (os_name == "Windows")
-				{
-					external_check_return = OS.Execute("where", [__xdelta], externalcheckoutput);
-				}
-				else
-				{
-					external_check_return = OS.Execute("command", ["-v", __xdelta], externalcheckoutput);
-				}
-				GD.Print($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
-				output.Add($"The result of \"{(os_name == "Windows" ? $"where {__xdelta}" : $"command -v {__xdelta}")}\": {external_check_return}");
-				GD.Print(externalcheckoutput);
-				output.Add(externalcheckoutput);
-				if (external_check_return == 0)
-				{
-					xdelta3 = __xdelta;
-					GD.Print("Found " + __xdelta);
-					output.Add("Found " + __xdelta);
-					break;
-				}
+				xdelta3 = xdelta_override;
+				GD.Print($"XDelta3 path was overridden to {xdelta3}");
+				output.Add($"XDelta3 path was overridden to {xdelta3}");
 			}
-		}
-		// path override
-		if (!string.IsNullOrEmpty(xdelta_override))
-		{
-			xdelta3 = xdelta_override;
-			GD.Print("XDelta3 path was overridden to " + xdelta3);
-			output.Add("xXDelta3 path was overridden to " + xdelta3);
-		}
-		if (!string.IsNullOrEmpty(_7zip_override))
-		{
-			_7zip = _7zip_override;
-			GD.Print("7-Zip path was overridden to " + _7zip);
-			output.Add("7-Zip path was overridden to " + _7zip);
-		}
-		//existence check
-		foreach (var pathhhhh in externals_hash.Keys)
-		{
-			if ((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh))
+			if (!string.IsNullOrEmpty(_7zip_override))
 			{
-				GD.Print($"Checking existence of {pathhhhh}");
-				output.Add($"Checking existence of {pathhhhh}");
-				if (!FileAccess.FileExists(pathhhhh))
-				{
-					GD.Print("Unable to find " + pathhhhh);
-					output.Add("Unable to find " + pathhhhh);
-					PatchResultHandler(false, "locPatchFailedNotExists", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 360));
-					return;
-				}
-				GD.Print($"Found {pathhhhh}");
-				output.Add($"Found {pathhhhh}");
+				_7zip = _7zip_override;
+				GD.Print($"7-Zip path was overridden to {_7zip}");
+				output.Add($"7-Zip path was overridden to {_7zip}");
 			}
-		}
-		//hash check
-		if (bypass_hash)
-		{
-			GD.Print("Sha256 check bypassed.");
-			output.Add("Sha256 check bypassed.");
-		}
-		else
-		{
+			//existence check
 			foreach (var pathhhhh in externals_hash.Keys)
 			{
-				if (((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh)) && FileAccess.FileExists(pathhhhh))
+				if ((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh))
 				{
-					GD.Print($"Checking hash of {pathhhhh}");
-					output.Add($"Checking hash of {pathhhhh}");
-					if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
+					GD.Print($"Checking existence of {pathhhhh}");
+					output.Add($"Checking existence of {pathhhhh}");
+					if (!FileAccess.FileExists(pathhhhh))
 					{
-						GD.Print(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
-						output.Add(FileAccess.GetSha256(pathhhhh) + " != " + externals_hash[pathhhhh]);
-						PatchResultHandler(false, "locPatchFailedSha256", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 360));
+						GD.Print($"Unable to find {pathhhhh}");
+						output.Add($"Unable to find {pathhhhh}");
+						PatchResultHandler(false, "locPatchFailedNotExists", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 360));
 						return;
 					}
-					GD.Print("Hash matched: " + externals_hash[pathhhhh]);
-					output.Add("Hash matched: " + externals_hash[pathhhhh]);
+					GD.Print($"Found {pathhhhh}");
+					output.Add($"Found {pathhhhh}");
 				}
 			}
-			GD.Print("Sha256 check all passed.");
-			output.Add("Sha256 check all passed.");
-		}
-		// demo override
-		if (force_patch > 0)
-		{
-			patchingdemo = (force_patch == 2);
-		}
-		GD.Print("Extracting...");
-		output.Add("Extracting...");
-		//解压
-		string tempPath = "ExtractTemp";
-		string extractArgs = $"x \"{(patchingdemo ? demopatchdir : patchdir)}\" -o\"" + GetGameDirPath(tempPath) + "\" -aoa -y";
-		GD.Print($"{_7zip} {extractArgs}");
-		var stime7z = DateTime.Now;
-		var extract_process = new Process();
-		var starti = new ProcessStartInfo();
-		starti.FileName = _7zip;
-		starti.Arguments = extractArgs;
-		starti.RedirectStandardOutput = true;
-		starti.RedirectStandardError = true;
-		extract_process.StartInfo = starti;
-		extract_process.OutputDataReceived += RecivedOutput;
-		extract_process.ErrorDataReceived += RecivedError;
-		extract_process.Start();
-		extract_process.BeginOutputReadLine();
-		extract_process.BeginErrorReadLine();
-		var pname = extract_process.ProcessName;
-		extract_process.WaitForExit();
-		GD.Print($"{pname} elapsed {(DateTime.Now - stime7z).TotalSeconds}s");
-		output.Add($"{pname} elapsed {(DateTime.Now - stime7z).TotalSeconds}s");
-		// 检查补丁内包含章节
-		chapters = [];
-		foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(tempPath)))
-		{
-			if (System.Text.RegularExpressions.Regex.IsMatch(file, @"^chapter\d+\.xdelta$"))
+			//hash check
+			if (bypass_hash)
 			{
-				chapters = chapters.Append(file.TrimSuffix(".xdelta").TrimPrefix("chapter")).ToArray();
-			}
-		}
-		if (use_backup)
-		{
-			//恢复备份
-			if (DirAccess.DirExistsAbsolute(path + "/backup"))
-			{
-				output += RestoreData(path);
-			}
-		}
-		else
-		{
-			OS.MoveToTrash(path + "/backup");
-			GD.Print("Removed " + path + "/backup");
-			output.Add("Removed " + path + "/backup");
-		}
-		output += MoveAfterExtracted(GetGameDirPath(tempPath), "", path);
-		OS.MoveToTrash(GetGameDirPath(tempPath));
-		var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Write);
-		if (ver != null)
-		{
-			ver.StoreString(patchingdemo ? demopatchver : patchver);
-			ver.Close();
-		}
-		//备份data
-		if (FileAccess.FileExists(path + "/main.xdelta") && FileAccess.FileExists(path + "/" + dataname))
-		{
-			DirAccess.RenameAbsolute(path + "/" + dataname, path + "/backup/" + dataname);
-			GD.Print("Renamed " + path + "/" + dataname + " to " + path + "/backup/" + dataname);
-			output.Add("Renamed " + path + "/" + dataname + " to " + path + "/backup/" + dataname);
-		}
-		foreach (var chapter in chapters)
-		{
-			if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta") && FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
-			{
-				if (!DirAccess.DirExistsAbsolute(path + "/backup/chapter" + chapter + "_" + osname))
-				{
-					DirAccess.MakeDirAbsolute(path + "/backup/chapter" + chapter + "_" + osname);
-				}
-				DirAccess.RenameAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname, path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
-				GD.Print("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + " to " + path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
-				output.Add("Renamed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname + " to " + path + "/backup/chapter" + chapter + "_" + osname + "/" + dataname);
-			}
-		}
-		//Patch
-		if (patchingdemo)
-		{
-			patched_count = chapters.Length;
-		}
-		System.EventHandler CreateFallbackHandler(string backupDataPath, string failedDataPath, string fallbackNamePrefix)
-		{
-			return (sender, e) =>
-			{
-				if (patch_failed) return;
-				var originalProc = (Process)sender;
-				if (originalProc.ExitCode != 0)
-				{
-					GD.Print($"{fallbackNamePrefix} xdelta3 failed. Attempting fallback...");
-					output.Add($"{fallbackNamePrefix} xdelta3 failed. Attempting fallback...");
-					string sha256Full = FileAccess.GetSha256(backupDataPath);
-					if (sha256Full == "")
-					{
-						GD.Print($"No data.win found.");
-						output.Add($"No data.win found.");
-						patch_failed = true;
-						return;
-					}
-					string shaPrefix = sha256Full.Substring(0, 8);
-					string fallbackPatchPath = $"{path}/{fallbackNamePrefix}{shaPrefix}.xdelta";
-
-					if (FileAccess.FileExists(fallbackPatchPath))
-					{
-						GD.Print($"Fallback patch found: {fallbackPatchPath}");
-						output.Add($"Fallback patch found: {fallbackPatchPath}");
-
-						//清理
-						if (FileAccess.FileExists(failedDataPath))
-						{
-							DirAccess.RemoveAbsolute(failedDataPath);
-						}
-
-						string fallbackArgs = $"-f -d -v -s \"{backupDataPath}\" \"{fallbackPatchPath}\" \"{failedDataPath}\"";
-						GD.Print($"{xdelta3} {fallbackArgs}");
-
-						var fallback_process = new Process();
-						fallback_process.StartInfo = new ProcessStartInfo
-						{
-							FileName = xdelta3,
-							Arguments = fallbackArgs,
-							RedirectStandardOutput = true,
-							RedirectStandardError = true
-						};
-						fallback_process.EnableRaisingEvents = true;
-						fallback_process.OutputDataReceived += RecivedOutput;
-						fallback_process.ErrorDataReceived += RecivedOutput;
-
-						fallback_process.Exited += (f_sender, f_e) =>
-						{
-							if (fallback_process.ExitCode == 0)
-							{
-								// 标一下不是正版游戏，用来结尾提示
-								used_fallback = true; 
-								Patched(f_sender, f_e);
-							}
-							else
-							{
-								GD.Print($"Fallback patch still FAILED for {shaPrefix}.");
-								output.Add($"Fallback patch still FAILED for {shaPrefix}.");
-								patch_failed = true;
-								return;
-							}
-						};
-
-						fallback_process.Start();
-						fallback_process.BeginOutputReadLine();
-						fallback_process.BeginErrorReadLine();
-					}
-					else
-					{
-						GD.Print($"No fallback patch found for {shaPrefix}.");
-						output.Add($"No fallback patch found for {shaPrefix}.");
-						patch_failed = true;
-						return;
-					}
-				}
-				else
-				{
-					// 第一次没报错，直接成功
-					Patched(sender, e);
-				}
-			};
-		}
-		patch_count_except_chapters = 0;
-		if (FileAccess.FileExists(path + "/main.xdelta"))
-		{
-			patch_count_except_chapters += 1;
-			string xdelta3Args = $"-f -d -v -s \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"";
-			GD.Print("Patching main data");
-			output.Add("Patching main data");
-			if (FileAccess.FileExists(path + "/" + dataname))
-			{
-				DirAccess.RemoveAbsolute(path + "/" + dataname);
-				GD.Print("Removed " + path + "/" + dataname);
-				output.Add("Removed " + path + "/" + dataname);
-			}
-			GD.Print($"{xdelta3} {xdelta3Args}");
-			var xdelta3_process = new Process();
-			starti = new ProcessStartInfo();
-			starti.FileName = xdelta3;
-			starti.Arguments = xdelta3Args;
-			starti.RedirectStandardOutput = true;
-			starti.RedirectStandardError = true;
-			xdelta3_process.StartInfo = starti;
-			xdelta3_process.EnableRaisingEvents = true;
-			xdelta3_process.OutputDataReceived += RecivedOutput;
-			xdelta3_process.ErrorDataReceived += RecivedOutput;//RecivedError; Xdelta3你神经病吧报错了吗你就返回Error
-			string backupPath = $"{path}/backup/{dataname}";
-			string destPath = $"{path}/{dataname}";
-			xdelta3_process.Exited += CreateFallbackHandler(backupPath, destPath, "main_");
-			xdelta3_process.Start();
-			xdelta3_process.BeginOutputReadLine();
-			xdelta3_process.BeginErrorReadLine();
-			//xdelta3_process.WaitForExit();
-		}
-		if (!patchingdemo)
-		{
-			foreach (var chapter in chapters)
-			{
-				if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
-				{
-					string xdelta3Args = $"-f -d -v -s \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"";
-					GD.Print("Patching chapter" + chapter + " data");
-					output.Add("Patching chapter" + chapter + " data");
-					if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
-					{
-						DirAccess.RemoveAbsolute(path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-						GD.Print("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-						output.Add("Removed " + path + "/chapter" + chapter + "_" + osname + "/" + dataname);
-					}
-					GD.Print($"{xdelta3} {xdelta3Args}");
-					var xdelta3_process = new Process();
-					starti = new ProcessStartInfo();
-					starti.FileName = xdelta3;
-					starti.Arguments = xdelta3Args;
-					starti.RedirectStandardOutput = true;
-					starti.RedirectStandardError = true;
-					xdelta3_process.StartInfo = starti;
-					xdelta3_process.EnableRaisingEvents = true;
-					xdelta3_process.OutputDataReceived += RecivedOutput;
-					xdelta3_process.ErrorDataReceived += RecivedOutput;//RecivedError; FUCK XDELTA3
-					// ws3917 - 新增xdelta3的fall back，用于旧版游戏安装补丁
-					string backupPath = $"{path}/backup/chapter{chapter}_{osname}/{dataname}";
-					string destPath = $"{path}/chapter{chapter}_{osname}/{dataname}";
-					xdelta3_process.Exited += CreateFallbackHandler(backupPath, destPath, $"chapter{chapter}_");
-					xdelta3_process.Start();
-					xdelta3_process.BeginOutputReadLine();
-					xdelta3_process.BeginErrorReadLine();
-					//xdelta3_process.WaitForExit();
-				}
-			}
-		}
-		while (patched_count < chapters.Length + patch_count_except_chapters && !patch_failed && (DateTime.Now - starttime).TotalSeconds < 30)
-		{
-			await Task.Delay(100);
-		}
-		if (patched_count >= chapters.Length + patch_count_except_chapters)
-		{
-			CallDeferred("Ending");
-			return;
-		}
-		if (patch_failed || ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= 30)))
-		{
-			Godot.Collections.Array<string> externals = [];
-			foreach (var programs in available_externals.Values)
-			{
-				externals += programs;
-			}
-			foreach (var external in externals)
-			{
-				if (os_name == "Windows")
-				{
-					OS.Execute("taskkill", ["/f", "/im", external + ".exe"]);
-				}
-				else
-				{
-					OS.Execute("killall", [external]);
-				}
-			}
-			// ws3917 - 等一下保证进程退出
-			await Task.Delay(200); 
-			if (patch_failed)
-			{
-				CallDeferred("PatchResultHandler", false, "locPatchFailedInvalidInput", (DateTime.Now - starttime).TotalSeconds, new Vector2I(640, 480));
+				GD.Print("Sha256 check bypassed.");
+				output.Add("Sha256 check bypassed.");
 			}
 			else
 			{
-				CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "30", new Vector2I(480, 240));
+				foreach (var pathhhhh in externals_hash.Keys)
+				{
+					if (((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh)) && FileAccess.FileExists(pathhhhh))
+					{
+						GD.Print($"Checking hash of {pathhhhh}");
+						output.Add($"Checking hash of {pathhhhh}");
+						if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
+						{
+							GD.Print($"{FileAccess.GetSha256(pathhhhh)} != {externals_hash[pathhhhh]}");
+							output.Add($"{FileAccess.GetSha256(pathhhhh)} != {externals_hash[pathhhhh]}");
+							PatchResultHandler(false, "locPatchFailedSha256", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 360));
+							return;
+						}
+						GD.Print($"Hash matched: {externals_hash[pathhhhh]}");
+						output.Add($"Hash matched: {externals_hash[pathhhhh]}");
+					}
+				}
+				GD.Print("Sha256 check all passed.");
+				output.Add("Sha256 check all passed.");
 			}
-				
+			// demo override
+			if (force_patch > 0)
+			{
+				patchingdemo = (force_patch == 2);
+			}
+			GD.Print("Extracting...");
+			output.Add("Extracting...");
+			//解压
+			string tempPath = "ExtractTemp";
+			string extractArgs = $"x \"{(patchingdemo ? demopatchdir : patchdir)}\" -o\"{GetGameDirPath(tempPath)}\" -aoa -y";
+			GD.Print($"{_7zip} {extractArgs}");
+			var stime7z = DateTime.Now;
+			var extract_process = new Process();
+			var starti = new ProcessStartInfo();
+			starti.FileName = _7zip;
+			starti.Arguments = extractArgs;
+			starti.RedirectStandardOutput = true;
+			starti.RedirectStandardError = true;
+			extract_process.StartInfo = starti;
+			extract_process.OutputDataReceived += RecivedOutput;
+			extract_process.ErrorDataReceived += RecivedError;
+			extract_process.Start();
+			extract_process.BeginOutputReadLine();
+			extract_process.BeginErrorReadLine();
+			var pname = extract_process.ProcessName;
+			if (!extract_process.WaitForExit(120_000))
+			{
+				extract_process.Kill();
+				extract_process.WaitForExit();
+				GD.PushError("7z extraction timed out after 120s, killed.");
+				output.Add("7z extraction timed out after 120s, killed.");
+			}
+			GD.Print($"{pname} elapsed {(DateTime.Now - stime7z).TotalSeconds}s");
+			output.Add($"{pname} elapsed {(DateTime.Now - stime7z).TotalSeconds}s");
+			// 检查补丁内包含章节
+			chapters = [];
+			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(tempPath)) ?? [])
+			{
+				if (System.Text.RegularExpressions.Regex.IsMatch(file, @"^chapter\d+\.xdelta$"))
+				{
+					chapters = chapters.Append(file.TrimSuffix(".xdelta").TrimPrefix("chapter")).ToArray();
+				}
+			}
+			if (use_backup)
+			{
+				//恢复备份
+				if (DirAccess.DirExistsAbsolute($"{path}/backup"))
+				{
+					output += RestoreData(path);
+				}
+			}
+			else
+			{
+				OS.MoveToTrash($"{path}/backup");
+				GD.Print($"Removed {path}/backup");
+				output.Add($"Removed {path}/backup");
+			}
+			output += MoveAfterExtracted(GetGameDirPath(tempPath), "", path);
+			OS.MoveToTrash(GetGameDirPath(tempPath));
+			var ver = FileAccess.Open($"{path}/backup/version", FileAccess.ModeFlags.Write);
+			if (ver != null)
+			{
+				ver.StoreString(patchingdemo ? demopatchver : patchver);
+				ver.Close();
+			}
+			//备份data
+			if (FileAccess.FileExists($"{path}/main.xdelta") && FileAccess.FileExists($"{path}/{dataname}"))
+			{
+				DirAccess.RenameAbsolute($"{path}/{dataname}", $"{path}/backup/{dataname}");
+				GD.Print($"Renamed {path}/{dataname} to {path}/backup/{dataname}");
+				output.Add($"Renamed {path}/{dataname} to {path}/backup/{dataname}");
+			}
+			foreach (var chapter in chapters)
+			{
+				if (FileAccess.FileExists($"{path}/chapter{chapter}.xdelta") && FileAccess.FileExists($"{path}/chapter{chapter}_{osname}/{dataname}"))
+				{
+					if (!DirAccess.DirExistsAbsolute($"{path}/backup/chapter{chapter}_{osname}"))
+					{
+						DirAccess.MakeDirAbsolute($"{path}/backup/chapter{chapter}_{osname}");
+					}
+					DirAccess.RenameAbsolute($"{path}/chapter{chapter}_{osname}/{dataname}", $"{path}/backup/chapter{chapter}_{osname}/{dataname}");
+					GD.Print($"Renamed {path}/chapter{chapter}_{osname}/{dataname} to {path}/backup/chapter{chapter}_{osname}/{dataname}");
+					output.Add($"Renamed {path}/chapter{chapter}_{osname}/{dataname} to {path}/backup/chapter{chapter}_{osname}/{dataname}");
+				}
+			}
+			//Patch
+			if (patchingdemo)
+			{
+				patched_count = chapters.Length;
+			}
+			System.EventHandler CreateFallbackHandler(string backupDataPath, string failedDataPath, string fallbackNamePrefix)
+			{
+				return (sender, e) =>
+				{
+					if (patch_failed) return;
+					var originalProc = (Process)sender;
+					if (originalProc.ExitCode != 0)
+					{
+						GD.Print($"{fallbackNamePrefix} xdelta3 failed. Attempting fallback...");
+						output.Add($"{fallbackNamePrefix} xdelta3 failed. Attempting fallback...");
+						string sha256Full = FileAccess.GetSha256(backupDataPath);
+						if (sha256Full == "")
+						{
+							GD.Print($"No data.win found.");
+							output.Add($"No data.win found.");
+							patch_failed = true;
+							return;
+						}
+						string shaPrefix = sha256Full.Substring(0, 8);
+						string fallbackPatchPath = $"{path}/{fallbackNamePrefix}{shaPrefix}.xdelta";
+
+						if (FileAccess.FileExists(fallbackPatchPath))
+						{
+							GD.Print($"Fallback patch found: {fallbackPatchPath}");
+							output.Add($"Fallback patch found: {fallbackPatchPath}");
+
+							//清理
+							if (FileAccess.FileExists(failedDataPath))
+							{
+								DirAccess.RemoveAbsolute(failedDataPath);
+							}
+
+							string fallbackArgs = $"-f -d -v -s \"{backupDataPath}\" \"{fallbackPatchPath}\" \"{failedDataPath}\"";
+							GD.Print($"{xdelta3} {fallbackArgs}");
+
+							var fallback_process = new Process();
+							fallback_process.StartInfo = new ProcessStartInfo
+							{
+								FileName = xdelta3,
+								Arguments = fallbackArgs,
+								RedirectStandardOutput = true,
+								RedirectStandardError = true
+							};
+							fallback_process.EnableRaisingEvents = true;
+							fallback_process.OutputDataReceived += RecivedOutput;
+							fallback_process.ErrorDataReceived += RecivedOutput;
+
+							fallback_process.Exited += (f_sender, f_e) =>
+							{
+								if (fallback_process.ExitCode == 0)
+								{
+									// 标一下不是正版游戏，用来结尾提示
+									used_fallback = true;
+									Patched(f_sender, f_e);
+								}
+								else
+								{
+									GD.Print($"Fallback patch still FAILED for {shaPrefix}.");
+									output.Add($"Fallback patch still FAILED for {shaPrefix}.");
+									patch_failed = true;
+									return;
+								}
+							};
+
+							fallback_process.Start();
+							fallback_process.BeginOutputReadLine();
+							fallback_process.BeginErrorReadLine();
+						}
+						else
+						{
+							GD.Print($"No fallback patch found for {shaPrefix}.");
+							output.Add($"No fallback patch found for {shaPrefix}.");
+							patch_failed = true;
+							return;
+						}
+					}
+					else
+					{
+						// 第一次没报错，直接成功
+						Patched(sender, e);
+					}
+				};
+			}
+			patch_count_except_chapters = 0;
+			if (FileAccess.FileExists($"{path}/main.xdelta"))
+			{
+				patch_count_except_chapters += 1;
+				string xdelta3Args = $"-f -d -v -s \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"";
+				GD.Print("Patching main data");
+				output.Add("Patching main data");
+				if (FileAccess.FileExists($"{path}/{dataname}"))
+				{
+					DirAccess.RemoveAbsolute($"{path}/{dataname}");
+					GD.Print($"Removed {path}/{dataname}");
+					output.Add($"Removed {path}/{dataname}");
+				}
+				GD.Print($"{xdelta3} {xdelta3Args}");
+				var xdelta3_process = new Process();
+				starti = new ProcessStartInfo();
+				starti.FileName = xdelta3;
+				starti.Arguments = xdelta3Args;
+				starti.RedirectStandardOutput = true;
+				starti.RedirectStandardError = true;
+				xdelta3_process.StartInfo = starti;
+				xdelta3_process.EnableRaisingEvents = true;
+				xdelta3_process.OutputDataReceived += RecivedOutput;
+				xdelta3_process.ErrorDataReceived += RecivedOutput;//RecivedError; Xdelta3你神经病吧报错了吗你就返回Error
+				string backupPath = $"{path}/backup/{dataname}";
+				string destPath = $"{path}/{dataname}";
+				xdelta3_process.Exited += CreateFallbackHandler(backupPath, destPath, "main_");
+				xdelta3_process.Start();
+				xdelta3_process.BeginOutputReadLine();
+				xdelta3_process.BeginErrorReadLine();
+				//xdelta3_process.WaitForExit();
+			}
+			if (!patchingdemo)
+			{
+				foreach (var chapter in chapters)
+				{
+					if (FileAccess.FileExists($"{path}/chapter{chapter}.xdelta"))
+					{
+						string xdelta3Args = $"-f -d -v -s \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"";
+						GD.Print($"Patching chapter{chapter} data");
+						output.Add($"Patching chapter{chapter} data");
+						if (FileAccess.FileExists($"{path}/chapter{chapter}_{osname}/{dataname}"))
+						{
+							DirAccess.RemoveAbsolute($"{path}/chapter{chapter}_{osname}/{dataname}");
+							GD.Print($"Removed {path}/chapter{chapter}_{osname}/{dataname}");
+							output.Add($"Removed {path}/chapter{chapter}_{osname}/{dataname}");
+						}
+						GD.Print($"{xdelta3} {xdelta3Args}");
+						var xdelta3_process = new Process();
+						starti = new ProcessStartInfo();
+						starti.FileName = xdelta3;
+						starti.Arguments = xdelta3Args;
+						starti.RedirectStandardOutput = true;
+						starti.RedirectStandardError = true;
+						xdelta3_process.StartInfo = starti;
+						xdelta3_process.EnableRaisingEvents = true;
+						xdelta3_process.OutputDataReceived += RecivedOutput;
+						xdelta3_process.ErrorDataReceived += RecivedOutput;//RecivedError; FUCK XDELTA3
+																		   // ws3917 - 新增xdelta3的fall back，用于旧版游戏安装补丁
+						string backupPath = $"{path}/backup/chapter{chapter}_{osname}/{dataname}";
+						string destPath = $"{path}/chapter{chapter}_{osname}/{dataname}";
+						xdelta3_process.Exited += CreateFallbackHandler(backupPath, destPath, $"chapter{chapter}_");
+						xdelta3_process.Start();
+						xdelta3_process.BeginOutputReadLine();
+						xdelta3_process.BeginErrorReadLine();
+						//xdelta3_process.WaitForExit();
+					}
+				}
+			}
+			var patchTimeoutWatch = System.Diagnostics.Stopwatch.StartNew();
+			while (patched_count < chapters.Length + patch_count_except_chapters && !patch_failed && patchTimeoutWatch.Elapsed.TotalSeconds < 30)
+			{
+				await Task.Delay(100);
+			}
+			if (patched_count >= chapters.Length + patch_count_except_chapters)
+			{
+				CallDeferred("Ending");
+				return;
+			}
+			if (patch_failed || ((!bypass_too_long) && patchTimeoutWatch.Elapsed.TotalSeconds >= 30))
+			{
+				Godot.Collections.Array<string> externals = [];
+				foreach (var programs in available_externals.Values)
+				{
+					externals += programs;
+				}
+				foreach (var external in externals)
+				{
+					if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+					{
+						OS.Execute("taskkill", ["/f", "/im", $"{external}.exe"]);
+					}
+					else
+					{
+						OS.Execute("killall", [external]);
+					}
+				}
+				// ws3917 - 等一下保证进程退出
+				await Task.Delay(200);
+				if (patch_failed)
+				{
+					CallDeferred("PatchResultHandler", false, "locPatchFailedInvalidInput", (DateTime.Now - starttime).TotalSeconds, new Vector2I(640, 480));
+				}
+				else
+				{
+					CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "30", new Vector2I(480, 240));
+				}
+
+			}
+		}
+		catch (Exception e)
+		{
+			GD.PushError($"Unhandled exception in Patch: {e}");
+			patch_failed = true;
 		}
 	}
 	internal static Godot.Collections.Array MoveAfterExtracted(string dir, string relative_dir, string drsdir)
 	{
 		Godot.Collections.Array output = [];
-		foreach (var di in DirAccess.GetDirectoriesAt(dir))
+		foreach (var di in DirAccess.GetDirectoriesAt(dir) ?? [])
 		{
-			output += MoveAfterExtracted(dir + "/" + di, relative_dir + di + "/", drsdir);
+			output += MoveAfterExtracted($"{dir}/{di}", $"{relative_dir}{di}/", drsdir);
 		}
-		foreach (var file in DirAccess.GetFilesAt(dir))
+		foreach (var file in DirAccess.GetFilesAt(dir) ?? [])
 		{
-			if (FileAccess.FileExists(drsdir + "/" + relative_dir + file))
+			if (FileAccess.FileExists($"{drsdir}/{relative_dir}{file}"))
 			{
-				if (!DirAccess.DirExistsAbsolute(drsdir + "/backup/" + relative_dir))
+				if (!DirAccess.DirExistsAbsolute($"{drsdir}/backup/{relative_dir}"))
 				{
-					DirAccess.MakeDirRecursiveAbsolute(drsdir + "/backup/" + relative_dir);
+					DirAccess.MakeDirRecursiveAbsolute($"{drsdir}/backup/{relative_dir}");
 				}
-				DirAccess.RenameAbsolute(drsdir + "/" + relative_dir + file, drsdir + "/backup/" + relative_dir + file);
-				GD.Print("Renamed " + drsdir + "/" + relative_dir + file + " to " + drsdir + "/backup/" + relative_dir + file);
-				output.Add("Renamed " + drsdir + "/" + relative_dir + file + " to " + drsdir + "/backup/" + relative_dir + file);
+				DirAccess.RenameAbsolute($"{drsdir}/{relative_dir}{file}", $"{drsdir}/backup/{relative_dir}{file}");
+				GD.Print($"Renamed {drsdir}/{relative_dir}{file} to {drsdir}/backup/{relative_dir}{file}");
+				output.Add($"Renamed {drsdir}/{relative_dir}{file} to {drsdir}/backup/{relative_dir}{file}");
 			}
-			DirAccess.RenameAbsolute(dir + "/" + file, drsdir + "/" + relative_dir + file);
-			GD.Print("Renamed " + dir + "/" + file + " to " + drsdir + "/" + relative_dir + file);
-			output.Add("Renamed " + dir + "/" + file + " to " + drsdir + "/" + relative_dir + file);
+			DirAccess.RenameAbsolute($"{dir}/{file}", $"{drsdir}/{relative_dir}{file}");
+			GD.Print($"Renamed {dir}/{file} to {drsdir}/{relative_dir}{file}");
+			output.Add($"Renamed {dir}/{file} to {drsdir}/{relative_dir}{file}");
 		}
 		return output;
 	}
@@ -1247,37 +1227,37 @@ public partial class Main : Control
 		Godot.Collections.Array output = [];
 		if (path != "")
 		{
-			if (FileAccess.FileExists(path + "/backup/version"))
+			if (FileAccess.FileExists($"{path}/backup/version"))
 			{
-				DirAccess.RemoveAbsolute(path + "/backup/version");
+				DirAccess.RemoveAbsolute($"{path}/backup/version");
 			}
-			if (DirAccess.DirExistsAbsolute(path + "/backup"))
+			if (DirAccess.DirExistsAbsolute($"{path}/backup"))
 			{
-				output += RestoreFolder(path + "/backup", path);
+				output += RestoreFolder($"{path}/backup", path);
 			}
-			OS.MoveToTrash(path + "/backup");
-			GD.Print("Removed " + path + "/backup");
-			output.Add("Removed " + path + "/backup");
+			OS.MoveToTrash($"{path}/backup");
+			GD.Print($"Removed {path}/backup");
+			output.Add($"Removed {path}/backup");
 		}
 		return output;
 	}
 	internal static Godot.Collections.Array RestoreFolder(string path, string target)
 	{
 		Godot.Collections.Array output = [];
-		foreach (var file in DirAccess.GetFilesAt(path))
+		foreach (var file in DirAccess.GetFilesAt(path) ?? [])
 		{
-			var result = DirAccess.RenameAbsolute(path + "/" + file, target + "/" + file);
-			GD.Print("Renamed " + path + "/" + file + " to " + target + "/" + file);
-			output.Add("Renamed " + path + "/" + file + " to " + target + "/" + file);
+			var result = DirAccess.RenameAbsolute($"{path}/{file}", $"{target}/{file}");
+			GD.Print($"Renamed {path}/{file} to {target}/{file}");
+			output.Add($"Renamed {path}/{file} to {target}/{file}");
 			if (result != Error.Ok)
 			{
-				GD.PushError("Error " + result.ToString() + " happened when renaming " + path + "/" + file + " to " + target + "/" + file);
-				output.Add("Error " + result.ToString() + " happened when renaming " + path + "/" + file + " to " + target + "/" + file);
+				GD.PushError($"Error {result} happened when renaming {path}/{file} to {target}/{file}");
+				output.Add($"Error {result} happened when renaming {path}/{file} to {target}/{file}");
 			}
 		}
-		foreach (var dir in DirAccess.GetDirectoriesAt(path))
+		foreach (var dir in DirAccess.GetDirectoriesAt(path) ?? [])
 		{
-			output += RestoreFolder(path + "/" + dir, target + "/" + dir);
+			output += RestoreFolder($"{path}/{dir}", $"{target}/{dir}");
 		}
 		return output;
 	}
@@ -1285,7 +1265,7 @@ public partial class Main : Control
 	{
 		var path = PathTrim(nodeEditGamePath.Text);
 		DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Indeterminate);
-		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
+		if (!DirAccess.DirExistsAbsolute($"{path}/backup"))
 		{
 			nodeWindowPopupContent.Text = "locNoBakDetected";
 			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
@@ -1315,12 +1295,7 @@ public partial class Main : Control
 		if (path != "")
 		{
 			nodeEditGamePath.Text = path;
-			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
-			if (game_path != null)
-			{
-				game_path.StoreString(path);
-				game_path.Close();
-			}
+			SaveGamePath(path);
 		}
 	}
 
@@ -1363,7 +1338,7 @@ public partial class Main : Control
 	{
 		if (string.IsNullOrEmpty(os))
 		{
-			os_name = OS.GetName();
+			os_name = GetOSName();
 		}
 		else
 		{
@@ -1411,7 +1386,7 @@ public partial class Main : Control
 			}
 			catch (Exception e)
 			{
-				GD.PushError("Error happened when getting process ID & Name: " + e.ToString() + " (" + e.Message + ")");
+				GD.PushError($"Error happened when getting process ID & Name: {e} ({e.Message})");
 			}
 		}
 		GD.Print(result);
@@ -1438,7 +1413,7 @@ public partial class Main : Control
 			}
 			catch (Exception ee)
 			{
-				GD.PushError("Error happened when getting process ID & Name: " + ee.ToString() + " (" + ee.Message + ")");
+				GD.PushError($"Error happened when getting process ID & Name: {ee} ({ee.Message})");
 			}
 		}
 		patched_count += 1;
@@ -1451,99 +1426,99 @@ public partial class Main : Control
 	}
 	internal async void PatchResultHandler(bool success, string information, string usedtime, Vector2I popup_size)
 	{
-		var path = PathTrim(nodeEditGamePath.Text);
-		nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}", usedtime);
-		nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-		nodeWindowPopup.Size = popup_size * windowScale;
-		nodeWindowPopup.Title = "locResult";
-		if (success)
+		try
 		{
-			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
-			var gamepath = nodeEditGamePath.Text;
-			//保存游戏路径
-			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
-			if (game_path != null)
+			var path = PathTrim(nodeEditGamePath.Text);
+			nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}", usedtime);
+			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+			nodeWindowPopup.Size = popup_size * windowScale;
+			nodeWindowPopup.Title = "locResult";
+			if (success)
 			{
-				game_path.StoreString(gamepath);
-				game_path.Close();
-			}
-		}
-		else
-		{
-			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Error);
-			//回退安装
-			if (bypass_restore_when_failed)
-			{
-				GD.Print("Restoring backup bypassed.");
-				output.Add("Restoring backup bypassed.");
+				DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
+				var gamepath = nodeEditGamePath.Text;
+				SaveGamePath(gamepath);
 			}
 			else
 			{
-				output += RestoreData(path);
+				DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Error);
+				//回退安装
+				if (bypass_restore_when_failed)
+				{
+					GD.Print("Restoring backup bypassed.");
+					output.Add("Restoring backup bypassed.");
+				}
+				else
+				{
+					output += RestoreData(path);
+				}
 			}
-		}
-		output.Add("Patched at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]);
-		var logtext = "";
-		foreach (var i in output)
-		{
-			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
-		}
-		nodeWindowLogContent.Text = logtext;
-		nodeWindowLogContent.Set("theme_override_font_sizes/font_size", FontSize(13, windowScale));
-		nodeWindowLog.Size = new Vector2I(960, 600) * windowScale;
-		var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
-		if (log != null)
-		{
-			log.StoreString(logtext);
-			log.Close();
-		}
-		//等待0.1秒给godot.log更新时间
-		await Task.Delay(100);
-		log = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
-		if (log != null)
-		{
-			logtext = log.GetAsText();
-			log.Close();
-			log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
+			output.Add($"Patched at {Time.GetDatetimeStringFromSystem(false, true)}, {Time.GetTimeZoneFromSystem()["name"]}");
+			var logtext = "";
+			foreach (var i in output)
+			{
+				logtext += $"{i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n")}\n";
+			}
+			nodeWindowLogContent.Text = logtext;
+			nodeWindowLogContent.Set("theme_override_font_sizes/font_size", FontSize(13, windowScale));
+			nodeWindowLog.Size = new Vector2I(960, 600) * windowScale;
+			var log = FileAccess.Open(GetGameDirPath("log.txt"), FileAccess.ModeFlags.Write);
 			if (log != null)
 			{
 				log.StoreString(logtext);
 				log.Close();
 			}
+			//等待0.1秒给godot.log更新时间
+			await Task.Delay(100);
+			log = FileAccess.Open("user://logs/godot.log", FileAccess.ModeFlags.Read);
+			if (log != null)
+			{
+				logtext = log.GetAsText();
+				log.Close();
+				log = FileAccess.Open(GetGameDirPath("godot.log"), FileAccess.ModeFlags.Write);
+				if (log != null)
+				{
+					log.StoreString(logtext);
+					log.Close();
+				}
+			}
+			nodeWindowLog.Show();
+			nodeWindowPopup.Show();
+			// 1225 check
+			if (IsChristmas())
+			{
+				nodeWindowPopup1225.Show();
+			}
+			nodeBtnPatch.Disabled = false;
+			nodeBtnUnpatch.Disabled = false;
+			nodeEditGamePath.Editable = true;
+			nodeBtnBrowse.Disabled = false;
 		}
-		nodeWindowLog.Show();
-		nodeWindowPopup.Show();
-		// 1225 check
-		var datedict = Time.GetDateDictFromSystem();
-		if (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+		catch (Exception e)
 		{
-			nodeWindowPopup1225.Show();
+			GD.PushError($"Unhandled exception in PatchResultHandler: {e}");
 		}
-		nodeBtnPatch.Disabled = false;
-		nodeBtnUnpatch.Disabled = false;
-		nodeEditGamePath.Editable = true;
-		nodeBtnBrowse.Disabled = false;
 	}
 	internal void Ending()
 	{
 		var path = PathTrim(nodeEditGamePath.Text);
 		//cleanup
-		foreach (var file in DirAccess.GetFilesAt(path))
+		foreach (var file in DirAccess.GetFilesAt(path) ?? [])
 		{
 			if (file.EndsWith(".xdelta"))
 			{
-				DirAccess.RemoveAbsolute(path + "/" + file);
-				GD.Print("Removed " + path + "/" + file);
-				output.Add("Removed " + path + "/" + file);
+				DirAccess.RemoveAbsolute($"{path}/{file}");
+				GD.Print($"Removed {path}/{file}");
+				output.Add($"Removed {path}/{file}");
 			}
 		}
 		var usedtime = DateTime.Now.Subtract(starttime).TotalSeconds.ToString();
-		output.Add("Total elapsed " + usedtime + "s");
+		output.Add($"Total elapsed {usedtime}s");
 		//end
 		var logtext = "";
 		foreach (var i in output)
 		{
-			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
+			logtext += $"{i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n")}\n";
 		}
 		if (logtext.Contains("XD3_INVALID_INPUT") && !used_fallback)
 		{
@@ -1555,19 +1530,19 @@ public partial class Main : Control
 		}
 		else if (logtext.Replace("\r", "").Replace("\n", "").Replace(" ", "") == "Extracting...")
 		{
-			PatchResultHandler(false, "locPatchFailedExternals" + (os_name == "macOS" ? "Mac" : ""), usedtime, new Vector2I(640, 360));
+			PatchResultHandler(false, $"locPatchFailedExternals{(RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "Mac" : "")}", usedtime, new Vector2I(640, 360));
 		}
-		else if ((os_name == "macOS" || os_name == "Linux") && logtext.ToLower().Contains("(required by "))
+		else if ((RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) && logtext.ToLower().Contains("(required by "))
 		{
 			PatchResultHandler(false, "locPatchFailedRequired", usedtime, new Vector2I(640, 360));
 		}
-		else if ((os_name == "macOS" || os_name == "Linux") && logtext.ToLower().Contains("permission denied"))
+		else if ((RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) && logtext.ToLower().Contains("permission denied"))
 		{
 			PatchResultHandler(false, "locPatchFailedDenied", usedtime, new Vector2I(640, 360));
 		}
 		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
 		{
-			PatchResultHandler(false, "locPatchFailed" + (os_name == "macOS" ? "Mac" : ""), usedtime, new Vector2I(480, 240));
+			PatchResultHandler(false, $"locPatchFailed{(RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "Mac" : "")}", usedtime, new Vector2I(480, 240));
 		}
 		else
 		{
@@ -1580,12 +1555,78 @@ public partial class Main : Control
 	{
 		if (OS.HasFeature("editor"))
 		{
-			return ProjectSettings.GlobalizePath("res://" + str);
+			return ProjectSettings.GlobalizePath($"res://{str}");
 		}
 		else
 		{
-			return OS.GetExecutablePath().GetBaseDir() + "/" + str;
+			return $"{OS.GetExecutablePath().GetBaseDir()}/{str}";
 		}
+	}
+	internal static void SaveGamePath(string path)
+	{
+		var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
+		if (game_path != null)
+		{
+			game_path.StoreString(path);
+			game_path.Close();
+		}
+	}
+	internal string FindExternalTool(string key, bool bypass, Action<string> setResult)
+	{
+		if (bypass)
+		{
+			GD.Print($"External {key} check bypassed.");
+			output.Add($"External {key} check bypassed.");
+			return null;
+		}
+		foreach (var tool in available_externals[key])
+		{
+			Godot.Collections.Array extOut = [];
+			GD.Print($"Checking {tool}");
+			output.Add($"Checking {tool}");
+			int ret;
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+				ret = OS.Execute("where", [tool], extOut);
+			else
+				ret = OS.Execute("command", ["-v", tool], extOut);
+			GD.Print($"The result of \"{(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? $"where {tool}" : $"command -v {tool}")}\": {ret}");
+			output.Add($"The result of \"{(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? $"where {tool}" : $"command -v {tool}")}\": {ret}");
+			GD.Print(extOut);
+			output.Add(extOut);
+			if (ret == 0)
+			{
+				setResult(tool);
+				GD.Print($"Found {tool}");
+				output.Add($"Found {tool}");
+				return tool;
+			}
+		}
+		return null;
+	}
+	internal static void EnsureExecutable(string path)
+	{
+		if (!string.IsNullOrEmpty(path) && path.Contains("/"))
+		{
+			OS.Execute("chmod", ["+x", path]);
+		}
+	}
+	internal static bool IsChristmas()
+	{
+		var d = Time.GetDateDictFromSystem();
+		return d["month"].AsString() == "12" && d["day"].AsString() == "25";
+	}
+	internal static string GetReleaseAssetUrl(Godot.Collections.Dictionary releases, bool demo)
+	{
+		if (!releases.ContainsKey("assets")) return "";
+		foreach (var asset in releases["assets"].AsGodotArray())
+		{
+			var filename = asset.AsGodotDictionary()["name"].AsString().ToLower();
+			if (filename.Contains(os_name.ToLower()) && ((demo && filename.Contains("demo")) || (!demo && !filename.Contains("demo"))))
+			{
+				return asset.AsGodotDictionary()["browser_download_url"].AsString();
+			}
+		}
+		return "";
 	}
 
 	//寻找游戏路径
@@ -1595,13 +1636,13 @@ public partial class Main : Control
 		var steampath = ""; // Variable only for windows
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 		{
-			steampath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86) + "/Steam";
+			steampath = $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFilesX86)}/Steam";
 			default_paths[ver][os_name] = default_paths[ver][os_name].Replace("{STEAMPATH}", steampath);
 		}
 		var game_path = default_paths[ver][os_name];
 		if (DirAccess.DirExistsAbsolute(game_path))
 		{
-			GD.Print("Found " + game_path);
+			GD.Print($"Found {game_path}");
 		}
 		else
 		{
@@ -1624,24 +1665,38 @@ public partial class Main : Control
 				var lff = FileAccess.Open(default_paths["libraryfolders"][os_name], FileAccess.ModeFlags.Read);
 				if (lff != null)
 				{
-					VObject vdfc = (VObject)VdfConvert.Deserialize(lff.GetAsText()).Value;
+					var vdfText = lff.GetAsText();
 					lff.Close();
-					foreach (VProperty i in vdfc.Properties())
+					try
 					{
-						VObject ii = (VObject)i.Value;
-						VObject apps = (VObject)ii["apps"];
-						if (apps.ContainsKey(is_demo ? "1690940" : "1671210"))
+						var vdfValue = VdfConvert.Deserialize(vdfText).Value;
+						if (vdfValue is not VObject vdfc)
 						{
-							game_path = ii["path"].ToString().Replace("\\", "/") + "/steamapps/common/DELTARUNE" + (is_demo ? "demo" : "") + (os_name == "macOS" ? "/DELTARUNE.app/Contents/Resources" : "");
-							if (DirAccess.DirExistsAbsolute(game_path))
+							GD.Print("VDF root is not a VObject");
+							return "";
+						}
+						foreach (VProperty i in vdfc.Properties())
+						{
+							if (i.Value is not VObject ii) continue;
+							if (!ii.ContainsKey("apps")) continue;
+							if (ii["apps"] is not VObject apps) continue;
+							if (apps.ContainsKey(is_demo ? "1690940" : "1671210"))
 							{
-								GD.Print("Found " + game_path);
-							}
-							else
-							{
-								game_path = "";
+								game_path = $"{ii["path"].ToString().Replace("\\", "/")}/steamapps/common/DELTARUNE{(is_demo ? "demo" : "")}{(RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "/DELTARUNE.app/Contents/Resources" : "")}";
+								if (DirAccess.DirExistsAbsolute(game_path))
+								{
+									GD.Print($"Found {game_path}");
+								}
+								else
+								{
+									game_path = "";
+								}
 							}
 						}
+					}
+					catch (Exception vdfExc)
+					{
+						GD.PushError($"Failed to parse VDF libraryfolders: {vdfExc}");
 					}
 				}
 			}
@@ -1656,74 +1711,69 @@ public partial class Main : Control
 	// 检查DR路径
 	internal bool PathCheck(string path, bool patching = false)
 	{
+		void FailCheck(string info, Vector2I size)
+		{
+			if (patching)
+			{
+				PatchResultHandler(false, info, (DateTime.Now - starttime).TotalSeconds.ToString(), size);
+			}
+		}
 		//file check
 		if (FileAccess.FileExists(path))
 		{
 			nodePathValid.Text = "locPatchInvalidFile";
-			if (patching)
-			{
-				PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
-			}
+			FailCheck("locPatchFailedPath", new Vector2I(640, 180));
 			return false;
 		}
 		//path check
 		if (!DirAccess.DirExistsAbsolute(path))
 		{
 			nodePathValid.Text = "locPatchInvalidExists";
-			if (patching)
-			{
-				PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
-			}
+			FailCheck("locPatchFailedPath", new Vector2I(640, 180));
 			return false;
 		}
 		//Same path check
 		if (!bypass_same_path)
 		{
-			var patcherpath = GetGameDirPath().Replace("\\","/").TrimSuffix("/");
+			var patcherpath = GetGameDirPath().Replace("\\", "/").TrimSuffix("/");
 			GD.Print($"Target Path: {path}\nPatcher Path: {patcherpath}");
 			output.Add($"Target Path: {path}\nPatcher Path: {patcherpath}");
 			if (path == patcherpath)
 			{
 				nodePathValid.Text = "locPatchInvalidSame";
-				if (patching)
-				{
-					PatchResultHandler(false, "locPatchFailedSamePath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
-				}
+				FailCheck("locPatchFailedSamePath", new Vector2I(640, 180));
 				return false;
 			}
 		}
 		//UT path check
-		if (path.ToLower().TrimSuffix("/").TrimSuffix(".app").EndsWith("undertale") || FileAccess.FileExists(path + "/UNDERTALE.exe"))
+		if (path.ToLower().TrimSuffix("/").TrimSuffix(".app").EndsWith("undertale") || FileAccess.FileExists($"{path}/UNDERTALE.exe"))
 		{
 			nodePathValid.Text = "locPatchInvalidUT";
-			if (patching)
-			{
-				PatchResultHandler(false, "locPatchFailedUT", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 270));
-			}
+			FailCheck("locPatchFailedUT", new Vector2I(640, 270));
 			return false;
 		}
 		// path check
 		var path_exists = true;
-		if (FileAccess.FileExists(path + "/" + dataname))
+		if (FileAccess.FileExists($"{path}/{dataname}"))
 		{
-			GD.Print("Found " + path + "/" + dataname);
-			output.Add("Found " + path + "/" + dataname);
+			GD.Print($"Found {path}/{dataname}");
+			output.Add($"Found {path}/{dataname}");
 		}
 		else
 		{
-			GD.Print("Unable to find " + path + "/" + dataname);
-			output.Add("Unable to find " + path + "/" + dataname);
+			GD.Print($"Unable to find {path}/{dataname}");
+			output.Add($"Unable to find {path}/{dataname}");
 			path_exists = false;
 		}
 		if (path_exists)
 		{
 			patchingdemo = true;
-			foreach (var folder in DirAccess.GetDirectoriesAt(path))
+			foreach (var folder in DirAccess.GetDirectoriesAt(path) ?? [])
 			{
-				if (folder.StartsWith("chapter") && FileAccess.FileExists(path + "/" + folder + "/" + dataname))
+				if (folder.StartsWith("chapter") && FileAccess.FileExists($"{path}/{folder}/{dataname}"))
 				{
-					GD.Print("Found " + path + "/" + folder);
-					output.Add("Found " + path + "/" + folder);
+					GD.Print($"Found {path}/{folder}");
+					output.Add($"Found {path}/{folder}");
 					patchingdemo = false;
 					break;
 				}
@@ -1733,42 +1783,33 @@ public partial class Main : Control
 		{
 			nodePathValid.Text = patchingdemo ? "locPatchValidDemo" : "locPatchValidFull";
 			UpdatePathText(path);
-			//保存游戏路径
-			var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
-			if (game_path != null)
-			{
-				game_path.StoreString(path);
-				game_path.Close();
-			}
+			SaveGamePath(path);
 		}
 		else
 		{
 			nodePathValid.Text = "locPatchInvalid";
-			if (patching)
-			{
-				PatchResultHandler(false, "locPatchFailedPath", (DateTime.Now - starttime).TotalSeconds.ToString(), new Vector2I(640, 180));
-			}
+			FailCheck("locPatchFailedPath", new Vector2I(640, 180));
 		}
-		nodeBtnRun.SetItemDisabled(3, (os_name != "Windows" && os_name != "macOS") || !path_exists);
+		nodeBtnRun.SetItemDisabled(3, (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) || !path_exists);
 		return path_exists;
 	}
 	// 更新路径文本
 	internal void UpdatePathText(string gamepath, bool trimming = true)
 	{
-		if (gamepath != "" && FileAccess.FileExists(gamepath + "/backup/version"))
+		if (gamepath != "" && FileAccess.FileExists($"{gamepath}/backup/version"))
 		{
-			var ver = FileAccess.Open(gamepath + "/backup/version", FileAccess.ModeFlags.Read);
+			var ver = FileAccess.Open($"{gamepath}/backup/version", FileAccess.ModeFlags.Read);
 			if (ver != null)
 			{
 				var vertxt = ver.GetAsText();
 				// 1225 check
 				var datedict = Time.GetDateDictFromSystem();
-				if (vertxt == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
+				if (vertxt == "1225" && IsChristmas())
 				{
 					vertxt = "■■■■";
 				}
 				var versiontxt = nodeTextPatchVersion.Text;
-				versiontxt = (trimming ? versiontxt.Substring(0, versiontxt.LastIndexOf("\n")) : versiontxt) + "\n" + TranslationServer.Translate("locInstalledVer") + vertxt;
+				versiontxt = $"{(trimming ? versiontxt.Substring(0, versiontxt.LastIndexOf("\n")) : versiontxt)}\n{TranslationServer.Translate("locInstalledVer")}{vertxt}";
 				nodeTextPatchVersion.Text = versiontxt;
 				ver.Close();
 			}
@@ -1798,16 +1839,10 @@ public partial class Main : Control
 	{
 		if (what == NotificationWMCloseRequest)
 		{
-			//保存游戏路径
 			var path = nodeEditGamePath.Text;
 			if (path != "")
 			{
-				var game_path = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Write);
-				if (game_path != null)
-				{
-					game_path.StoreString(path);
-					game_path.Close();
-				}
+				SaveGamePath(path);
 			}
 			//Dispose掉文件流
 			if (fileStream != null)
@@ -1816,12 +1851,12 @@ public partial class Main : Control
 				fileStream = null;
 			}
 			//删除未清理的下载缓存
-			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()))
+			foreach (var file in DirAccess.GetFilesAt(GetGameDirPath()) ?? [])
 			{
 				if (file.StartsWith("_downloadingtemp_"))
 				{
 					DirAccess.RemoveAbsolute(GetGameDirPath(file));
-					GD.Print("Removed " + GetGameDirPath(file));
+					GD.Print($"Removed {GetGameDirPath(file)}");
 				}
 			}
 		}
