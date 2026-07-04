@@ -231,9 +231,14 @@ public partial class Main : Control
 							{
 								quarantineApp = qParts[2];
 								quarantineDate = DateTimeOffset.FromUnixTimeSeconds(ts).ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
+								GD.Print("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
+								output.Add("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
 							}
-							GD.Print("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
-							output.Add("macOS quarantine xattr: Detected (App: " + quarantineApp + ", Date: " + quarantineDate + ")");
+							else
+							{
+								GD.Print("macOS quarantine xattr: Detected (Raw: " + quarantineDetail + ")");
+								output.Add("macOS quarantine xattr: Detected (Raw: " + quarantineDetail + ")");
+							}
 						}
 						else
 						{
