@@ -89,5 +89,5 @@ locOverrideOS,Override Current OS,覆盖当前系统,覆寫當前系統
 locOverrideScale,Override Window Scale,覆盖窗口缩放,覆寫視窗縮放
 locGithubApiSource,Github API Source,Github API 源,Github API 源
 locMacQuarantineTitle,macOS Security Check,macOS 安全检测,macOS 安全檢測
-locMacQuarantineFound,"Issue detected:\n{0}\n{1}\n\nRun in Terminal:\nsudo xattr -dr com.apple.quarantine <app path>\nAfter that, restart the app","检测到隔离：\n{0}\n{1}\n\n请在终端执行以下指令修复：\nsudo xattr -dr com.apple.quarantine <应用路径>\n随后重启应用","檢測到隔離：\n{0}\n{1}\n\n請在終端機執行以下指令修復：\nsudo xattr -dr com.apple.quarantine <應用路徑>\n隨後重啟應用"
+locMacQuarantineFound,"Issue detected:\n{0}\n{1}\n\nRun in Terminal:\nsudo xattr -d com.apple.quarantine <app path>\nAfter that, restart the app","检测到隔离：\n{0}\n{1}\n\n请在终端执行以下指令修复：\nsudo xattr -d com.apple.quarantine <应用路径>\n随后重启应用","檢測到隔離：\n{0}\n{1}\n\n請在終端機執行以下指令修復：\nsudo xattr -d com.apple.quarantine <應用路徑>\n隨後重啟應用"
 loc1225,"*  You tried to patch it...\n* But, it slipped through your hand\n*  And you couldn't find it anymore.\n\n*  You couldn't find\nyour patch.",*  你试着安装它...\n*  结果，那东西从你手上滑走\n*  然后就再也找不到了。\n\n*  找不到\n你的补丁了。,*  你試著安裝它...\n*  結果，那東西從你手上滑走\n*  然後就再也找不到了。\n\n*  找不到\n你的補丁了。
