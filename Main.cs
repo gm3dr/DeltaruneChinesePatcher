@@ -13,6 +13,7 @@ using System.Text;
 
 public partial class Main : Control
 {
+	#region Node References
 	[Export]
 	ColorRect nodeTitleBar = null!;
 
@@ -80,6 +81,7 @@ public partial class Main : Control
 	LineEdit nodeOverrideOS = null!;
 	[Export]
 	SpinBox nodeOverrideScale = null!;
+	#endregion
 
 	static readonly System.Net.Http.HttpClient httpc = new();
 	static string[] chapters = [];
@@ -88,7 +90,7 @@ public partial class Main : Control
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
 	static bool used_fallback = false; // ws3917 - 是否使用了備用安裝補丁
 	static bool patch_failed = false; // ws3917 - 补丁安装失败的信号
-	static int too_long_time = 45;
+	static readonly int too_long_time = 45;
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
 	{
 		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za", "7zz"]},
