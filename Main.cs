@@ -1058,12 +1058,16 @@ public partial class Main : Control
 			//恢复备份
 			if (DirAccess.DirExistsAbsolute(path + "/backup"))
 			{
-				output += RestoreData(path);
+				output += await RestoreData(path);
 			}
 		}
 		else
 		{
 			OS.MoveToTrash(path + "/backup");
+			while (DirAccess.DirExistsAbsolute(path + "/backup"))
+			{
+				await Task.Delay(100);
+			}
 			GD.Print("Removed " + path + "/backup");
 			output.Add("Removed " + path + "/backup");
 		}
@@ -1317,7 +1321,7 @@ public partial class Main : Control
 		}
 		return output;
 	}
-	internal static Godot.Collections.Array RestoreData(string path)
+	internal static async Task<Godot.Collections.Array> RestoreData(string path)
 	{
 		Godot.Collections.Array output = [];
 		if (path != "")
@@ -1331,6 +1335,10 @@ public partial class Main : Control
 				output += RestoreFolder(path + "/backup", path);
 			}
 			OS.MoveToTrash(path + "/backup");
+			while (DirAccess.DirExistsAbsolute(path + "/backup"))
+			{
+				await Task.Delay(100);
+			}
 			GD.Print("Removed " + path + "/backup");
 			output.Add("Removed " + path + "/backup");
 		}
@@ -1356,25 +1364,33 @@ public partial class Main : Control
 		}
 		return output;
 	}
-	public void _on_unpatch_pressed()
+	public async void _on_unpatch_pressed()
 	{
+		nodeBtnPatch.Disabled = true;
+		nodeBtnUnpatch.Disabled = true;
+		nodeEditGamePath.Editable = false;
+		nodeBtnBrowse.Disabled = true;
+
 		var path = PathTrim(nodeEditGamePath.Text);
 		DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Indeterminate);
 		if (!DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
 			nodeWindowPopupContent.Text = "locNoBakDetected";
-			nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-			nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
-			nodeWindowPopup.Title = "locResult";
-			nodeWindowPopup.Show();
-			return;
 		}
-		RestoreData(path);
-		nodeWindowPopupContent.Text = "locUnpatched";
+		else
+		{
+			await RestoreData(path);
+			nodeWindowPopupContent.Text = "locUnpatched";
+		}
 		nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 		nodeWindowPopup.Size = new Vector2I(360, 120) * windowScale;
 		nodeWindowPopup.Title = "locResult";
 		nodeWindowPopup.Show();
+		
+		nodeBtnPatch.Disabled = false;
+		nodeBtnUnpatch.Disabled = false;
+		nodeEditGamePath.Editable = true;
+		nodeBtnBrowse.Disabled = false;
 	}
 
 	public void _on_edit_game_path_text_changed(string path)
@@ -1554,7 +1570,7 @@ public partial class Main : Control
 			}
 			else
 			{
-				output += RestoreData(path);
+				output += await RestoreData(path);
 			}
 		}
 		output.Add("Patched at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]);
