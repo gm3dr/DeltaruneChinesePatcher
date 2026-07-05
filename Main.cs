@@ -1063,6 +1063,7 @@ public partial class Main : Control
 		}
 		else
 		{
+			await KillExternals();
 			OS.MoveToTrash(path + "/backup");
 			while (DirAccess.DirExistsAbsolute(path + "/backup"))
 			{
@@ -1274,24 +1275,7 @@ public partial class Main : Control
 		}
 		if (patch_failed || ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= 30)))
 		{
-			Godot.Collections.Array<string> externals = [];
-			foreach (var programs in available_externals.Values)
-			{
-				externals += programs;
-			}
-			foreach (var external in externals)
-			{
-				if (os_name == "Windows")
-				{
-					OS.Execute("taskkill", ["/f", "/im", external + ".exe"]);
-				}
-				else
-				{
-					OS.Execute("killall", [external]);
-				}
-			}
-			// ws3917 - 等一下保证进程退出
-			await Task.Delay(200); 
+			await KillExternals();
 			if (patch_failed)
 			{
 				CallDeferred("PatchResultHandler", false, "locPatchFailedInvalidInput", (DateTime.Now - starttime).TotalSeconds, new Vector2I(640, 480));
@@ -1341,6 +1325,7 @@ public partial class Main : Control
 			{
 				output += RestoreFolder(path + "/backup", path);
 			}
+			await KillExternals();
 			OS.MoveToTrash(path + "/backup");
 			while (DirAccess.DirExistsAbsolute(path + "/backup"))
 			{
@@ -1869,6 +1854,30 @@ public partial class Main : Control
 				versiontxt = (trimming ? versiontxt.Substring(0, versiontxt.LastIndexOf("\n")) : versiontxt) + "\n" + TranslationServer.Translate("locInstalledVer") + vertxt;
 				nodeTextPatchVersion.Text = versiontxt;
 				ver.Close();
+			}
+		}
+	}
+	// 杀死外部程序
+	internal static async Task KillExternals()
+	{
+		Godot.Collections.Array<string> externals = [];
+		foreach (var programs in available_externals.Values)
+		{
+			externals += programs;
+		}
+		foreach (var external in externals)
+		{
+			if (os_name == "Windows")
+			{
+				OS.Execute("taskkill", ["/f", "/im", external + ".exe"]);
+			}
+			else
+			{
+				OS.Execute("killall", [external]);
+			}
+			while (Process.GetProcessesByName(external + ((os_name == "Windows") ? ".exe" : "")).Length > 0)
+			{
+				await Task.Delay(100); 
 			}
 		}
 	}
