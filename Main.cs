@@ -142,16 +142,16 @@ public partial class Main : Control
 	static string dataname = (os_name == "macOS" ? "game.ios" : "data.win");
 	static readonly bool is_outdated_ver = Engine.GetVersionInfo()["major"].AsInt32() <= 4 && Engine.GetVersionInfo()["minor"].AsInt32() <= 4;
 	static readonly bool is_self_extract = os_name == "Windows" && GetGameDirPath().Replace("/","\\").Contains(System.IO.Path.GetTempPath().TrimSuffix("\\"));
-	string[] locales;
-	bool inited = false;
+	static string[] locales;
+	static bool inited = false;
 	static Vector2 windowDesignSize = new Vector2(640, 480);
 	static Vector2 windowDesignSpaceSize = new Vector2(640, 480) * 1.5f;
-	int windowScale = Math.Max(Mathf.FloorToInt((DisplayServer.ScreenGetUsableRect().Size.Y - DisplayServer.ScreenGetUsableRect().Position.Y) / windowDesignSpaceSize.Y), 1);
-	System.IO.FileStream fileStream = null;
+	static int windowScale = Math.Max(Mathf.FloorToInt((DisplayServer.ScreenGetUsableRect().Size.Y - DisplayServer.ScreenGetUsableRect().Position.Y) / windowDesignSpaceSize.Y), 1);
+	static System.IO.FileStream fileStream = null;
 	static Godot.Collections.Array output = [];
-	int patched_count = 0;
-	DateTime starttime = DateTime.MinValue;
-	bool patchingdemo = false;
+	static int patched_count = 0;
+	static DateTime starttime = DateTime.MinValue;
+	static bool patchingdemo = false;
 	// advanced options
 	static bool bypass_hash = false;
 	static bool bypass_too_long = false;
