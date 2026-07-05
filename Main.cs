@@ -87,6 +87,7 @@ public partial class Main : Control
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
 	static bool used_fallback = false; // ws3917 - 是否使用了備用安裝補丁
 	static bool patch_failed = false; // ws3917 - 补丁安装失败的信号
+	static int too_long_time = 45;
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
 	{
 		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za", "7zz"]},
@@ -1264,7 +1265,7 @@ public partial class Main : Control
 				}
 			}
 		}
-		while (patched_count < chapters.Length + patch_count_except_chapters && !patch_failed && (DateTime.Now - starttime).TotalSeconds < 30)
+		while (patched_count < chapters.Length + patch_count_except_chapters && !patch_failed && (DateTime.Now - starttime).TotalSeconds < too_long_time)
 		{
 			await Task.Delay(100);
 		}
@@ -1273,7 +1274,7 @@ public partial class Main : Control
 			CallDeferred("Ending");
 			return;
 		}
-		if (patch_failed || ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= 30)))
+		if (patch_failed || ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= too_long_time)))
 		{
 			await KillExternals();
 			if (patch_failed)
@@ -1282,7 +1283,7 @@ public partial class Main : Control
 			}
 			else
 			{
-				CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", "30", new Vector2I(480, 240));
+				CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", too_long_time.ToString(), new Vector2I(480, 240));
 			}
 				
 		}
