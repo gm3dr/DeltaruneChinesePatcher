@@ -1072,7 +1072,14 @@ public partial class Main : Control
 			output.Add("Removed " + path + "/backup");
 		}
 		output += MoveAfterExtracted(GetGameDirPath(tempPath), "", path);
+		await Task.Delay(100);
 		OS.MoveToTrash(GetGameDirPath(tempPath));
+		while (DirAccess.DirExistsAbsolute(GetGameDirPath(tempPath)))
+		{
+			await Task.Delay(100);
+		}
+		GD.Print(GetGameDirPath(tempPath));
+		output.Add(GetGameDirPath(tempPath));
 		var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Write);
 		if (ver != null)
 		{
