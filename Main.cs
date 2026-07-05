@@ -590,12 +590,17 @@ public partial class Main : Control
 			case 3:
 				if (os_name == "Windows")
 				{
-					OS.ShellOpen(PathTrim(nodeEditGamePath.Text) + "/DELTARUNE.exe");
+					var extract_process = new Process();
+					var starti = new ProcessStartInfo();
+					starti.FileName = PathTrim(nodeEditGamePath.Text) + "/DELTARUNE.exe";
+					starti.WorkingDirectory = PathTrim(nodeEditGamePath.Text);
+					extract_process.StartInfo = starti;
+					extract_process.Start();
 				}
 				else if (os_name == "macOS")
 				{
 					var appBundlePath = System.IO.Path.GetFullPath(PathTrim(nodeEditGamePath.Text) + "/../..");
-					OS.Execute("/usr/bin/open", ["-a", appBundlePath]);
+					OS.CreateProcess("/usr/bin/open", ["-a", appBundlePath]);
 				}
 				break;
 		}
