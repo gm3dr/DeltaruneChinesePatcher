@@ -101,8 +101,8 @@ public partial class Main : Control
 		{GetGameDirPath("externals/7zip/7z"), "57b73a4bf122b8d7e69c4c04a478f258b03f1515feebe1e70f190432710b3a3b"},
 		{GetGameDirPath("externals/7zip/7z.exe"), "4bec0bc59836a890a11568b58bd12a3e7b23a683557340562da211b6088058ba"},
 		{GetGameDirPath("externals/7zip/7z_mac"), "113122403b762d2f838aff4e68cbd37066cdb7e585e655ff1155f846287c5b8a"},
-		{GetGameDirPath("externals/xdelta3/xdelta3"), "709f63ebb9655dc3b5c84f17e11217494eb34cf00c009a026386e4c8617ea903"},
-		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "6855c01cf4a1662ba421e6f95370cf9afa2b3ab6c148473c63efe60d634dfb9a"},
+		{GetGameDirPath("externals/xdelta3/xdelta3"), "0d38d86de5ab6bbc1adae531331d64585b5a09ce3604a5f090c27f71b6a64b23"},
+		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "53d90226615f217d3380c39892833311b4e24acd863e1ca01f14b5e772e2e6d0"},
 		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), "a425bc68caec30b075d4f4c94f4042ad421c6477ed4903f4594a32446cd59b79"}
 	};
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Dictionary<string, string>> default_paths = new()
