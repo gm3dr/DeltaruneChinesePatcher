@@ -1478,6 +1478,15 @@ public partial class Main : Control
 	internal async void PatchResultHandler(bool success, string information, string usedtime, Vector2I popup_size)
 	{
 		var path = PathTrim(nodeEditGamePath.Text);
+		//cleanup
+		foreach (var file in DirAccess.GetFilesAt(path))
+		{
+			if (file.EndsWith(".xdelta"))
+			{
+				DirAccess.RemoveAbsolute(path + "/" + file);
+				PrintLog("Removed " + path + "/" + file);
+			}
+		}
 		nodeWindowPopupContent.Text = TranslationServer.Translate(information).ToString().Replace("{USEDTIME}", usedtime);
 		nodeWindowPopupContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
 		nodeWindowPopup.Size = popup_size * windowScale;
@@ -1552,15 +1561,6 @@ public partial class Main : Control
 	internal void Ending()
 	{
 		var path = PathTrim(nodeEditGamePath.Text);
-		//cleanup
-		foreach (var file in DirAccess.GetFilesAt(path))
-		{
-			if (file.EndsWith(".xdelta"))
-			{
-				DirAccess.RemoveAbsolute(path + "/" + file);
-				PrintLog("Removed " + path + "/" + file);
-			}
-		}
 		var usedtime = DateTime.Now.Subtract(starttime).TotalSeconds.ToString();
 		PrintLog("Total elapsed " + usedtime + "s");
 		//end
