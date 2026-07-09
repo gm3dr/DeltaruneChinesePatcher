@@ -866,6 +866,12 @@ public partial class Main : Control
 		nodeWindowLogContent.Text = "";
 		var path = PathTrim(nodeEditGamePath.Text);
 		output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
+		// demo override
+		if (force_patch > 0)
+		{
+			patchingdemo = (force_patch == 2);
+		}
+		PrintLog("Patching " + (patchingdemo ? demopatchdir : patchdir) + " on " + path);
 		PathCheck(path, true);
 		//chmod加权限
 		if (os_name == "macOS" || os_name == "Linux")
@@ -982,11 +988,6 @@ public partial class Main : Control
 				}
 			}
 			PrintLog("Sha256 check all passed.");
-		}
-		// demo override
-		if (force_patch > 0)
-		{
-			patchingdemo = (force_patch == 2);
 		}
 		PrintLog("Extracting...");
 		//解压
