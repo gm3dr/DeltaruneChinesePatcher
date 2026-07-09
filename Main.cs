@@ -156,8 +156,8 @@ public partial class Main : Control
 	static bool bypass_hash = false;
 	static bool bypass_too_long = false;
 	static bool bypass_same_path = false;
-	static bool bypass_externals_xdelta = false;
-	static bool bypass_externals_7zip = false;
+	static bool use_installed_xdelta = false;
+	static bool use_installed_7zip = false;
 	static bool bypass_restore_when_failed = false;
 	static int force_patch = 0; // 0=disabled, 1=full, 2=demo
 	static string github_api = "https://api.github.com";
@@ -882,14 +882,10 @@ public partial class Main : Control
 			}
 		}
 		//外部程序检查
-		Godot.Collections.Array externalcheckoutput;
-		int external_check_return;
-		if (bypass_externals_7zip)
+		if (use_installed_7zip)
 		{
-			PrintLog("External 7-Zip check bypassed.");
-		}
-		else
-		{
+			Godot.Collections.Array externalcheckoutput;
+			int external_check_return;
 			foreach (var __7z in available_externals["7z"])
 			{
 				externalcheckoutput = [];
@@ -912,12 +908,10 @@ public partial class Main : Control
 				}
 			}
 		}
-		if (bypass_externals_xdelta)
+		if (use_installed_xdelta)
 		{
-			PrintLog("External XDelta3 check bypassed.");
-		}
-		else
-		{
+			Godot.Collections.Array externalcheckoutput;
+			int external_check_return;
 			foreach (var __xdelta in available_externals["xdelta"])
 			{
 				externalcheckoutput = [];
@@ -1369,14 +1363,14 @@ public partial class Main : Control
 		bypass_same_path = toggled;
 	}
 
-	public void _on_bypassexternal7zip_toggled(bool toggled)
+	public void _on_useinstalled7zip_toggled(bool toggled)
 	{
-		bypass_externals_7zip = toggled;
+		use_installed_7zip = toggled;
 	}
 
-	public void _on_bypassexternalxdelta_toggled(bool toggled)
+	public void _on_useinstalledxdelta_toggled(bool toggled)
 	{
-		bypass_externals_xdelta = toggled;
+		use_installed_xdelta = toggled;
 	}
 
 	public void _on_bypassrestorewhenfailed_toggled(bool toggled)

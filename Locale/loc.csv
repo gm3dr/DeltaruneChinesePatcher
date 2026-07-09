@@ -72,8 +72,8 @@ locTriggerPathDetect,Trigger DR Path Detect & Save it,触发 DR 路径检测并�
 locBypassHash,Bypass Hash Check,绕过散列值检查,繞過雜湊值檢查
 locBypassTooLong,Bypass TAKING TOO LONG Stopping,绕过 TAKING TOO LONG 终止,繞過 TAKING TOO LONG 終止
 locBypassSamePath,Bypass Same Path as DR,绕过与 DR 相同路径检查,繞過與 DR 相同路徑檢查
-locBypassExternalXDelta,Bypass external XDelta3 checking,绕过外部 XDelta3 检测,繞過外部 XDelta3 檢測
-locBypassExternal7Zip,Bypass external 7-Zip checking,绕过外部 7-Zip 检测,繞過外部 7-Zip 檢測
+locUseInstalledXDelta,Use installed XDelta3 first,优先使用已安装 XDelta3,優先使用已安裝 XDelta3
+locUseInstalled7Zip,Use installed 7-Zip first,优先使用已安装 7-Zip,優先使用已安裝 7-Zip
 locBypassRestoreWhenFailed,Bypass Restore Backup when failed,绕过失败时的备份还原,繞過失敗時的備份還原
 locForcePatchType,Force patch type,强制补丁类型,強制補丁類型
 locDisabled,Disabled,已禁用,已禁用
