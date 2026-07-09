@@ -134,7 +134,9 @@ jobs:
     - name: Codesign
       run: |
           sudo xattr -cr "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app"
-          codesign -s - "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/DELTARUNE Chinese Patcher"
+          codesign -s - --force "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/7zip/7z_mac"
+          codesign -s - --force "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/externals/xdelta3/xdelta3_mac"
+          codesign -s - --force "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/Contents/MacOS/DELTARUNE Chinese Patcher"
 
     - name: Archive
       run: |
