@@ -1441,7 +1441,7 @@ public partial class Main : Control
 			}
 			catch (Exception e)
 			{
-				PrintLog("Error happened when getting process ID & Name: " + e.ToString() + " (" + e.Message + ")", 2);
+				PrintLog("Exception happened when getting process ID & Name: " + e.ToString() + " (" + e.Message + ")", 2);
 			}
 		}
 		PrintLog(result);
@@ -1465,7 +1465,7 @@ public partial class Main : Control
 			}
 			catch (Exception ee)
 			{
-				PrintLog("Error happened when getting process ID & Name: " + ee.ToString() + " (" + ee.Message + ")", 2);
+				PrintLog("Exception happened when getting process ID & Name: " + ee.ToString() + " (" + ee.Message + ")", 2);
 			}
 		}
 		patched_count += 1;
