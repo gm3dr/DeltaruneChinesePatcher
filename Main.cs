@@ -1555,7 +1555,6 @@ public partial class Main : Control
 	}
 	internal void Ending()
 	{
-		var path = PathTrim(nodeEditGamePath.Text);
 		var usedtime = DateTime.Now.Subtract(starttime).TotalSeconds.ToString();
 		PrintLog("Total elapsed " + usedtime + "s");
 		//end
