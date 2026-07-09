@@ -1446,7 +1446,14 @@ public partial class Main : Control
 		var result = recived.Data;
 		if (process is Process processs)
 		{
-			result = $"{processs.Id} ({processs.ProcessName}): {recived.Data}";
+			try
+			{
+				result = $"{processs.Id} ({processs.ProcessName}): {recived.Data}";
+			}
+			catch (Exception e)
+			{
+				PrintLog("Exception happened when getting process ID & Name: " + e.ToString() + " (" + e.Message + ")", 2);
+			}
 		}
 		PrintLog(result, 2);
 	}
