@@ -101,8 +101,8 @@ public partial class Main : Control
 		{GetGameDirPath("externals/7zip/7z"), "20df89e993594c1bb7686f125dabe1acc56c109fb1d9b40435ea5fcbc1ca3453"},
 		{GetGameDirPath("externals/7zip/7z.exe"), "56b8cc9f4971cef253644fafe54063ed7fdca551d4dee0f8c6baa81b855acd72"},
 		{GetGameDirPath("externals/7zip/7z_mac"), ""}, // 保留用于文件存在检测
-		{GetGameDirPath("externals/xdelta3/xdelta3"), "0d38d86de5ab6bbc1adae531331d64585b5a09ce3604a5f090c27f71b6a64b23"},
-		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "53d90226615f217d3380c39892833311b4e24acd863e1ca01f14b5e772e2e6d0"},
+		{GetGameDirPath("externals/xdelta3/xdelta3"), "7598709e2a13869d7538602ecc3e0bef931be380680ef521710ff27930182436"},
+		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "8a3f91bdbcc3e8ea3f727937673bf6c46abaa7d0aa4eae475b9733302ebc6674"},
 		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), ""} // 保留用于文件存在检测
 	};
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Dictionary<string, string>> default_paths = new()
