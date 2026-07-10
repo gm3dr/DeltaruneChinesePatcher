@@ -1578,6 +1578,10 @@ public partial class Main : Control
 		{
 			PatchResultHandler(false, "locPatchFailedCantFind", usedtime, new Vector2I(640, 360));
 		}
+		else if (logtext.Contains("insufficient disk space") || logtext.Contains("磁盘空间不足") || logtext.Contains("磁碟空間不足"))
+		{
+			PatchResultHandler(false, "locPatchFailedDiskSpace", usedtime, new Vector2I(640, 180));
+		}
 		else if (logtext.Replace("\r", "").Replace("\n", "").Replace(" ", "") == "Extracting...")
 		{
 			PatchResultHandler(false, "locPatchFailedExternals" + (os_name == "macOS" ? "Mac" : ""), usedtime, new Vector2I(640, 360));
