@@ -171,6 +171,7 @@ public partial class Main : Control
 		//首次初始化
 		if (!inited)
 		{
+			GetWindow().FilesDropped += DragPatch;
 			httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 			// Outdated notification
 			if (is_outdated_ver)
@@ -1853,6 +1854,32 @@ public partial class Main : Control
 		}
 
 		PrintLog(stringBuilder.ToString());
+	}
+
+	internal void DragPatch(string[] paths)
+	{
+		foreach (var path in paths)
+		{
+			if (DirAccess.DirExistsAbsolute(path))
+			{
+				DragPatch(DirAccess.GetFilesAt(path));
+			}
+			if (FileAccess.FileExists(path))
+			{
+				var _path = path.Replace("\\","/").TrimPrefix("\"").TrimSuffix("\"").TrimPrefix("\'").TrimSuffix("\'").TrimSuffix("/");
+				var file = _path.Split("/").Last();
+				var result = DirAccess.CopyAbsolute(_path, GetGameDirPath() + "/" + file);
+				if (result == Error.Ok)
+				{
+					PrintLog("Copied " + _path + " to " + GetGameDirPath() + "/" + file);
+				}
+				else
+				{
+					PrintLog("Error " + result.ToString() + " happened when copying " + _path + " to " + GetGameDirPath() + "/" + file, 2);
+				}
+			}
+			_Ready();
+		}
 	}
 
 	//这个奇怪的DTM字体 最小是13 然后是13+14=27
