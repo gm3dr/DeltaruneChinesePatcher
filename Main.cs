@@ -1844,7 +1844,7 @@ public partial class Main : Control
 		}
 		output.Add(prefix + text);
 	}
-	public static void PrintLog(params object[] what)
+	internal static void PrintLog(params object[] what)
 	{
 		StringBuilder stringBuilder = new();
 		for (int i = 0; i < what.Length; i++)
