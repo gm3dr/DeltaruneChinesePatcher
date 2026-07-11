@@ -544,40 +544,33 @@ public partial class Main : Control
 		var path = PathTrim(nodeEditGamePath.Text);
 
 		nodeEditGamePath.Text = path;
-		if (DirAccess.DirExistsAbsolute(path + "/backup"))
+		if (DirAccess.DirExistsAbsolute(path + "/backup") && !only_found_backup)
 		{
-			if (only_found_backup)
+			if (path != "" && FileAccess.FileExists(path + "/backup/version"))
 			{
-				Patch(true);
-			}
-			else
-			{
-				if (path != "" && FileAccess.FileExists(path + "/backup/version"))
+				var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Read);
+				if (ver != null)
 				{
-					var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Read);
-					if (ver != null)
-					{
-						nodeWindowPatchContent.Text = TranslationServer.Translate("locBakVerDetected").ToString().Replace("{VER}", ver.GetAsText());
-						ver.Close();
-					}
-					else
-					{
-						nodeWindowPatchContent.Text = "locBakDetected";
-					}
+					nodeWindowPatchContent.Text = TranslationServer.Translate("locBakVerDetected").ToString().Replace("{VER}", ver.GetAsText());
+					ver.Close();
 				}
 				else
 				{
 					nodeWindowPatchContent.Text = "locBakDetected";
 				}
-				nodeWindowPatchContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-				nodeWindowPatch.Size = new Vector2I(TranslationServer.GetLocale().StartsWith("en") ? 800 : 640, 320) * windowScale;
-				nodeWindowPatchVBox.CustomMinimumSize = new Vector2(640, 0) * windowScale;
-				nodeWindowPatch.Show();
 			}
+			else
+			{
+				nodeWindowPatchContent.Text = "locBakDetected";
+			}
+			nodeWindowPatchContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+			nodeWindowPatch.Size = new Vector2I(TranslationServer.GetLocale().StartsWith("en") ? 800 : 640, 320) * windowScale;
+			nodeWindowPatchVBox.CustomMinimumSize = new Vector2(640, 0) * windowScale;
+			nodeWindowPatch.Show();
 		}
 		else
 		{
-			Patch();
+			Patch(only_found_backup);
 		}
 	}
 	public void _on_info_pressed()
