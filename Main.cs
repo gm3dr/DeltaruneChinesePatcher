@@ -152,6 +152,7 @@ public partial class Main : Control
 	static int patched_count = 0;
 	static DateTime starttime = DateTime.MinValue;
 	static bool patchingdemo = false;
+	static bool only_found_backup = false;
 	// advanced options
 	static bool bypass_hash = false;
 	static bool bypass_too_long = false;
@@ -545,27 +546,34 @@ public partial class Main : Control
 		nodeEditGamePath.Text = path;
 		if (DirAccess.DirExistsAbsolute(path + "/backup"))
 		{
-			if (path != "" && FileAccess.FileExists(path + "/backup/version"))
+			if (only_found_backup)
 			{
-				var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Read);
-				if (ver != null)
+				Patch(true);
+			}
+			else
+			{
+				if (path != "" && FileAccess.FileExists(path + "/backup/version"))
 				{
-					nodeWindowPatchContent.Text = TranslationServer.Translate("locBakVerDetected").ToString().Replace("{VER}", ver.GetAsText());
-					ver.Close();
+					var ver = FileAccess.Open(path + "/backup/version", FileAccess.ModeFlags.Read);
+					if (ver != null)
+					{
+						nodeWindowPatchContent.Text = TranslationServer.Translate("locBakVerDetected").ToString().Replace("{VER}", ver.GetAsText());
+						ver.Close();
+					}
+					else
+					{
+						nodeWindowPatchContent.Text = "locBakDetected";
+					}
 				}
 				else
 				{
 					nodeWindowPatchContent.Text = "locBakDetected";
 				}
+				nodeWindowPatchContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+				nodeWindowPatch.Size = new Vector2I(TranslationServer.GetLocale().StartsWith("en") ? 800 : 640, 320) * windowScale;
+				nodeWindowPatchVBox.CustomMinimumSize = new Vector2(640, 0) * windowScale;
+				nodeWindowPatch.Show();
 			}
-			else
-			{
-				nodeWindowPatchContent.Text = "locBakDetected";
-			}
-			nodeWindowPatchContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-			nodeWindowPatch.Size = new Vector2I(TranslationServer.GetLocale().StartsWith("en") ? 800 : 640, 320) * windowScale;
-			nodeWindowPatchVBox.CustomMinimumSize = new Vector2(640, 0) * windowScale;
-			nodeWindowPatch.Show();
 		}
 		else
 		{
@@ -867,6 +875,7 @@ public partial class Main : Control
 		nodeWindowLogContent.Text = "";
 		var path = PathTrim(nodeEditGamePath.Text);
 		output = ["Patch at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]];
+		only_found_backup = false;
 		// demo override
 		if (force_patch > 0)
 		{
@@ -1739,19 +1748,37 @@ public partial class Main : Control
 		}
 		else
 		{
-			PrintLog("Unable to find " + path + "/" + dataname);
-			path_exists = false;
+			if (FileAccess.FileExists(path + "/backup/" + dataname))
+			{
+				PrintLog("Unable to find " + path + "/" + dataname + " but found " + path + "/backup/" + dataname);
+				only_found_backup = true;
+			}
+			else
+			{
+				PrintLog("Unable to find " + path + "/" + dataname);
+				path_exists = false;
+			}
 		}
 		if (path_exists)
 		{
 			patchingdemo = true;
 			foreach (var folder in DirAccess.GetDirectoriesAt(path))
 			{
-				if (folder.StartsWith("chapter") && FileAccess.FileExists(path + "/" + folder + "/" + dataname))
+				if (folder.StartsWith("chapter"))
 				{
-					PrintLog("Found " + path + "/" + folder);
-					patchingdemo = false;
-					break;
+					if (FileAccess.FileExists(path + "/" + folder + "/" + dataname))
+					{
+						PrintLog("Found " + path + "/" + folder);
+						patchingdemo = false;
+						break;
+					}
+					else if (FileAccess.FileExists(path + "/backup/" + folder + "/" + dataname))
+					{
+						PrintLog("Unable to find " + path + "/" + folder + " but found " + path + "/backup/" + folder);
+						patchingdemo = false;
+						only_found_backup = true;
+						break;
+					}
 				}
 			}
 		}
