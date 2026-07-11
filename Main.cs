@@ -1024,7 +1024,7 @@ public partial class Main : Control
 		chapters = [];
 		foreach (var file in DirAccess.GetFilesAt(GetGameDirPath(tempPath)))
 		{
-			if (System.Text.RegularExpressions.Regex.IsMatch(file, @"^chapter\d+\.xdelta$"))
+			if (Regex.IsMatch(file, @"^chapter\d+\.xdelta$"))
 			{
 				chapters = chapters.Append(file.TrimSuffix(".xdelta").TrimPrefix("chapter")).ToArray();
 			}
