@@ -1322,7 +1322,7 @@ public partial class Main : Control
 		nodeWindowPopup.Title = "locResult";
 		nodeWindowPopup.Show();
 		
-		nodeBtnPatch.Disabled = false;
+		nodeBtnPatch.Disabled = (patchver == "locNotFound" && !patchingdemo) || (string.IsNullOrEmpty(demopatchver) && patchingdemo);
 		nodeBtnUnpatch.Disabled = false;
 		nodeEditGamePath.Editable = true;
 		nodeBtnBrowse.Disabled = false;
