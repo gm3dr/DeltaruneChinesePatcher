@@ -542,7 +542,7 @@ public partial class Main : Control
 		nodeBtnBrowse.Disabled = true;
 
 		var path = PathTrim(nodeEditGamePath.Text);
-
+		PathCheck(path, true);
 		nodeEditGamePath.Text = path;
 		if (DirAccess.DirExistsAbsolute(path + "/backup") && !only_found_backup)
 		{
