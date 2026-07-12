@@ -874,7 +874,8 @@ public partial class Main : Control
 		{
 			patchingdemo = (force_patch == 2);
 		}
-		PrintLog("Patching " + (patchingdemo ? demopatchdir : patchdir) + " on " + path);
+		PrintLog("Patching " + (patchingdemo ? demopatchdir : patchdir) + " onto " + path);
+		PrintLog("Patching patch " + (patchingdemo ? demopatchver : patchver) + " with patcher v" + ProjectSettings.GetSetting("application/config/version").AsString());
 		PathCheck(path, true);
 		//chmod加权限
 		if (os_name == "macOS" || os_name == "Linux")
@@ -1498,6 +1499,7 @@ public partial class Main : Control
 		nodeWindowPopup.Title = "locResult";
 		if (success)
 		{
+			PrintLog("Patched! Information: " + information + ", Used time: " + usedtime + "s");
 			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Noprogress);
 			var gamepath = nodeEditGamePath.Text;
 			//保存游戏路径
@@ -1510,6 +1512,7 @@ public partial class Main : Control
 		}
 		else
 		{
+			PrintLog("Patch failed! Information: " + information + ", Used time: " + usedtime + "s");
 			DisplayServer.WindowSetTaskbarProgressState(DisplayServer.ProgressState.Error);
 			//回退安装
 			if (bypass_restore_when_failed)
@@ -1521,6 +1524,7 @@ public partial class Main : Control
 				await RestoreData(path);
 			}
 		}
+		PrintLog(nodeWindowPopupContent.Text.Replace("\n", "\\n"));
 		output.Add("Patched at " + Time.GetDatetimeStringFromSystem(false, true) + ", " + Time.GetTimeZoneFromSystem()["name"]);
 		var logtext = "";
 		foreach (var i in output)
