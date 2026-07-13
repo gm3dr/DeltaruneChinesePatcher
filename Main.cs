@@ -351,7 +351,7 @@ public partial class Main : Control
 		nodeBtnUpdatePatcher.Visible = false;
 		nodeBtnUpdatePatcher.Disabled = false;
 		//安装器版本号
-		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString() + (is_self_extract ? "-SelfExtract" : "") + (is_outdated_ver ? "-Outdated" : "");
+		nodeTextPatcherVersion.Text = "v" + ProjectSettings.GetSetting("application/config/version").AsString() + (is_self_extract ? "-SelfExtract" : "") + (is_outdated_ver ? "-Outdated" : "") + (OS.IsDebugBuild() ? "-DebugBuild" : "");
 		// 1225 check
 		if (patchver == "1225" || patchver == "■■■■" || (datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25"))
 		{
@@ -393,7 +393,7 @@ public partial class Main : Control
 		_on_edit_game_path_text_changed(game_path);
 		//HttpClient
 		nodeBtnInfo.TooltipText = "locInfo";
-		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]" + (!string.IsNullOrEmpty(demopatchver) ? ("  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + (is_self_extract ? "" : "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting"));
+		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]" + (!string.IsNullOrEmpty(demopatchver) ? ("  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
 		//contributors
 		var json = new Json();
 		try
@@ -418,59 +418,51 @@ public partial class Main : Control
 		json = new Json();
 		try
 		{
-			if (is_self_extract)
+			if (!inited)
 			{
-				nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
-				if (!string.IsNullOrEmpty(demopatchver))
-				{
-					nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
-				}
-				UpdatePathText(nodeEditGamePath.Text, false);
+				json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinese/releases/latest"));
+				patchreleases = json.Data.AsGodotDictionary();
 			}
-			else
+			var latestver = patchreleases["tag_name"].AsString();
+			// 1225 check
+			if (latestver == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
 			{
-				if (!inited)
-				{
-					json.Parse(await httpc.GetStringAsync(github_api + "/repos/gm3dr/DeltaruneChinese/releases/latest"));
-					patchreleases = json.Data.AsGodotDictionary();
-				}
-				var latestver = patchreleases["tag_name"].AsString();
-				// 1225 check
-				if (latestver == "1225" && datedict["month"].AsString() == "12" && datedict["day"].AsString() == "25")
-				{
-					latestver = "■■■■";
-				}
-				nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
-				if (!string.IsNullOrEmpty(demopatchver))
-				{
-					nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
-				}
-				nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locLatestVer") + latestver;
-				UpdatePathText(nodeEditGamePath.Text, false);
-				if (patchver != patchreleases["tag_name"].AsString() || demopatchver != patchreleases["tag_name"].AsString())
+				latestver = "■■■■";
+			}
+			nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]";
+			if (!string.IsNullOrEmpty(demopatchver))
+			{
+				nodeTextPatchVersion.Text += "  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]";
+			}
+			nodeTextPatchVersion.Text += "\n" + TranslationServer.Translate("locLatestVer") + latestver;
+			if (patchver != patchreleases["tag_name"].AsString() || demopatchver != patchreleases["tag_name"].AsString())
+			{
+				nodeTextPatchVersion.Text += TranslationServer.Translate("locUpdateAvailable");
+				if (!is_self_extract)
 				{
 					nodeUpdatePatchRow.Visible = true;
 				}
-				if (nodeWindowReadmeContent.Text != "")
+			}
+			UpdatePathText(nodeEditGamePath.Text, false);
+			if (nodeWindowReadmeContent.Text != "")
+			{
+				foreach (var asset in patchreleases["assets"].AsGodotArray())
 				{
-					foreach (var asset in patchreleases["assets"].AsGodotArray())
+					if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains("readme"))
 					{
-						if (asset.AsGodotDictionary()["name"].AsString().ToLower().Contains("readme"))
+						var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
+						var readme = FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write);
+						if (readme != null)
 						{
-							var text = await httpc.GetStringAsync(asset.AsGodotDictionary()["browser_download_url"].AsString());
-							var readme = FileAccess.Open(GetGameDirPath("readme.txt"), FileAccess.ModeFlags.Write);
-							if (readme != null)
-							{
-								readme.StoreString(text);
-								nodeWindowReadmeContent.Text = text;
-								nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
-								nodeWindowReadme.Title = "readme.txt";
-								nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
-								nodeWindowReadme.Show();
-								readme.Close();
-							}
-							break;
+							readme.StoreString(text);
+							nodeWindowReadmeContent.Text = text;
+							nodeWindowReadmeContent.Set("theme_override_font_sizes/font_size", FontSize(27, windowScale));
+							nodeWindowReadme.Title = "readme.txt";
+							nodeWindowReadme.Size = new Vector2I(960, 600) * windowScale;
+							nodeWindowReadme.Show();
+							readme.Close();
 						}
+						break;
 					}
 				}
 			}

@@ -5,6 +5,7 @@ locBrowse, Browse , 浏览, 瀏覽
 locLocalVer,Local patch version: ,本地补丁版本：,本地補丁版本：
 locLatestVer,Latest patch version: ,最新补丁版本：,最新補丁版本：
 locInstalledVer,Installed patch version: ,已安装补丁版本：,已安裝補丁版本：
+locUpdateAvailable, [Update Avaiable], [更新可用], [更新可用]
 locPatch, Patch , 安装补丁, 安裝補丁
 locLog,Log,日志,日誌
 locClick2Copy,Click to copy to clipboard,点击复制到剪贴板,按下拷貝到剪貼簿
