@@ -394,6 +394,7 @@ public partial class Main : Control
 		//HttpClient
 		nodeBtnInfo.TooltipText = "locInfo";
 		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]" + (!string.IsNullOrEmpty(demopatchver) ? ("  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
+		nodeUpdatePatchRow.Visible = false;
 		//contributors
 		var json = new Json();
 		try
