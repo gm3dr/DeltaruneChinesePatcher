@@ -112,7 +112,7 @@ jobs:
       
     - name: Install Custom Export Template
       run: |
-        TEMPLATE_DIR="/Users/runner/Library/Application Support/Godot/export_templates/4.7.1.rc.mono"
+        TEMPLATE_DIR="/Users/runner/Library/Application Support/Godot/export_templates/4.7.2.rc.mono"
         mkdir -p "$TEMPLATE_DIR"
         cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot_macos_mono.zip "${TEMPLATE_DIR}/macos.zip"
 

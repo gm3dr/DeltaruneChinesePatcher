@@ -148,7 +148,7 @@ jobs:
 
     - name: Install Custom Export Template
       run: |
-        $TEMPLATE_DIR = "$env:APPDATA\Godot\export_templates\4.7.1.rc.mono"
+        $TEMPLATE_DIR = "$env:APPDATA\Godot\export_templates\4.7.2.rc.mono"
         mkdir $TEMPLATE_DIR
         cp ${{ env.GODOT_SOURCE_PATH }}\bin\godot.windows.template_release.x86_64.mono.exe "$TEMPLATE_DIR\windows_release_x86_64.exe"
         $TEMPLATE_DIR = "$env:APPDATA\Godot\export_templates\4.4.2.rc.mono"
