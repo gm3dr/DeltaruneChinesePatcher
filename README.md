@@ -65,27 +65,6 @@ ${{ env.GODOT_EDITOR_PATH }} --headless --generate-mono-glue modules/mono/glue
 python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./bin --push-nupkgs-local ${{ env.LOCAL_NUGET_PATH }}
 ```
 
-## 路线图
-
- - [x] \[v1.1.0\] 补丁安装失败错误信息
- - [x] \[v1.1.0\] Linux 平台支持
- - [x] \[v1.1.0\] 安装失败时恢复备份
- - [x] \[v2.0.0\] 设计界面外观
- - [x] \[v2.0.0\] 在线获取并一键下载最新汉化补丁
- - [x] \[v2.0.0\] 检测目录下Readme并弹出窗口
- - [x] \[v2.1.0\] 调用本地安装的 XDelta3 与 7-Zip
- - [x] \[v2.1.0\] Linux 与 macOS 自动`chmod +x`外部程序
- - [x] \[v2.1.0\] 删除汉化补丁 (将被覆盖的内容存储到Backup目录用于还原)
- - [x] \[v2.1.2\] 默认 DELTARUNE 路径
- - [x] \[v2.1.2\] 从默认 Steam 路径读取 libraryfolders.vdf 来获取 DR 安装路径
- - [x] \[v2.1.2\] Windows 从注册表获取 Steam 路径后读取 libraryfolders.vdf 来获取 DR 安装路径
- - [x] \[v2.1.2\] 安装后显示安装用时
- - [x] \[v2.1.2\] 多线程安装
- - [x] \[v2.1.3\] macOS 平台支持
- - [x] \[v2.2.0\] 高级选项
- - [x] \[v2.4.0\] 安装 Demo 版 DR 汉化补丁
- - [x] \[v2.4.0\] 实时显示目录有效情况
-
 ## 借物
 
 
