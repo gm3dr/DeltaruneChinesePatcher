@@ -391,6 +391,10 @@ public partial class Main : Control
 		}
 		nodeEditGamePath.Text = game_path;
 		_on_edit_game_path_text_changed(game_path);
+		if (game_path == "")
+		{
+			_on_browse_pressed();
+		}
 		//HttpClient
 		nodeBtnInfo.TooltipText = "locInfo";
 		nodeTextPatchVersion.Text = TranslationServer.Translate("locLocalVer")  + "\n" + TranslationServer.Translate("locFullVersion")  + " [" + TranslationServer.Translate(patchver) + "]" + (!string.IsNullOrEmpty(demopatchver) ? ("  |  " + TranslationServer.Translate("locDemoVersion")  + " [" + demopatchver.ToString() + "]") : "") + "\n" + TranslationServer.Translate("locLatestVer") + TranslationServer.Translate("locRequesting");
@@ -515,6 +519,7 @@ public partial class Main : Control
 	}
 	public void _on_browse_pressed()
 	{
+		nodeOpenDialog.Title = TranslationServer.Translate("locSelectDRDir");
 		nodeOpenDialog.Show();
 	}
 	public void _on_file_dialog_dir_selected(string dir)
