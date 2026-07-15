@@ -1900,7 +1900,7 @@ public partial class Main : Control
 					PrintLog("Error " + result.ToString() + " happened when copying " + _path + " to " + GetGameDirPath() + "/" + file, 2);
 				}
 			}
-			_Ready();
+			GetTree().ReloadCurrentScene();
 		}
 	}
 
