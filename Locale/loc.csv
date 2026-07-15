@@ -9,7 +9,7 @@ locUpdateAvailable, [Update Avaiable], [更新可用], [更新可用]
 locPatch, Patch , 安装补丁, 安裝補丁
 locLog,Log,日志,日誌
 locClick2Copy,Click to copy to clipboard,点击复制到剪贴板,按下拷貝到剪貼簿
-locDeltaruneDir,Installation Directory of the Steam version of DELTARUNE,DELTARUNE Steam 版安装目录,DELTARUNE Steam 版安裝目錄
+locDeltaruneDir,Installation directory of the Steam version of DELTARUNE,DELTARUNE Steam 版安装目录,DELTARUNE Steam 版安裝目錄
 locRequesting,Requesting...,获取中...,獲取中...
 locNotFound,Not found,未找到,未找到
 locUpdatePatch, Download latest patch , 下载最新补丁包, 下載最新補丁包
