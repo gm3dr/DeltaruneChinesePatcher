@@ -1591,6 +1591,10 @@ public partial class Main : Control
 		{
 			PatchResultHandler(false, "locPatchFailedExternals" + (os_name == "macOS" ? "Mac" : ""), usedtime, new Vector2I(640, 360));
 		}
+		else if (os_name == "macOS" && logtext.Contains("AppTranslocation"))
+		{
+			PatchResultHandler(false, "locPatchFailedQuarantined", usedtime, new Vector2I(640, 240));
+		}
 		else if ((os_name == "macOS" || os_name == "Linux") && logtext.ToLower().Contains("(required by "))
 		{
 			PatchResultHandler(false, "locPatchFailedRequired", usedtime, new Vector2I(640, 360));
