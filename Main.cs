@@ -1601,7 +1601,7 @@ public partial class Main : Control
 		}
 		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
 		{
-			PatchResultHandler(false, "locPatchFailed" + (os_name == "macOS" ? "Mac" : ""), usedtime, new Vector2I(480, 240));
+			PatchResultHandler(false, "locPatchFailed", usedtime, new Vector2I(480, 240));
 		}
 		else
 		{
