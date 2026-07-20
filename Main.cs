@@ -172,7 +172,6 @@ public partial class Main : Control
 		//首次初始化
 		if (!inited)
 		{
-			GetWindow().FilesDropped -= DragPatch;
 			GetWindow().FilesDropped += DragPatch;
 			httpc.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36");
 			// Outdated notification
@@ -635,6 +634,7 @@ public partial class Main : Control
 	{
 		nodeWindowAdvanced.Hide();
 		inited = false;
+		GetWindow().FilesDropped -= DragPatch;
 		_Ready();
 	}
 	public void _on_tutorial_pressed()
@@ -783,6 +783,7 @@ public partial class Main : Control
 			nodeBtnUpdatePatch.TooltipText = "locRestartIn5Sec";
 			await ToSignal(GetTree().CreateTimer(5f), "timeout");
 			inited = false;
+			GetWindow().FilesDropped -= DragPatch;
 			_Ready();
 		}
 	}
@@ -1906,6 +1907,7 @@ public partial class Main : Control
 				}
 			}
 			inited = false;
+			GetWindow().FilesDropped -= DragPatch;
 			_Ready();
 		}
 	}
