@@ -150,11 +150,11 @@ jobs:
           --volname "DELTARUNE Chinese Patcher" \
           --background "${{ env.SOURCE_PATH }}/arrow.png" \
           --window-pos 200 120 \
-          --window-size 800 400 \
-          --icon-size 100 \
-          --icon "DELTARUNE Chinese Patcher.app" 200 190 \
+          --window-size 600 300 \
+          --icon-size 80 \
+          --icon "DELTARUNE Chinese Patcher.app" 180 130 \
           --hide-extension "DELTARUNE Chinese Patcher.app" \
-          --app-drop-link 600 185 \
+          --app-drop-link 450 130 \
           "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS.dmg" \
           "${{ github.workspace }}/build/DeltaruneChinesePatcher_macOS/DELTARUNE Chinese Patcher.app/"
         
