@@ -188,11 +188,11 @@ jobs:
         mkdir "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows\externals\7zip"
         mkdir "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows\externals\xdelta3"
         cp "${{ env.SOURCE_PATH }}\externals\7zip\7z.exe" "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows\externals\7zip\"
-        cp "${{ env.SOURCE_PATH }}\externals\xdelta3\xdelta3.exe" "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows\externals\xdelta3\"
+        cp "${{ env.SOURCE_PATH }}\externals\xdelta3\hpatchz.exe" "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows\externals\xdelta3\"
         mkdir "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated\externals\7zip"
         mkdir "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated\externals\xdelta3"
         cp "${{ env.SOURCE_PATH }}\externals\7zip\7z.exe" "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated\externals\7zip\"
-        cp "${{ env.SOURCE_PATH }}\externals\xdelta3\xdelta3.exe" "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated\externals\xdelta3\"
+        cp "${{ env.SOURCE_PATH }}\externals\xdelta3\hpatchz.exe" "${{ github.workspace }}\build\DeltaruneChinesePatcher_Windows_Outdated\externals\xdelta3\"
 
     - name: Archive
       run: |

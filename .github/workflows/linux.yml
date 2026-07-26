@@ -199,11 +199,11 @@ jobs:
           mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/7zip"
           mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/xdelta3"
           cp "${{ env.SOURCE_PATH }}/externals/7zip/7z" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/7zip/"
-          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/xdelta3/"
+          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/hpatchz" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux/externals/xdelta3/"
           mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/7zip"
           mkdir -p "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/xdelta3"
           cp "${{ env.SOURCE_PATH }}/externals/7zip/7z" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/7zip/"
-          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/xdelta3" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/xdelta3/"
+          cp "${{ env.SOURCE_PATH }}/externals/xdelta3/hpatchz" "${{ github.workspace }}/build/DeltaruneChinesePatcher_Linux_Outdated/externals/xdelta3/"
 
     - name: Archive
       run: |
