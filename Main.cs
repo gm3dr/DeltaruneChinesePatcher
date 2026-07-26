@@ -86,7 +86,7 @@ public partial class Main : Control
 	static readonly System.Net.Http.HttpClient httpc = new();
 	static string[] chapters = [];
 	static int patch_count_except_chapters = 0; // chapterX.xdelta 以外的 xdelta 数量，目前只有 main.xdelta
-	static string xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3");
+	static string xdelta3 = GetGameDirPath("externals/xdelta3/hpatchz");
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
 	static bool used_fallback = false; // ws3917 - 是否使用了備用安裝補丁
 	static bool patch_failed = false; // ws3917 - 补丁安装失败的信号
@@ -94,16 +94,16 @@ public partial class Main : Control
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
 	{
 		{"7z", ["7z", "7zip", "7-zip", "7zr", "7za", "7zz"]},
-		{"xdelta", ["xdelta", "xdelta3"]}
+		{"xdelta", ["hpatchz"]}
 	};
 	static readonly Godot.Collections.Dictionary<string, string> externals_hash = new()
 	{
 		{GetGameDirPath("externals/7zip/7z"), "20df89e993594c1bb7686f125dabe1acc56c109fb1d9b40435ea5fcbc1ca3453"},
 		{GetGameDirPath("externals/7zip/7z.exe"), "56b8cc9f4971cef253644fafe54063ed7fdca551d4dee0f8c6baa81b855acd72"},
 		{GetGameDirPath("externals/7zip/7z_mac"), ""}, // 保留用于文件存在检测
-		{GetGameDirPath("externals/xdelta3/xdelta3"), "7598709e2a13869d7538602ecc3e0bef931be380680ef521710ff27930182436"},
-		{GetGameDirPath("externals/xdelta3/xdelta3.exe"), "8a3f91bdbcc3e8ea3f727937673bf6c46abaa7d0aa4eae475b9733302ebc6674"},
-		{GetGameDirPath("externals/xdelta3/xdelta3_mac"), ""} // 保留用于文件存在检测
+		{GetGameDirPath("externals/xdelta3/hpatchz"), "e91c7bea2300b6452c8e88d8b3fff4a0904cd4dfb9cd96b951233bffa99282f4"},
+		{GetGameDirPath("externals/xdelta3/hpatchz.exe"), "e94d64fe6e3cefe7f3a82ed3b0ba3de1fd448925f3067911dc65b5c6512f284c"},
+		{GetGameDirPath("externals/xdelta3/hpatchz_mac"), ""} // 保留用于文件存在检测
 	};
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Dictionary<string, string>> default_paths = new()
 	{
@@ -361,12 +361,12 @@ public partial class Main : Control
 		//系统特供目录
 		if (os_name == "Windows")
 		{
-			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3.exe");
+			xdelta3 = GetGameDirPath("externals/xdelta3/hpatchz.exe");
 			_7zip = GetGameDirPath("externals/7zip/7z.exe");
 		}
 		else if (os_name == "macOS")
 		{
-			xdelta3 = GetGameDirPath("externals/xdelta3/xdelta3_mac");
+			xdelta3 = GetGameDirPath("externals/xdelta3/hpatchz_mac");
 			_7zip = GetGameDirPath("externals/7zip/7z_mac");
 		}
 		//语言选项
@@ -958,7 +958,7 @@ public partial class Main : Control
 		//existence check
 		foreach (var pathhhhh in externals_hash.Keys)
 		{
-			if ((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh))
+			if ((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("hpatchz") && xdelta3 == pathhhhh))
 			{
 				PrintLog($"Checking existence of {pathhhhh}");
 				if (!FileAccess.FileExists(pathhhhh))
@@ -979,7 +979,7 @@ public partial class Main : Control
 		{
 			foreach (var pathhhhh in externals_hash.Keys)
 			{
-				if (((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("xdelta3") && xdelta3 == pathhhhh)) && FileAccess.FileExists(pathhhhh))
+				if (((pathhhhh.Split("/").Last().Contains("7z") && _7zip == pathhhhh) || (pathhhhh.Split("/").Last().Contains("hpatchz") && xdelta3 == pathhhhh)) && FileAccess.FileExists(pathhhhh))
 				{
 					PrintLog($"Checking hash of {pathhhhh}");
 					if (FileAccess.GetSha256(pathhhhh) != externals_hash[pathhhhh])
@@ -1107,7 +1107,7 @@ public partial class Main : Control
 							DirAccess.RemoveAbsolute(failedDataPath);
 						}
 
-						string fallbackArgs = $"-f -d -v -s \"{backupDataPath}\" \"{fallbackPatchPath}\" \"{failedDataPath}\"";
+						string fallbackArgs = $"-f \"{backupDataPath}\" \"{fallbackPatchPath}\" \"{failedDataPath}\"";
 						PrintLog($"{xdelta3} {fallbackArgs}");
 
 						var fallback_process = new Process();
@@ -1160,7 +1160,7 @@ public partial class Main : Control
 		if (FileAccess.FileExists(path + "/main.xdelta"))
 		{
 			patch_count_except_chapters += 1;
-			string xdelta3Args = $"-f -d -v -s \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"";
+			string xdelta3Args = $"-f \"{path}/backup/{dataname}\" \"{path}/main.xdelta\" \"{path}/{dataname}\"";
 			PrintLog("Patching main data");
 			if (FileAccess.FileExists(path + "/" + dataname))
 			{
@@ -1192,7 +1192,7 @@ public partial class Main : Control
 			{
 				if (FileAccess.FileExists(path + "/chapter" + chapter + ".xdelta"))
 				{
-					string xdelta3Args = $"-f -d -v -s \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"";
+					string xdelta3Args = $"-f \"{path}/backup/chapter{chapter}_{osname}/{dataname}\" \"{path}/chapter{chapter}.xdelta\" \"{path}/chapter{chapter}_{osname}/{dataname}\"";
 					PrintLog("Patching chapter" + chapter + " data");
 					if (FileAccess.FileExists(path + "/chapter" + chapter + "_" + osname + "/" + dataname))
 					{
@@ -1577,11 +1577,11 @@ public partial class Main : Control
 		{
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
-		if (logtext.Contains("XD3_INVALID_INPUT") && !used_fallback)
+		if (logtext.Contains("patch run ERROR!") && !used_fallback)
 		{
 			PatchResultHandler(false, "locPatchFailedInvalidInput", usedtime, new Vector2I(640, 480));
 		}
-		else if (logtext.Contains("cannot find the path specified") || logtext.Contains("找不到指定的路径") || logtext.Contains("找不到指定的路徑") || logtext.Contains("No such file or directory"))
+		else if (logtext.Contains("cannot find the path specified") || logtext.Contains("找不到指定的路径") || logtext.Contains("找不到指定的路徑") || logtext.Contains("No such file or directory") || logtext.Contains("file open error!"))
 		{
 			PatchResultHandler(false, "locPatchFailedCantFind", usedtime, new Vector2I(640, 360));
 		}
@@ -1605,7 +1605,7 @@ public partial class Main : Control
 		{
 			PatchResultHandler(false, "locPatchFailedDenied", usedtime, new Vector2I(640, 360));
 		}
-		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
+		else if (!logtext.Contains("patch ok!") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
 		{
 			PatchResultHandler(false, "locPatchFailed", usedtime, new Vector2I(480, 240));
 		}
