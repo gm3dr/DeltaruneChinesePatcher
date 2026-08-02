@@ -71,7 +71,7 @@ _data = {
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yrrhc"]
 
 [sub_resource type="Theme" id="Theme_trn2v"]
-default_font_size = 26
+default_font_size = 27
 
 [node name="Main" type="Control" unique_id=74677333 node_paths=PackedStringArray("nodeTitleBar", "nodeBgAnim", "nodeBtnInfo", "nodeComboLanguage", "nodeTextPatcherVersion", "nodeBtnUpdatePatcher", "nodeTextPatchVersion", "nodeUpdatePatchRow", "nodeBtnUpdatePatch", "nodeProgress", "nodeEditGamePath", "nodePathValid", "nodeBtnBrowse", "nodeBtnPatch", "nodeBtnRun", "nodeBtnUnpatch", "nodeOpenDialog", "nodeWindowReadme", "nodeWindowReadmeContent", "nodeWindowLog", "nodeWindowLogContent", "nodeWindowPopup", "nodeWindowPopupContent", "nodeWindowPopup1225", "nodeWindowPatch", "nodeWindowPatchVBox", "nodeWindowPatchContent", "nodeWindowTutorial", "nodeWindowAdvanced", "nodeContainerAdvanced", "nodeOverrideOS", "nodeOverrideScale")]
 layout_mode = 3
@@ -762,7 +762,7 @@ size_flags_horizontal = 3
 [node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/XDelta/VBoxContainer" unique_id=849576187]
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 27
 placeholder_text = "locEmptyToDisable"
 
 [node name="7Zip" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=2111628437]
@@ -790,7 +790,7 @@ size_flags_horizontal = 3
 [node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/7Zip/VBoxContainer" unique_id=1989576315]
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 27
 placeholder_text = "locEmptyToDisable"
 
 [node name="OverrideOS" type="HBoxContainer" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer" unique_id=1939028539]
@@ -808,7 +808,7 @@ horizontal_alignment = 2
 [node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS" unique_id=1486767554]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 27
 placeholder_text = "Windows"
 
 [node name="Control2" type="Control" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/OverrideOS" unique_id=2103612412]
@@ -863,7 +863,7 @@ size_flags_horizontal = 3
 [node name="LineEdit" type="LineEdit" parent="Advanced/CenterContainer/HBoxContainer/VBoxContainer/GithubApi/VBoxContainer" unique_id=397757338]
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 27
 text = "https://api.github.com"
 placeholder_text = "https://api.github.com"
 
