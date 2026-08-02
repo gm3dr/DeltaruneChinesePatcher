@@ -1,97 +1,97 @@
-keys,en,zh_CN,zh_TW
-locTitle,DELTARUNE Chinese Patcher,DELTARUNE 汉化安装器,DELTARUNE 漢化安裝器
-locLanguageName,English,中文（简体）,中文（繁體）
-locBrowse, Browse , 浏览, 瀏覽
-locLocalVer,Local patch version: ,本地补丁版本：,本地補丁版本：
-locLatestVer,Latest patch version: ,最新补丁版本：,最新補丁版本：
-locInstalledVer,Installed patch version: ,已安装补丁版本：,已安裝補丁版本：
-locUpdateAvailable, [Update Avaiable], [更新可用], [更新可用]
-locPatch, Patch , 安装补丁, 安裝補丁
-locLog,Log,日志,日誌
-locClick2Copy,Click to copy to clipboard,点击复制到剪贴板,按下拷貝到剪貼簿
-locDeltaruneDir,Installation directory of the Steam version of DELTARUNE,DELTARUNE Steam 版安装目录,DELTARUNE Steam 版安裝目錄
-locSelectDRDir,Select DELTARUNE Steam Ver. installation directory,选择 DELTARUNE Steam 版安装目录,選擇 DELTARUNE Steam 版安裝目錄
-locRequesting,Requesting...,获取中...,獲取中...
-locNotFound,Not found,未找到,未找到
-locUpdatePatch, Download latest patch , 下载最新补丁包, 下載最新補丁包
-locUpdateDemoPatch,↓ Patch for demo ↓,↓ Demo 版补丁 ↓,↓ Demo 版補丁 ↓
-locUpdatePatchAuto,Auto download,自动下载,自動下載
-locUpdatePatchBrowser,Download with Browser,通过浏览器下载,透過瀏覽器下載
-locUpdatePatchInfo,"< Auto download >\nAutomatically download latest patch\nOnly single thread supported, might be slow\n\n< Download with Browser >\nDownload latest patch with your browser, faster speed\nYou need to drag & drop it onto the patcher's window after download finished\n(No need for extracting it)\n\nPlease restart patcher after you finished",< 自动下载>\n自动下载最新的补丁包\n仅支持单线程，可能会很慢\n\n< 通过浏览器下載>\n通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要将其拖到安装器窗口上\n（不需要解压）\n\n请在完成后重启安装器,< 自動下載>\n自動下載最新的補丁包\n僅支援單執行緒，可能會很慢\n\n< 透過瀏覽器下載>\n透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要將其拖動到安裝器視窗上\n（不需要提取壓縮包）\n\n請在完成後重啟安裝器
-locUpdatePatchInfoMac,"< Auto download >\nAutomatically download latest patch\nOnly single thread supported, might be slow\n\n< Download with Browser >\nDownload latest patch with your browser, faster speed\nYou need to move it into the Contents/MacOS folder in the patcher's package after download finished (No need for extracting it)\n\nPlease restart patcher after you finished",< 自动下载>\n自动下载最新的补丁包\n仅支持单线程，可能会很慢\n\n< 通过浏览器下載>\n通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要自行将其移动到安装器包中的 Contents/MacOS 下（不需要解压）\n\n请在完成后重启安装器,< 自動下載>\n自動下載最新的補丁包\n僅支援單執行緒，可能會很慢\n\n< 透過瀏覽器下載>\n透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要自行將其移動到安裝器包中的 Contents/MacOS 下（不需要提取壓縮包）\n\n請在完成後重啟安裝器
-locUpdate, Newer version detected: {VER} , 检测到新版：{VER} , 偵測到新版：{VER} 
-locClickToUpdate,Click to download latest version with browser,点击使用浏览器下载最新版本,點擊使用瀏覽器下載最新版本
-locDownloadFailed,Download failed: ,下载失败：,下載失敗：
-locWaiting4Restart, Waiting for restart , 等待重启, 等待重啟
-locRestartIn5Sec,Restarting in 5 seconds,将在 5 秒内重启,將在 5 秒內重啟
-locPleaseRestart,Please restart patcher,请重启安装器,請重啟安裝器
-locTimeout, Connection Timeout , 连接超时, 連線逾時
-locResult,Result,结果,結果
-locCaution,Caution,注意,注意
-locPatched,"Patched!\nElapsed {USEDTIME}s\nOriginal files was moved to\nDELTARUNE/backup as backup",安装完成！\n总共耗时 {USEDTIME} 秒\n原本的文件已经移动到了\nDELTARUNE/backup 作为备份,安裝完成！\n總共耗時 {USEDTIME} 秒\n原本的檔案已經移動到了\nDELTARUNE/backup 作為備份
-locPatchedFallback,"Patched!\nElapsed {USEDTIME}s\nOld version detected.\nIt's still playable, but\nupdate game ASAP is recommended",安装完成！\n总共耗时 {USEDTIME} 秒\n检测到游戏是旧版\n仍可游玩，但推荐尽快更新,安裝完成！\n總共耗時 {USEDTIME} 秒\n檢測到遊戲是舊版\n仍可遊玩，但推薦儘快更新
-locPatchFailedPath,Patch failed after {USEDTIME}s\nYou might selected incorrect DELTARUNE path,耗时 {USEDTIME} 秒后安装失败\n你可能选择了一个错误的 DELTARUNE 路径,耗時 {USEDTIME} 秒後安裝失敗\n你可能選擇了一個錯誤的 DELTARUNE 路徑
-locPatchFailedSamePath,Patch failed after {USEDTIME}s\nThe patcher seems to be in the DELTARUNE path\nPlease move to prevent potential errors,耗时 {USEDTIME} 秒后安装失败\n安装器似乎在 DELTARUNE 路径中\n请移动以防止潜在错误,耗時 {USEDTIME} 秒後安裝失敗\n安裝器似乎在 DR 路徑中\n請移動以防止潛在錯誤
-locPatchFailedDiskSpace,Patch failed after {USEDTIME}s\n(Insufficient disk space)\nPlease clean your disk space,耗时 {USEDTIME} 秒后安装失败\n（磁盘空间不足）\n请清理你的磁盘空间,耗時 {USEDTIME} 秒後安裝失敗\n（磁碟空間不足）\n請清理你的磁碟空間
-locPatchFailedUT,Patch failed after {USEDTIME}s\nYou might selected an UNDERTALE path\nPlease visit Baidu Tieba for UNDERTALE patch,耗时 {USEDTIME} 秒后安装失败\n你可能选择了一个 UNDERTALE 路径\nUNDERTALE 汉化补丁请前往百度贴吧 undertale 吧精华帖,耗時 {USEDTIME} 秒後安裝失敗\n你可能選擇了一個 UNDERTALE 路徑\nUNDERTALE 漢化補丁請前往百度貼吧 undertale 精華帖\n或是前往巴哈姆特尋找他人製作的繁中補丁
-locPatchFailedTakingTooLong,Patch failed after {USEDTIME}s\nPatch process was terminated since\nIT'S TAKING TOO LONG\nYou can try again later,耗时 {USEDTIME} 秒后安装失败\n由于程序 IS TAKING TOO LONG\n安装进程被终止了\n你可以稍后重试,耗時 {USEDTIME} 秒後安裝失敗\n由於程式 IS TAKING TOO LONG\n安裝程序被終止了\n你可以稍後重試
-locPatchFailedNotExists,Patch failed after {USEDTIME}s\n(unable to find external programs)\nCan't find 7-Zip/XDelta3 in externals folder\nPlease ensure you have fully extracted the zipped file\nOr try to disable your anti-virus software,耗时 {USEDTIME} 秒后安装失败\n（无法找到外部程序）\n在「externals」文件夹中无法找到 7-Zip/XDelta3\n请确保你已经完全解压了压缩文件\n或是尝试关闭你的杀毒软件,耗時 {USEDTIME} 秒後安裝失敗\n（無法找到外部程式）\n在「externals」資料夾中無法找到 7-Zip/XDelta3\n請確保你已經完全解壓了壓縮檔案\n或是嘗試關閉你的防毒軟體
-locPatchFailedSha256,Patch failed after {USEDTIME}s\n(hash mismatch)\nSha256 of 7-Zip/XDelta3 does not match\nThese files might be modified\nPlease ensure you are using trusted release\nOr there might be a virus in your system,耗时 {USEDTIME} 秒后安装失败\n（散列值不符）\n7-Zip/XDelta3 的 Sha256 不符\n这些文件可能被篡改了\n请确保你使用的是可信的发布版本\n或者你的系统中可能有病毒,耗時 {USEDTIME} 秒後安裝失敗\n（雜湊值不符）\n7-Zip/XDelta3 的 Sha256 不符\n這些檔案可能被篡改了\n請確保你使用的是可信的釋出版本\n或者你的系統中可能有病毒
-locPatchFailedInvalidInput,Patch failed after {USEDTIME}s\n(XD3_INVALID_INPUT)\n\nHere are possible reasons and how to fix:\nGame updated and patch is outdated\nFix: Download new patch or wait for patch update\nGame version is outdated\nFix: Go to Steam update DELTARUNE\nGame file was modified / Old file left\nFix: Go to Steam library right click DELTARUNE\nProperties...→Installed Files→Verify integrity of game files,耗时 {USEDTIME} 秒后安装失败\n（XD3_INVALID_INPUT）\n可能原因与对应解决方法如下：\n游戏更新了但并未更新补丁\n解决方法：下载新版补丁/等待补丁更新\n游戏版本过低\n解决方法：前往 Steam 更新 DELTARUNE\n游戏文件被修改了/旧文件遗留\n解决方法：前往 Steam 库右键 DELTARUNE\n属性...→已安装文件→验证游戏文件的完整性,耗時 {USEDTIME} 秒後安裝失敗\n（XD3_INVALID_INPUT）\n可能原因與對應解決方法如下：\n遊戲更新了但並未更新補丁\n解決方法：下載新版補丁/等待補丁更新\n遊戲版本過低\n解決方法：前往 Steam 更新 DELTARUNE\n遊戲檔案被修改了/舊檔案遺留\n解決方法：前往 Steam 收藏庫右鍵 DELTARUNE\n內容...→已安裝檔案→驗證遊戲檔案的完整性
-locPatchFailedExternals,"Patch failed after {USEDTIME}s\n(external programs error)\nExternals program executing failed\nPlease check "externals" folder in the patcher's directory and ensure the executable files in the every folder in it are exists\nOr try to install 7-Zip and XDelta3 in your system manually\nTry to add 7-Zip and XDelta3 to the environment variables",耗时 {USEDTIME} 秒后安装失败\n（外部程序错误）\n外部程序执行失败\n请检查安装器目录中的「externals」文件夹并\n确保其中所有文件夹里的可执行文件都存在\n或尝试手动在系统中安装 7-Zip 与 XDelta3\n尝试将 7-Zip 与 XDelta3 添加到环境变量中,耗時 {USEDTIME} 秒後安裝失敗\n（外部程式錯誤）\n外部程式執行失敗\n請檢查安裝器目錄中的「externals」資料夾並\n確保其中所有資料夾裡的可執行檔案都存在\n或嘗試手動在系統中安裝 7-Zip 與 XDelta3\n嘗試將 7-Zip 與 XDelta3 添加到環境變量中
-locPatchFailedExternalsMac,"Patch failed after {USEDTIME}s\n(external programs error)\nExternals program executing failed\nPlease check "Contents/MacOS/externals" folder in the patcher's package and ensure the executable files in the every folder in it are exists\nOr try to install 7-Zip and XDelta3 in your system manually\nTry to add 7-Zip and XDelta3 to the environment variables",耗时 {USEDTIME} 秒后安装失败\n（外部程序错误）\n外部程序执行失败\n请检查安装器目录中的「Contents/MacOS/externals」文件夹并\n确保其中所有文件夹里的可执行文件都存在\n或尝试手动在系统中安装 7-Zip 与 XDelta3\n尝试将 7-Zip 与 XDelta3 添加到环境变量中,耗時 {USEDTIME} 秒後安裝失敗\n（外部程式錯誤）\n外部程式執行失敗\n請檢查安裝器目錄中的「Contents/MacOS/externals」資料夾並\n確保其中所有資料夾裡的可執行檔案都存在\n或嘗試手動在系統中安裝 7-Zip 與 XDelta3\n嘗試將 7-Zip 與 XDelta3 添加到環境變量中
-locPatchFailedRequired,Patch failed after {USEDTIME}s\n(dependence missing)\nPlease try to install 7-Zip and XDelta3 in your system manually,耗时 {USEDTIME} 秒后安装失败\n（依赖缺失）\n请尝试手动在系统中安装 7-Zip 与 XDelta3,耗時 {USEDTIME} 秒後安裝失敗\n（依賴缺失）\n請嘗試手動在系統中安裝 7-Zip 與 XDelta3
-locPatchFailedDenied,Patch failed after {USEDTIME}s\n(permission denied)\nPlease try to manually execute\nchmod +x ./externals/7zip/7z(_mac)\nand\nchmod +x ./externals/xdelta3/xdelta3(_mac),耗时 {USEDTIME} 秒后安装失败\n（权限拒绝）\n请尝试手动执行\nchmod +x ./externals/7zip/7z\n和\nchmod +x ./externals/xdelta3/xdelta3,耗時 {USEDTIME} 秒後安裝失敗\n（權限拒絕）\n請嘗試手動執行\nchmod +x ./externals/7zip/7z(_mac)\n和\nchmod +x ./externals/xdelta3/xdelta3(_mac)
-locPatchFailedCantFind,Patch failed after {USEDTIME}s\n(cannot find file)\nYour game file might be incomplete\nPlease go to Steam library right click DELTARUNE\nProperties...→Installed Files→Verify integrity of game files,耗时 {USEDTIME} 秒后安装失败\n（无法找到文件）\n你的游戏文件可能不完整\n请前往 Steam 库右键 DELTARUNE\n属性...→已安装文件→验证游戏文件的完整性,耗時 {USEDTIME} 秒後安裝失敗\n（無法找到檔案）\n你的遊戲檔案可能不完整\n請前往 Steam 收藏庫右鍵 DELTARUNE\n內容...→已安裝檔案→驗證遊戲檔案的完整性
-locPatchFailedQuarantined,"Patch failed after {USEDTIME}s\n(Quarantined by macOS)\nPlease move patcher to the Applications folder","耗时 {USEDTIME} 秒后安装失败\n（被 macOS 隔离）\n请将安装器移动到\n「应用程序/Applications」文件夹","耗時 {USEDTIME} 秒後安裝失敗\n（被 macOS 隔離）\n請將安裝器移動到\n「應用程式/Applications」資料夾"
-locPatchFailed,"Patch failed after {USEDTIME}s\nUnknown error, please report with log content",耗时 {USEDTIME} 秒后安装失败\n未知错误，请在报告问题时把日志内容一同附上,耗時 {USEDTIME} 秒後安裝失敗\n未知錯誤，請在報告問題時把日誌內容一同附上
-locBakDetected,"Backup files after patching detected.\nUse backup files to patch or patch directly?\n\n[ Backup files ] will restore previous version of the game\nCan be used when the game updated but patch is not\n[ Patch directly ] applies when the game and patch both updated\nOr applies after pressed Verify integrity of game files",检测到打过补丁留下的备份文件。\n使用备份文件安装还是直接安装？\n\n【使用备份文件】会恢复到上版本的游戏\n可用于游戏更新但补丁未更新的情况\n【直接安装】适用于游戏与补丁均更新后\n亦或是点击了「验证游戏文件的完整性」后,偵測到打過補丁留下的備份檔案。\n使用備份檔案安裝還是直接安裝？\n\n【使用備份檔案】會恢復到上版本的遊戲\n可用於遊戲更新但補丁未更新的情況\n【直接安裝】適用於遊戲與補丁均更新後\n亦或是點擊了「驗證遊戲檔案的完整性」後
-locBakVerDetected,"Backup files of patch {VER} was detected.\nUse backup files to patch or patch directly?\n\n[ Backup files ] will restore previous version of the game\nCan be used when the game updated but patch is not\n[ Patch directly ] applies when the game and patch both updated\nOr applies after pressed Verify integrity of game files",检测到补丁版本 {VER} 留下的备份文件。\n使用备份文件安装还是直接安装？\n\n【使用备份文件】会恢复到上版本的游戏\n可用于游戏更新但补丁未更新的情况\n【直接安装】适用于游戏与补丁均更新后\n亦或是点击了「验证游戏文件的完整性」后,偵測到補丁版本 {VER} 留下的備份檔案。\n使用備份檔案安裝還是直接安裝？\n\n【使用備份檔案】會恢復到上版本的遊戲\n可用於遊戲更新但補丁未更新的情況\n【直接安裝】適用於遊戲與補丁均更新後\n亦或是點擊了「驗證遊戲檔案的完整性」後
-locPatchBackup, Backup files , 使用备份文件, 使用備份檔案
-locPatchDirectly, Patch directly , 直接安裝, 直接安裝
-locUnpatch, Unpatch , 卸载补丁, 解除安裝補丁
-locNoBakDetected,No backup files detected,未检测到备份文件,未檢測到備份檔案
-locUnpatched,Restored backup files,已恢复备份文件,已恢復備份檔案
-locReadme,Readme,说明,說明
-locInfo,DELTARUNE Chinese Patcher By SheepYhangCN\nIcon By WhatDamon\nMade with Godot Engine .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installation directory of the Steam version of DELTARUNE\nPatcher will automatically patch data of every chapter\n\nThis patcher is open source on Github\nClick to open Github repository,DELTARUNE 汉化安装器 By 憨憨羊の宇航鸽鸽\n图标 By WhatDamon\n使用 Godot Engine .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data 安装补丁\n\n此安装器已在 Github 上开源\n点击打开 Github 仓库,DELTARUNE 漢化安裝器 By 憨憨羊の宇航鴿鴿\n圖標 By WhatDamon\n使用 Godot Engine .NET 製作\nDELTARUNE 中文在地化版 by 好人漢化組\n\n設置 DELTARUNE Steam 版安裝目錄\n安裝器會自動為每個章節的 data 安裝補丁\n\n此安裝器已在 Github 上開源\n點擊打開 Github 倉庫
-locInfoContributors,DELTARUNE Chinese Patcher\nIcon By WhatDamon\nMade with Godot Engine .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installation directory of the Steam version of DELTARUNE\nPatcher will automatically patch data of every chapter\n\nThis patcher is open source on Github\nContributors: {CONTRIBUTORS}\nClick to open Github repository,DELTARUNE 汉化安装器\n图标 By WhatDamon\n使用 Godot Engine .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data 安装补丁\n\n此安装器已在 Github 上开源\n贡献者：{CONTRIBUTORS}\n点击打开 Github 仓库,DELTARUNE 漢化安裝器\n圖標 By WhatDamon\n使用 Godot Engine .NET 製作\nDELTARUNE 中文在地化版 by 好人漢化組\n\n設置 DELTARUNE Steam 版安裝目錄\n安裝器會自動為每個章節的 data 安裝補丁\n\n此安裝器已在 Github 上開源\n貢獻者：{CONTRIBUTORS}\n點擊打開 Github 倉庫
-locRungame, Run Game , 启动游戏, 啟動遊戲
-locRungameTooltip,Run game through Steam,通过 Steam 启动游戏,透過 Steam 啟動遊戲
-locOutdatedVer,You're currently running the version for outdated hardware\nThis version is only for the purpose of compatibility\nYou might encounter some glitches that is not in normal version\nWe won't bother it if it's not serious\nPlease keep in mind,你目前正在运行用于老旧硬件的版本\n此版本仅用于兼容性目的\n你可能会遇到一些在正常版本中不存在的小故障\n如果其不严重则我们不会加以处理\n请谨记,你目前正在運行用於老舊硬體的版本\n此版本僅供相容性目的\n你可能會遇到一些再正常版本中不存在的小故障\n如果其不嚴重則我們不會加以處理\n請謹記
-locPatchInvalid,   [color=red]Path Invalid[/color],   [color=red]路径无效[/color],   [color=red]路徑無效[/color]
-locPatchInvalidExists,   [color=red]Path Invalid: Not exists[/color],   [color=red]路径无效：不存在[/color],   [color=red]路徑無效：不存在[/color]
-locPatchInvalidFile,   [color=red]Path Invalid: File instead of Directory[/color],   [color=red]路径无效：文件而非路径[/color],   [color=red]路徑無效：檔案而非路徑[/color]
-locPatchInvalidUT,   [color=red]Path Invalid: UNDERTALE instead of DELTARUNE[/color],   [color=red]路径无效：UNDERTALE 而非 DELTARUNE[/color],   [color=red]路徑無效：UNDERTALE 而非 DELTARUNE[/color]
-locPatchInvalidSame,   [color=red]Path not recommended: Same path as patcher[/color],   [color=red]路径不推荐：与安装器相同路径[/color],   [color=red]路徑不推薦：與安裝器相同路徑[/color]
-locPatchValidFull,   [color=green]Path Valid: Full Version[/color],   [color=green]路径有效：完整版[/color],   [color=green]路徑有效：完整版[/color]
-locPatchValidDemo,   [color=green]Path Valid: Demo Version[/color],   [color=green]路径有效：Demo 版[/color],   [color=green]路徑有效：Demo 版[/color]
-locPleaseRead,Please read before use,请在使用前阅读,請在使用前閱讀
-locPleaseReadLabel,"Patch & patcher are FULLY FREE & OPEN-SOURCED\nWe strictly prohibits any form of illegal activity\ninvolving the resale of patches.\nPlease ensure you got this through official channels\nIf you paid money for this,\nGo ask for refund and report the seller immediately\n\nPress button below for patch tutorial\nIf you encounter any problem when patching\nPlease check the video first\n You can restart patcher to find this again",此汉化补丁与汉化安装器「完全免费且开源」\n好人汉化组严禁任何形式的倒卖补丁违法行为\n请确保你通过正规途径获取此汉化补丁\n如果你通过付费获取此补丁，请尽快前往退款举报\n\n按下下方按钮打开安装教程\n如果在安装过程中出现任何问题\n也请优先查阅此视频\n你可以通过重启安装器来再次找到此窗口\n,此漢化補丁與漢化安裝器「完全免費且開源」\n好人漢化組嚴禁任何形式的倒賣補丁違法行為\n請確保是透過正規途徑獲取此漢化補丁\n如果你是付費獲取此補丁，請儘快前往退款舉報\n\n按下下方按鈕開啟安裝教程\n如果在安裝過程中出現任何問題\n也請優先查閱此影片\n你可以透過重啟安裝器來再次找到此視窗\n
-locOpenTutorial, Open Tutorial Video , 打开安装教程 , 打開安裝教程 
-locConfirmRead,I've fully read contents above\nand confirmed I got this for free,我已完整阅读以上内容\n且确认是通过免费途径获取,我已完整閱讀以上內容\n且確認是透過免費途徑獲取獲取
-locAdvanced,Advanced Options,高级选项,高級選項
-locAdvancedTooltip,Click to open Advanced Options\nWarning: Please ensure that you know what you are doing\nbefore using these options,点击打开高级选项\n警告：请确保你知道你在做什么的情况下\n才使用这些选项,點擊打開高級選項\n警告：請確保你知道你在做什麼的情況下\n才使用這些選項
-locTriggerPathDetect,Trigger DR Path Detect & Save it,触发 DR 路径检测并储存,觸發 DR 路徑檢測並儲存
-locBypassHash,Bypass Hash Check,绕过散列值检查,繞過雜湊值檢查
-locBypassTooLong,Bypass TAKING TOO LONG Stopping,绕过 TAKING TOO LONG 终止,繞過 TAKING TOO LONG 終止
-locBypassSamePath,Bypass Same Path as DR,绕过与 DR 相同路径检查,繞過與 DR 相同路徑檢查
-locUseInstalledXDelta,Use installed XDelta3 first,优先使用已安装 XDelta3,優先使用已安裝 XDelta3
-locUseInstalled7Zip,Use installed 7-Zip first,优先使用已安装 7-Zip,優先使用已安裝 7-Zip
-locBypassRestoreWhenFailed,Bypass Restore Backup when failed,绕过失败时的备份还原,繞過失敗時的備份還原
-locForcePatchType,Force patch type,强制补丁类型,強制補丁類型
-locDisabled,Disabled,已禁用,已禁用
-locFullVersion,Full Ver.,完整版,完整版
-locDemoVersion,Demo Ver.,Demo 版,Demo 版
-locFullSteam,Full Version (Through Steam),完整版（通过 Steam）,完整版（透過 Steam）
-locDemoSteam,Demo Version (Through Steam),Demo 版（通过 Steam）,Demo 版（透過 Steam）
-locWithoutSteam,Run without Steam,不通过 Steam 启动,不透過 Steam 啟動
-locXDeltaPath,Override XDelta3 Path,覆盖 XDelta3 路径,覆寫 XDelta3 路徑
-loc7zipPath,Override 7-Zip Path,覆盖 7-Zip 路径,覆寫 7-Zip 路徑
-locEmptyToDisable,Empty to Disable,留空以禁用,留空以禁用
-locOverrideOS,Override Current OS,覆盖当前系统,覆寫當前系統
-locOverrideScale,Override Window Scale,覆盖窗口缩放,覆寫視窗縮放
-locGithubApiSource,Github API Source,Github API 源,Github API 源
-locMacQuarantineTitle,macOS Quarantine Check,macOS 隔离检测,macOS 隔離檢測
-locMacQuarantineFound,"This application has been quarantined by macOS.\n{0}\n\nYou can move this app to\nthe Applications folder manually\nor run this command in terminal to fix it:\nsudo xattr -dr com.apple.quarantine <app path>\nThen restart the app","此应用已被 macOS 隔离。\n{0}\n\n你可以手动将此应用移动到\n「应用程序/Applications」文件夹\n或在终端运行以下命令修复：\nsudo xattr -dr com.apple.quarantine <应用路径>\n随后重启应用","此應用程式已被 macOS 隔離。\n{0}\n\n你可以手動將此應用移動到\n「應用程式/Applications」資料夾\n或在終端機運行以下命令修復：\nsudo xattr -dr com.apple.quarantine <應用路徑>\n隨後重啟應用"
-locMacQuarantineXattrInfo,"From: {0}  Date: {1}","来自：{0}  时间：{1}","來自：{0}  時間：{1}"
-loc1225,"*  You tried to patch it...\n* But, it slipped through your hand\n*  And you couldn't find it anymore.\n\n*  You couldn't find\nyour patch.",*  你试着安装它...\n*  结果，那东西从你手上滑走\n*  然后就再也找不到了。\n\n*  找不到\n你的补丁了。,*  你試著安裝它...\n*  結果，那東西從你手上滑走\n*  然後就再也找不到了。\n\n*  找不到\n你的補丁了。
+keys,en,zh_CN,zh_TW,ja
+locTitle,DELTARUNE Chinese Patcher,DELTARUNE 汉化安装器,DELTARUNE 漢化安裝器,DELTARUNE中国語化インストーラー
+locLanguageName,English,中文（简体）,中文（繁體）,日本語
+locBrowse, Browse , 浏览, 瀏覽,参照
+locLocalVer,Local patch version: ,本地补丁版本：,本地補丁版本：,ローカルパッチのバージョン：
+locLatestVer,Latest patch version: ,最新补丁版本：,最新補丁版本：,最新のパッチバージョン：
+locInstalledVer,Installed patch version: ,已安装补丁版本：,已安裝補丁版本：,インストール済みパッチ：
+locUpdateAvailable, [Update Avaiable], [更新可用], [更新可用],\n[更新が利用可能です]
+locPatch, Patch , 安装补丁, 安裝補丁,ﾊﾟｯﾁをｲﾝｽﾄｰﾙ
+locLog,Log,日志,日誌,ログ
+locClick2Copy,Click to copy to clipboard,点击复制到剪贴板,按下拷貝到剪貼簿,クリックしてクリップボードにコピー
+locDeltaruneDir,Installation directory of the Steam version of DELTARUNE,DELTARUNE Steam 版安装目录,DELTARUNE Steam 版安裝目錄,DELTARUNE Steam版のインストール先
+locSelectDRDir,Select DELTARUNE Steam Ver. installation directory,选择 DELTARUNE Steam 版安装目录,選擇 DELTARUNE Steam 版安裝目錄,DELTARUNE Steam版のインストール先を選択
+locRequesting,Requesting...,获取中...,獲取中...,取得中...
+locNotFound,Not found,未找到,未找到,見つかりません
+locUpdatePatch, Download latest patch , 下载最新补丁包, 下載最新補丁包,最新版パッチをダウンロード
+locUpdateDemoPatch,↓ Patch for demo ↓,↓ Demo 版补丁 ↓,↓ Demo 版補丁 ↓,↓ Demo版パッチ ↓
+locUpdatePatchAuto,Auto download,自动下载,自動下載,自動ダウンロード
+locUpdatePatchBrowser,Download with Browser,通过浏览器下载,透過瀏覽器下載,ブラウザーでダウンロード
+locUpdatePatchInfo,"< Auto download >\nAutomatically download latest patch\nOnly single thread supported, might be slow\n\n< Download with Browser >\nDownload latest patch with your browser, faster speed\nYou need to drag & drop it onto the patcher's window after download finished\n(No need for extracting it)\n\nPlease restart patcher after you finished",< 自动下载>\n自动下载最新的补丁包\n仅支持单线程，可能会很慢\n\n< 通过浏览器下載>\n通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要将其拖到安装器窗口上\n（不需要解压）\n\n请在完成后重启安装器,< 自動下載>\n自動下載最新的補丁包\n僅支援單執行緒，可能會很慢\n\n< 透過瀏覽器下載>\n透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要將其拖動到安裝器視窗上\n（不需要提取壓縮包）\n\n請在完成後重啟安裝器,< 自動ダウンロード>\n最新版のパッチを自動でダウンロードします\nシングルスレッドのみ対応のため、時間がかかる場合があります\n\n< ブラウザーでダウンロード>\nブラウザーから最新版のパッチをダウンロードします\nダウンロード後、インストーラーのウィンドウへドラッグ＆ドロップしてください\n（解凍は不要です）\n\n完了後、インストーラーを再起動してください
+locUpdatePatchInfoMac,"< Auto download >\nAutomatically download latest patch\nOnly single thread supported, might be slow\n\n< Download with Browser >\nDownload latest patch with your browser, faster speed\nYou need to move it into the Contents/MacOS folder in the patcher's package after download finished (No need for extracting it)\n\nPlease restart patcher after you finished",< 自动下载>\n自动下载最新的补丁包\n仅支持单线程，可能会很慢\n\n< 通过浏览器下載>\n通过你的浏览器下载最新的补丁包，速度更快\n下载完成后你需要自行将其移动到安装器包中的 Contents/MacOS 下（不需要解压）\n\n请在完成后重启安装器,< 自動下載>\n自動下載最新的補丁包\n僅支援單執行緒，可能會很慢\n\n< 透過瀏覽器下載>\n透過你的瀏覽器下載最新的補丁包，速度更快\n下載完成後你需要自行將其移動到安裝器包中的 Contents/MacOS 下（不需要提取壓縮包）\n\n請在完成後重啟安裝器,< 自動ダウンロード>\n最新版のパッチを自動でダウンロードします\nシングルスレッドのみ対応のため、時間がかかる場合があります\n\n< ブラウザーでダウンロード>\nブラウザーから最新版のパッチをダウンロードします\nダウンロード後、インストーラー内の「Contents/MacOS」フォルダーへ移動してください\n（解凍は不要です）\n\n完了後、インストーラーを再起動してください
+locUpdate, Newer version detected: {VER} , 检测到新版：{VER} , 偵測到新版：{VER} ,新しいバージョンを検出しました：{VER}
+locClickToUpdate,Click to download latest version with browser,点击使用浏览器下载最新版本,點擊使用瀏覽器下載最新版本,クリックしてブラウザーから最新版をダウンロード
+locDownloadFailed,Download failed: ,下载失败：,下載失敗：,ダウンロードに失敗しました：
+locWaiting4Restart, Waiting for restart , 等待重启, 等待重啟,再起動待機中
+locRestartIn5Sec,Restarting in 5 seconds,将在 5 秒内重启,將在 5 秒內重啟,5秒後に再起動します
+locPleaseRestart,Please restart patcher,请重启安装器,請重啟安裝器,インストーラーを再起動してください
+locTimeout, Connection Timeout , 连接超时, 連線逾時,接続がタイムアウトしました
+locResult,Result,结果,結果,結果
+locCaution,Caution,注意,注意,注意
+locPatched,Patched!\nElapsed {USEDTIME}s\nOriginal files was moved to\nDELTARUNE/backup as backup,安装完成！\n总共耗时 {USEDTIME} 秒\n原本的文件已经移动到了\nDELTARUNE/backup 作为备份,安裝完成！\n總共耗時 {USEDTIME} 秒\n原本的檔案已經移動到了\nDELTARUNE/backup 作為備份,インストールが完了しました！\n所要時間：{USEDTIME}秒\n元のファイルは\nDELTARUNE/backupへ\nバックアップされています
+locPatchedFallback,"Patched!\nElapsed {USEDTIME}s\nOld version detected.\nIt's still playable, but\nupdate game ASAP is recommended",安装完成！\n总共耗时 {USEDTIME} 秒\n检测到游戏是旧版\n仍可游玩，但推荐尽快更新,安裝完成！\n總共耗時 {USEDTIME} 秒\n檢測到遊戲是舊版\n仍可遊玩，但推薦儘快更新,インストールが完了しました！\n所要時間：{USEDTIME}秒\n古いバージョンのゲームを検出しました\nそのままプレイできますが、できるだけ早くアップデートすることをおすすめします
+locPatchFailedPath,Patch failed after {USEDTIME}s\nYou might selected incorrect DELTARUNE path,耗时 {USEDTIME} 秒后安装失败\n你可能选择了一个错误的 DELTARUNE 路径,耗時 {USEDTIME} 秒後安裝失敗\n你可能選擇了一個錯誤的 DELTARUNE 路徑,{USEDTIME}秒後にインストールに失敗しました\n選択したパスはDELTARUNEのものではない可能性があります
+locPatchFailedSamePath,Patch failed after {USEDTIME}s\nThe patcher seems to be in the DELTARUNE path\nPlease move to prevent potential errors,耗时 {USEDTIME} 秒后安装失败\n安装器似乎在 DELTARUNE 路径中\n请移动以防止潜在错误,耗時 {USEDTIME} 秒後安裝失敗\n安裝器似乎在 DR 路徑中\n請移動以防止潛在錯誤,{USEDTIME}秒後にインストールに失敗しました\nインストーラーがDELTARUNEフォルダー内にあります\n予期しない問題を防ぐため、別の場所へ移動してください
+locPatchFailedDiskSpace,Patch failed after {USEDTIME}s\n(Insufficient disk space)\nPlease clean your disk space,耗时 {USEDTIME} 秒后安装失败\n（磁盘空间不足）\n请清理你的磁盘空间,耗時 {USEDTIME} 秒後安裝失敗\n（磁碟空間不足）\n請清理你的磁碟空間,{USEDTIME}秒後にインストールに失敗しました\n（ディスク容量不足）\nディスクの空き容量を確保してください
+locPatchFailedUT,Patch failed after {USEDTIME}s\nYou might selected an UNDERTALE path\nPlease visit Baidu Tieba for UNDERTALE patch,耗时 {USEDTIME} 秒后安装失败\n你可能选择了一个 UNDERTALE 路径\nUNDERTALE 汉化补丁请前往百度贴吧 undertale 吧精华帖,耗時 {USEDTIME} 秒後安裝失敗\n你可能選擇了一個 UNDERTALE 路徑\nUNDERTALE 漢化補丁請前往百度貼吧 undertale 精華帖\n或是前往巴哈姆特尋找他人製作的繁中補丁,{USEDTIME}秒後にインストールに失敗しました\n選択したパスはUNDERTALEのものと思われます\nUNDERTALE中国語化パッチについては配布ページをご利用ください
+locPatchFailedTakingTooLong,Patch failed after {USEDTIME}s\nPatch process was terminated since\nIT'S TAKING TOO LONG\nYou can try again later,耗时 {USEDTIME} 秒后安装失败\n由于程序 IS TAKING TOO LONG\n安装进程被终止了\n你可以稍后重试,耗時 {USEDTIME} 秒後安裝失敗\n由於程式 IS TAKING TOO LONG\n安裝程序被終止了\n你可以稍後重試,{USEDTIME}秒後にインストールに失敗しました\n処理時間がナガイ　シすぎるため\nインストールを中断しました\n時間をおいて再度お試しください
+locPatchFailedNotExists,Patch failed after {USEDTIME}s\n(unable to find external programs)\nCan't find 7-Zip/XDelta3 in externals folder\nPlease ensure you have fully extracted the zipped file\nOr try to disable your anti-virus software,耗时 {USEDTIME} 秒后安装失败\n（无法找到外部程序）\n在「externals」文件夹中无法找到 7-Zip/XDelta3\n请确保你已经完全解压了压缩文件\n或是尝试关闭你的杀毒软件,耗時 {USEDTIME} 秒後安裝失敗\n（無法找到外部程式）\n在「externals」資料夾中無法找到 7-Zip/XDelta3\n請確保你已經完全解壓了壓縮檔案\n或是嘗試關閉你的防毒軟體,{USEDTIME}秒後にインストールに失敗しました\n（外部プログラムが見つかりません）\n「externals」フォルダー内に\n7-ZipまたはXDelta3が見つかりません\n圧縮ファイルを完全に展開したことを確認してください\nまたは、セキュリティソフトを一時的に無効化してください
+locPatchFailedSha256,Patch failed after {USEDTIME}s\n(hash mismatch)\nSha256 of 7-Zip/XDelta3 does not match\nThese files might be modified\nPlease ensure you are using trusted release\nOr there might be a virus in your system,耗时 {USEDTIME} 秒后安装失败\n（散列值不符）\n7-Zip/XDelta3 的 Sha256 不符\n这些文件可能被篡改了\n请确保你使用的是可信的发布版本\n或者你的系统中可能有病毒,耗時 {USEDTIME} 秒後安裝失敗\n（雜湊值不符）\n7-Zip/XDelta3 的 Sha256 不符\n這些檔案可能被篡改了\n請確保你使用的是可信的釋出版本\n或者你的系統中可能有病毒,{USEDTIME}秒後にインストールに失敗しました\n（ハッシュ値が一致しません）\n7-Zip/XDelta3のSHA-256が一致しません\nファイルが改ざんされている可能性があります\n信頼できる配布元から入手したことをご確認ください\nまたは、システムがマルウェアに感染している可能性があります
+locPatchFailedInvalidInput,Patch failed after {USEDTIME}s\n(XD3_INVALID_INPUT)\n\nHere are possible reasons and how to fix:\nGame updated and patch is outdated\nFix: Download new patch or wait for patch update\nGame version is outdated\nFix: Go to Steam update DELTARUNE\nGame file was modified / Old file left\nFix: Go to Steam library right click DELTARUNE\nProperties...→Installed Files→Verify integrity of game files,耗时 {USEDTIME} 秒后安装失败\n（XD3_INVALID_INPUT）\n可能原因与对应解决方法如下：\n游戏更新了但并未更新补丁\n解决方法：下载新版补丁/等待补丁更新\n游戏版本过低\n解决方法：前往 Steam 更新 DELTARUNE\n游戏文件被修改了/旧文件遗留\n解决方法：前往 Steam 库右键 DELTARUNE\n属性...→已安装文件→验证游戏文件的完整性,耗時 {USEDTIME} 秒後安裝失敗\n（XD3_INVALID_INPUT）\n可能原因與對應解決方法如下：\n遊戲更新了但並未更新補丁\n解決方法：下載新版補丁/等待補丁更新\n遊戲版本過低\n解決方法：前往 Steam 更新 DELTARUNE\n遊戲檔案被修改了/舊檔案遺留\n解決方法：前往 Steam 收藏庫右鍵 DELTARUNE\n內容...→已安裝檔案→驗證遊戲檔案的完整性,{USEDTIME}秒後にインストールに失敗しました\n（XD3_INVALID_INPUT）\n考えられる原因：\nゲームは更新済みですが、パッチが未対応\n→最新版パッチをダウンロードするか、更新をお待ちください\nゲームのバージョンが古い\n→Steam で DELTARUNE を更新してください\nゲームファイルが変更されている、または古いファイルが残っている\n→Steam ライブラリで DELTARUNE を右クリック\n「プロパティ」→「インストール済みファイル」\n→「ゲームファイルの整合性を確認」
+locPatchFailedExternals,Patch failed after {USEDTIME}s\n(external programs error)\nExternals program executing failed\nPlease check externals" folder in the patcher's directory and ensure the executable files in the every folder in it are exists\nOr try to install 7-Zip and XDelta3 in your system manually\nTry to add 7-Zip and XDelta3 to the environment variables",耗时 {USEDTIME} 秒后安装失败\n（外部程序错误）\n外部程序执行失败\n请检查安装器目录中的「externals」文件夹并\n确保其中所有文件夹里的可执行文件都存在\n或尝试手动在系统中安装 7-Zip 与 XDelta3\n尝试将 7-Zip 与 XDelta3 添加到环境变量中,耗時 {USEDTIME} 秒後安裝失敗\n（外部程式錯誤）\n外部程式執行失敗\n請檢查安裝器目錄中的「externals」資料夾並\n確保其中所有資料夾裡的可執行檔案都存在\n或嘗試手動在系統中安裝 7-Zip 與 XDelta3\n嘗試將 7-Zip 與 XDelta3 添加到環境變量中,{USEDTIME}秒後にインストールに失敗しました\n（外部プログラムエラー）\n外部プログラムの実行に失敗しました\nインストーラー内の\n「externals」フォルダーを確認し\nすべての実行ファイルが存在することをご確認ください\nまたは7-ZipとXDelta3を手動でインストールし\n環境変数(PATH)へ追加してください
+locPatchFailedExternalsMac,Patch failed after {USEDTIME}s\n(external programs error)\nExternals program executing failed\nPlease check Contents/MacOS/externals" folder in the patcher's package and ensure the executable files in the every folder in it are exists\nOr try to install 7-Zip and XDelta3 in your system manually\nTry to add 7-Zip and XDelta3 to the environment variables",耗时 {USEDTIME} 秒后安装失败\n（外部程序错误）\n外部程序执行失败\n请检查安装器目录中的「Contents/MacOS/externals」文件夹并\n确保其中所有文件夹里的可执行文件都存在\n或尝试手动在系统中安装 7-Zip 与 XDelta3\n尝试将 7-Zip 与 XDelta3 添加到环境变量中,耗時 {USEDTIME} 秒後安裝失敗\n（外部程式錯誤）\n外部程式執行失敗\n請檢查安裝器目錄中的「Contents/MacOS/externals」資料夾並\n確保其中所有資料夾裡的可執行檔案都存在\n或嘗試手動在系統中安裝 7-Zip 與 XDelta3\n嘗試將 7-Zip 與 XDelta3 添加到環境變量中,{USEDTIME}秒後にインストールに失敗しました\n（外部プログラムエラー）\n外部プログラムの実行に失敗しました\nインストーラー内の\n「Contents/MacOS/externals」フォルダーを確認し\nすべての実行ファイルが存在することをご確認ください\nまたは7-ZipとXDelta3を手動でインストールし\n環境変数(PATH)へ追加してください
+locPatchFailedRequired,Patch failed after {USEDTIME}s\n(dependence missing)\nPlease try to install 7-Zip and XDelta3 in your system manually,耗时 {USEDTIME} 秒后安装失败\n（依赖缺失）\n请尝试手动在系统中安装 7-Zip 与 XDelta3,耗時 {USEDTIME} 秒後安裝失敗\n（依賴缺失）\n請嘗試手動在系統中安裝 7-Zip 與 XDelta3,{USEDTIME}秒後にインストールに失敗しました\n（依存関係が不足しています）\n7-ZipとXDelta3を手動でインストールしてください
+locPatchFailedDenied,Patch failed after {USEDTIME}s\n(permission denied)\nPlease try to manually execute\nchmod +x ./externals/7zip/7z(_mac)\nand\nchmod +x ./externals/xdelta3/xdelta3(_mac),耗时 {USEDTIME} 秒后安装失败\n（权限拒绝）\n请尝试手动执行\nchmod +x ./externals/7zip/7z\n和\nchmod +x ./externals/xdelta3/xdelta3,耗時 {USEDTIME} 秒後安裝失敗\n（權限拒絕）\n請嘗試手動執行\nchmod +x ./externals/7zip/7z(_mac)\n和\nchmod +x ./externals/xdelta3/xdelta3(_mac),{USEDTIME}秒後にインストールに失敗しました\n（権限がありません）\n以下のコマンドを実行してください\nchmod +x ./externals/7zip/7z\nと\nchmod +x ./externals/xdelta3/xdelta3
+locPatchFailedCantFind,Patch failed after {USEDTIME}s\n(cannot find file)\nYour game file might be incomplete\nPlease go to Steam library right click DELTARUNE\nProperties...→Installed Files→Verify integrity of game files,耗时 {USEDTIME} 秒后安装失败\n（无法找到文件）\n你的游戏文件可能不完整\n请前往 Steam 库右键 DELTARUNE\n属性...→已安装文件→验证游戏文件的完整性,耗時 {USEDTIME} 秒後安裝失敗\n（無法找到檔案）\n你的遊戲檔案可能不完整\n請前往 Steam 收藏庫右鍵 DELTARUNE\n內容...→已安裝檔案→驗證遊戲檔案的完整性,{USEDTIME}秒後にインストールに失敗しました\n（ファイルが見つかりません）\nゲームファイルが破損している可能性があります\nSteamライブラリでDELTARUNEを右クリックし\n「プロパティ」→「インストール済みファイル」\n→「ゲームファイルの整合性を確認」を\n実行してください。
+locPatchFailedQuarantined,Patch failed after {USEDTIME}s\n(Quarantined by macOS)\nPlease move patcher to the Applications folder,耗时 {USEDTIME} 秒后安装失败\n（被 macOS 隔离）\n请将安装器移动到\n「应用程序/Applications」文件夹,耗時 {USEDTIME} 秒後安裝失敗\n（被 macOS 隔離）\n請將安裝器移動到\n「應用程式/Applications」資料夾,{USEDTIME}秒後にインストールに失敗しました\n（macOSの隔離属性が検出されました）\nインストーラーを\n「アプリケーション（Applications）」フォルダーへ移動してください
+locPatchFailed,"Patch failed after {USEDTIME}s\nUnknown error, please report with log content",耗时 {USEDTIME} 秒后安装失败\n未知错误，请在报告问题时把日志内容一同附上,耗時 {USEDTIME} 秒後安裝失敗\n未知錯誤，請在報告問題時把日誌內容一同附上,{USEDTIME}秒後にインストールに失敗しました\n不明なエラーです\n不具合を報告する際はログもあわせて送信してください
+locBakDetected,Backup files after patching detected.\nUse backup files to patch or patch directly?\n\n[ Backup files ] will restore previous version of the game\nCan be used when the game updated but patch is not\n[ Patch directly ] applies when the game and patch both updated\nOr applies after pressed Verify integrity of game files,检测到打过补丁留下的备份文件。\n使用备份文件安装还是直接安装？\n\n【使用备份文件】会恢复到上版本的游戏\n可用于游戏更新但补丁未更新的情况\n【直接安装】适用于游戏与补丁均更新后\n亦或是点击了「验证游戏文件的完整性」后,偵測到打過補丁留下的備份檔案。\n使用備份檔案安裝還是直接安裝？\n\n【使用備份檔案】會恢復到上版本的遊戲\n可用於遊戲更新但補丁未更新的情況\n【直接安裝】適用於遊戲與補丁均更新後\n亦或是點擊了「驗證遊戲檔案的完整性」後,以前のパッチのバックアップが見つかりました\nバックアップからインストールしますか？\nそれともそのままインストールしますか？\n\n【バックアップを使用】\nゲームを以前のバージョンへ戻します\nゲームのみ更新され、パッチが未対応の場合に使用してください\n【そのままインストール】\nゲーム?パッチとも最新版の場合\nまたはSteamの「ゲームファイルの整合性を確認」を実行した後はこちらを選択してください
+locBakVerDetected,Backup files of patch {VER} was detected.\nUse backup files to patch or patch directly?\n\n[ Backup files ] will restore previous version of the game\nCan be used when the game updated but patch is not\n[ Patch directly ] applies when the game and patch both updated\nOr applies after pressed Verify integrity of game files,检测到补丁版本 {VER} 留下的备份文件。\n使用备份文件安装还是直接安装？\n\n【使用备份文件】会恢复到上版本的游戏\n可用于游戏更新但补丁未更新的情况\n【直接安装】适用于游戏与补丁均更新后\n亦或是点击了「验证游戏文件的完整性」后,偵測到補丁版本 {VER} 留下的備份檔案。\n使用備份檔案安裝還是直接安裝？\n\n【使用備份檔案】會恢復到上版本的遊戲\n可用於遊戲更新但補丁未更新的情況\n【直接安裝】適用於遊戲與補丁均更新後\n亦或是點擊了「驗證遊戲檔案的完整性」後,パッチバージョン{VER}のバックアップが見つかりました\nバックアップからインストールしますか？\nそれともそのままインストールしますか？\n\n【バックアップを使用】\nゲームを以前のバージョンへ戻します\nゲームのみ更新され、パッチが未対応の場合に使用してください\n【そのままインストール】\nゲーム?パッチとも最新版の場合\nまたはSteamの「ゲームファイルの整合性を確認」を実行した後はこちらを選択してください
+locPatchBackup, Backup files , 使用备份文件, 使用備份檔案,バックアップを使用
+locPatchDirectly, Patch directly , 直接安裝, 直接安裝,そのままインストール
+locUnpatch, Unpatch , 卸载补丁, 解除安裝補丁,ﾊﾟｯﾁをｱﾝｲﾝｽﾄｰﾙ
+locNoBakDetected,No backup files detected,未检测到备份文件,未檢測到備份檔案,バックアップは見つかりませんでした
+locUnpatched,Restored backup files,已恢复备份文件,已恢復備份檔案,バックアップを復元しました
+locReadme,Readme,说明,說明,情報
+locInfo,DELTARUNE Chinese Patcher By SheepYhangCN\nIcon By WhatDamon\nMade with Godot Engine .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installation directory of the Steam version of DELTARUNE\nPatcher will automatically patch data of every chapter\n\nThis patcher is open source on Github\nClick to open Github repository,DELTARUNE 汉化安装器 By 憨憨羊の宇航鸽鸽\n图标 By WhatDamon\n使用 Godot Engine .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data 安装补丁\n\n此安装器已在 Github 上开源\n点击打开 Github 仓库,DELTARUNE 漢化安裝器 By 憨憨羊の宇航鴿鴿\n圖標 By WhatDamon\n使用 Godot Engine .NET 製作\nDELTARUNE 中文在地化版 by 好人漢化組\n\n設置 DELTARUNE Steam 版安裝目錄\n安裝器會自動為每個章節的 data 安裝補丁\n\n此安裝器已在 Github 上開源\n點擊打開 Github 倉庫,DELTARUNE中国語化インストーラー By 憨憨羊の宇航鴿鴿\nアイコン：WhatDamon\nGodot Engine .NET により制作\nDELTARUNE中国語化 By 好人漢化組\n\nDELTARUNE Steam版のインストール先を設定\n\n各チャプターのdataに自動でパッチを適用します\n\nこのインストーラーはGitHubでオープンソースとして公開されています\nGitHubリポジトリを開く
+locInfoContributors,DELTARUNE Chinese Patcher\nIcon By WhatDamon\nMade with Godot Engine .NET\nDELTARUNE Chinese Localized Version by 好人汉化组\n\nSet the installation directory of the Steam version of DELTARUNE\nPatcher will automatically patch data of every chapter\n\nThis patcher is open source on Github\nContributors: {CONTRIBUTORS}\nClick to open Github repository,DELTARUNE 汉化安装器\n图标 By WhatDamon\n使用 Godot Engine .NET 制作\nDELTARUNE 中文本地化版 by 好人汉化组\n\n设置 DELTARUNE Steam 版安装目录\n安装器会自动为每个章节的 data 安装补丁\n\n此安装器已在 Github 上开源\n贡献者：{CONTRIBUTORS}\n点击打开 Github 仓库,DELTARUNE 漢化安裝器\n圖標 By WhatDamon\n使用 Godot Engine .NET 製作\nDELTARUNE 中文在地化版 by 好人漢化組\n\n設置 DELTARUNE Steam 版安裝目錄\n安裝器會自動為每個章節的 data 安裝補丁\n\n此安裝器已在 Github 上開源\n貢獻者：{CONTRIBUTORS}\n點擊打開 Github 倉庫,DELTARUNE中国語化インストーラー\nアイコン：WhatDamon\nGodot Engine .NET により制作\nDELTARUNE中国語化 By 好人漢化組\n\nDELTARUNE Steam版のインストール先を設定\n\n各チャプターのdataに自動でパッチを適用します\n\nこのインストーラーはGitHubでオープンソースとして公開されています\n貢献者：{CONTRIBUTORS}\nGitHubリポジトリを開く
+locRungame, Run Game , 启动游戏, 啟動遊戲,ｹﾞｰﾑを起動
+locRungameTooltip,Run game through Steam,通过 Steam 启动游戏,透過 Steam 啟動遊戲,Steam からゲームを起動
+locOutdatedVer,You're currently running the version for outdated hardware\nThis version is only for the purpose of compatibility\nYou might encounter some glitches that is not in normal version\nWe won't bother it if it's not serious\nPlease keep in mind,你目前正在运行用于老旧硬件的版本\n此版本仅用于兼容性目的\n你可能会遇到一些在正常版本中不存在的小故障\n如果其不严重则我们不会加以处理\n请谨记,你目前正在運行用於老舊硬體的版本\n此版本僅供相容性目的\n你可能會遇到一些再正常版本中不存在的小故障\n如果其不嚴重則我們不會加以處理\n請謹記,現在、旧式ハードウェア向けバージョンを使用しています\nこのバージョンは互換性確保のみを目的としています\n通常版には存在しない軽微な不具合が発生する場合があります\n重大でない限り修正は行われません\nあらかじめご了承ください
+locPatchInvalid,   [color=red]Path Invalid[/color],   [color=red]路径无效[/color],   [color=red]路徑無效[/color],   [color=red]無効なパスです[/color]
+locPatchInvalidExists,   [color=red]Path Invalid: Not exists[/color],   [color=red]路径无效：不存在[/color],   [color=red]路徑無效：不存在[/color],   [color=red]無効なパス：存在しません[/color]
+locPatchInvalidFile,   [color=red]Path Invalid: File instead of Directory[/color],   [color=red]路径无效：文件而非路径[/color],   [color=red]路徑無效：檔案而非路徑[/color],   [color=red]無効なパス：ファイル（パスではありません）[/color]
+locPatchInvalidUT,   [color=red]Path Invalid: UNDERTALE instead of DELTARUNE[/color],   [color=red]路径无效：UNDERTALE 而非 DELTARUNE[/color],   [color=red]路徑無效：UNDERTALE 而非 DELTARUNE[/color],   [color=red]無効なパス：UNDERTALE（DELTARUNEではありません）[/color]
+locPatchInvalidSame,   [color=red]Path not recommended: Same path as patcher[/color],   [color=red]路径不推荐：与安装器相同路径[/color],   [color=red]路徑不推薦：與安裝器相同路徑[/color],   [color=red]推奨されないパス：インストーラーと同じ場所[/color]
+locPatchValidFull,   [color=green]Path Valid: Full Version[/color],   [color=green]路径有效：完整版[/color],   [color=green]路徑有效：完整版[/color],   [color=green]有効なパス：製品版[/color]
+locPatchValidDemo,   [color=green]Path Valid: Demo Version[/color],   [color=green]路径有效：Demo 版[/color],   [color=green]路徑有效：Demo 版[/color],   [color=green]有効なパス：Demo版[/color]
+locPleaseRead,Please read before use,请在使用前阅读,請在使用前閱讀,ご利用前に必ずお読みください
+locPleaseReadLabel,"Patch & patcher are FULLY FREE & OPEN-SOURCED\nWe strictly prohibits any form of illegal activity\ninvolving the resale of patches.\nPlease ensure you got this through official channels\nIf you paid money for this,\nGo ask for refund and report the seller immediately\n\nPress button below for patch tutorial\nIf you encounter any problem when patching\nPlease check the video first\n You can restart patcher to find this again",此汉化补丁与汉化安装器「完全免费且开源」\n好人汉化组严禁任何形式的倒卖补丁违法行为\n请确保你通过正规途径获取此汉化补丁\n如果你通过付费获取此补丁，请尽快前往退款举报\n\n按下下方按钮打开安装教程\n如果在安装过程中出现任何问题\n也请优先查阅此视频\n你可以通过重启安装器来再次找到此窗口\n,此漢化補丁與漢化安裝器「完全免費且開源」\n好人漢化組嚴禁任何形式的倒賣補丁違法行為\n請確保是透過正規途徑獲取此漢化補丁\n如果你是付費獲取此補丁，請儘快前往退款舉報\n\n按下下方按鈕開啟安裝教程\n如果在安裝過程中出現任何問題\n也請優先查閱此影片\n你可以透過重啟安裝器來再次找到此視窗\n,この中国語化パッチおよびインストーラーは\n完全無料?オープンソースです\n好人漢化組は\nいかなる形であってもパッチの転売を固く禁止します\n必ず正規の無料配布元から入手してください\nもし有料で入手した場合は\n速やかに返金申請および通報を行ってください\n\n下のボタンからインストールガイドを開けます\nインストール中に問題が発生した場合も\nまずはこちらの動画をご確認ください\nインストーラーを再起動すると\nこの画面を再度表示できます\n
+locOpenTutorial, Open Tutorial Video , 打开安装教程 , 打開安裝教程 ,インストールガイドを開く
+locConfirmRead,I've fully read contents above\nand confirmed I got this for free,我已完整阅读以上内容\n且确认是通过免费途径获取,我已完整閱讀以上內容\n且確認是透過免費途徑獲取獲取,上記の内容をすべて読み\n無料で入手したことを確認しました
+locAdvanced,Advanced Options,高级选项,高級選項,詳細オプション
+locAdvancedTooltip,Click to open Advanced Options\nWarning: Please ensure that you know what you are doing\nbefore using these options,点击打开高级选项\n警告：请确保你知道你在做什么的情况下\n才使用这些选项,點擊打開高級選項\n警告：請確保你知道你在做什麼的情況下\n才使用這些選項,クリックして詳細オプションを開く\n警告：\n内容を理解している場合のみ使用してください
+locTriggerPathDetect,Trigger DR Path Detect & Save it,触发 DR 路径检测并储存,觸發 DR 路徑檢測並儲存,DELTARUNEパスを再検出して保存
+locBypassHash,Bypass Hash Check,绕过散列值检查,繞過雜湊值檢查,ハッシュ値チェックを無効化
+locBypassTooLong,Bypass TAKING TOO LONG Stopping,绕过 TAKING TOO LONG 终止,繞過 TAKING TOO LONG 終止,ナガイ　シすぎ判定を無効化
+locBypassSamePath,Bypass Same Path as DR,绕过与 DR 相同路径检查,繞過與 DR 相同路徑檢查,ゲームフォルダーとの同一パス判定を無効化
+locUseInstalledXDelta,Use installed XDelta3 first,优先使用已安装 XDelta3,優先使用已安裝 XDelta3,インストール済みXDelta3を優先
+locUseInstalled7Zip,Use installed 7-Zip first,优先使用已安装 7-Zip,優先使用已安裝 7-Zip,インストール済み7-Zipを優先
+locBypassRestoreWhenFailed,Bypass Restore Backup when failed,绕过失败时的备份还原,繞過失敗時的備份還原,失敗時のバックアップ復元を無効化
+locForcePatchType,Force patch type,强制补丁类型,強制補丁類型,パッチ種別を強制指定
+locDisabled,Disabled,已禁用,已禁用,無効
+locFullVersion,Full Ver.,完整版,完整版,製品版
+locDemoVersion,Demo Ver.,Demo 版,Demo 版,Demo版
+locFullSteam,Full Version (Through Steam),完整版（通过 Steam）,完整版（透過 Steam）,製品版（Steam）
+locDemoSteam,Demo Version (Through Steam),Demo 版（通过 Steam）,Demo 版（透過 Steam）,Demo版（Steam）
+locWithoutSteam,Run without Steam,不通过 Steam 启动,不透過 Steam 啟動,Steamを使用せず起動
+locXDeltaPath,Override XDelta3 Path,覆盖 XDelta3 路径,覆寫 XDelta3 路徑,XDelta3のパスを指定
+loc7zipPath,Override 7-Zip Path,覆盖 7-Zip 路径,覆寫 7-Zip 路徑,7-Zipのパスを指定
+locEmptyToDisable,Empty to Disable,留空以禁用,留空以禁用,空欄で無効
+locOverrideOS,Override Current OS,覆盖当前系统,覆寫當前系統,システム設定を上書き
+locOverrideScale,Override Window Scale,覆盖窗口缩放,覆寫視窗縮放,ウィンドウ倍率を上書き
+locGithubApiSource,Github API Source,Github API 源,Github API 源,GitHub APIミラー
+locMacQuarantineTitle,macOS Quarantine Check,macOS 隔离检测,macOS 隔離檢測,macOS隔離チェック
+locMacQuarantineFound,This application has been quarantined by macOS.\n{0}\n\nYou can move this app to\nthe Applications folder manually\nor run this command in terminal to fix it:\nsudo xattr -dr com.apple.quarantine <app path>\nThen restart the app,此应用已被 macOS 隔离。\n{0}\n\n你可以手动将此应用移动到\n「应用程序/Applications」文件夹\n或在终端运行以下命令修复：\nsudo xattr -dr com.apple.quarantine <应用路径>\n随后重启应用,此應用程式已被 macOS 隔離。\n{0}\n\n你可以手動將此應用移動到\n「應用程式/Applications」資料夾\n或在終端機運行以下命令修復：\nsudo xattr -dr com.apple.quarantine <應用路徑>\n隨後重啟應用,このアプリはmacOSの隔離属性が設定されています。\n{0}\n\n手動で\n「アプリケーション（Applications）」フォルダーへ移動するか\n以下をターミナルで実行してください\nsudo xattr -dr com.apple.quarantine <アプリのパス>\nその後、アプリを再起動してください
+locMacQuarantineXattrInfo,From: {0}  Date: {1},来自：{0}  时间：{1},來自：{0}  時間：{1},送信元：{0}  時刻：{1}
+loc1225,"*  You tried to patch it...\n* But, it slipped through your hand\n*  And you couldn't find it anymore.\n\n*  You couldn't find\nyour patch.",*  你试着安装它...\n*  结果，那东西从你手上滑走\n*  然后就再也找不到了。\n\n*  找不到\n你的补丁了。,*  你試著安裝它...\n*  結果，那東西從你手上滑走\n*  然後就再也找不到了。\n\n*  找不到\n你的補丁了。,＊ パッチを　当てようとした…\n＊ が　手をすり抜けて…\n＊ …もう　見つからなかった。\n\n＊ ………\n\n　 パッチが　見つからなかった。

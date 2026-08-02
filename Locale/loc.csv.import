@@ -6,10 +6,10 @@ uid="uid://brnjwmq5sdc82"
 
 [deps]
 
-files=["res://Locale/loc.en.translation", "res://Locale/loc.zh_CN.translation", "res://Locale/loc.zh_TW.translation"]
+files=["res://Locale/loc.en.translation", "res://Locale/loc.zh_CN.translation", "res://Locale/loc.zh_TW.translation", "res://Locale/loc.ja.translation"]
 
 source_file="res://Locale/loc.csv"
-dest_files=["res://Locale/loc.en.translation", "res://Locale/loc.zh_CN.translation", "res://Locale/loc.zh_TW.translation"]
+dest_files=["res://Locale/loc.en.translation", "res://Locale/loc.zh_CN.translation", "res://Locale/loc.zh_TW.translation", "res://Locale/loc.ja.translation"]
 
 [params]
 

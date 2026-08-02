@@ -112,6 +112,10 @@ python "./modules/mono/build_scripts/build_assemblies.py" --godot-output-dir=./b
 		<td>北京中易中标电子信息技术有限公司</td>
 	</tr>
 	</tr>
+		<td>JFドット東雲ゴシック</td>
+		<td>The Electronic Font Open Laboratory</td>
+	</tr>
+	</tr>
 		<td>应用图标</td>
 		<td>WhatDamon</td>
 	</tr>

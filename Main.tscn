@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://666gqdeu718c" path="res://Assets/Background/animation/anim2.png" id="6_03owx"]
 [ext_resource type="Texture2D" uid="uid://doih7ph0v7vy8" path="res://Assets/Background/animation/anim3.png" id="7_wkp8b"]
 [ext_resource type="Texture2D" uid="uid://cq6fbe5egxp8o" path="res://Assets/Background/animation/anim4.png" id="8_20pc6"]
+[ext_resource type="FontFile" uid="uid://bdk7xuiuykjti" path="res://Assets/DTM.otf" id="9_03owx"]
 
 [sub_resource type="Animation" id="Animation_5vvyt"]
 length = 0.001
@@ -329,6 +330,7 @@ offset_left = 1.0
 offset_right = 63.0
 offset_bottom = 60.0
 tooltip_text = "locInfo"
+theme_override_fonts/font = ExtResource("9_03owx")
 text = "  !  "
 
 [node name="ComboLanguage" type="OptionButton" parent="." unique_id=1745333609]
@@ -339,13 +341,6 @@ anchor_right = 1.0
 offset_left = -212.0
 offset_bottom = 60.0
 grow_horizontal = 0
-item_count = 3
-popup/item_0/text = "English"
-popup/item_0/id = 0
-popup/item_1/text = "中文（简体）"
-popup/item_1/id = 1
-popup/item_2/text = "中文（繁體）"
-popup/item_2/id = 2
 
 [node name="TitleBar" type="ColorRect" parent="." unique_id=2009895199]
 visible = false

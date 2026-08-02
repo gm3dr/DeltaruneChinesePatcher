@@ -377,6 +377,10 @@ public partial class Main : Control
 			nodeComboLanguage.Set("popup/item_" + Array.IndexOf(locales, current).ToString() + "/text", TranslationServer.FindTranslations(current, true)[0].GetMessage("locLanguageName"));
 		}
 		nodeComboLanguage.Selected = Array.IndexOf(locales.ToArray(), locales.Contains(TranslationServer.GetLocale()) ? TranslationServer.GetLocale() : TranslationServer.GetLocale().Left(2));
+		// Theme
+		Theme = GD.Load<Theme>("res://Assets/Theme" + (TranslationServer.GetLocale().StartsWith("ja") ? "Ja" : "") + ".tres");
+		// 字体大小更新
+		UpdateFontSize(this);
 		//读取之前的游戏路径
 		var game_path_f = FileAccess.Open(game_path_file, FileAccess.ModeFlags.Read);
 		var game_path = "";
@@ -509,10 +513,7 @@ public partial class Main : Control
 
 	public void _on_language_item_selected(int selected)
 	{
-		if (OS.IsStdOutVerbose())
-		{
-			PrintLog($"Language changed from {TranslationServer.GetLocale()} to {locales[selected]}.");
-		}
+		PrintLog($"Language changed from {TranslationServer.GetLocale()} to {locales[selected]}.");
 		TranslationServer.SetLocale(locales[selected]);
 		_Ready();
 	}
@@ -1916,6 +1917,10 @@ public partial class Main : Control
 	//从27开始公差却是13 14显示会出问题
 	internal static int FontSize(int size, int multiply)
 	{
+		if (TranslationServer.GetLocale().StartsWith("ja"))
+		{
+			return (size + 1) * multiply;
+		}
 		if (multiply == 1)
 		{
 			return size;
@@ -1929,6 +1934,35 @@ public partial class Main : Control
 			return (size - 1) * multiply;
 		}
 		return size * multiply;
+	}
+	internal static void UpdateFontSize(Node node)
+	{
+		Godot.Collections.Dictionary<int, int> pairs = new()
+		{
+			{ 13, 14 },
+			{ 27, 28 },
+			{ 40, 42 }
+		};
+		var is_ja = TranslationServer.GetLocale().StartsWith("ja");
+		foreach (var child in node.GetChildren())
+		{
+			if (child is Control ctl)
+			{
+				var current_size = ctl.Get("theme_override_font_sizes/font_size");
+				foreach (var pair in pairs)
+				{
+					int size1 = is_ja ? pair.Key : pair.Value;
+					if (current_size.AsInt32() == size1)
+					{
+						var size2 = (is_ja ? pair.Value : pair.Key);
+						PrintLog("Updated font size of node " + ctl.Name + " (" + ctl.GetPath() + ") from " + size1.ToString() + " to " + size2.ToString());
+						ctl.Set("theme_override_font_sizes/font_size", size2);
+						break;
+					}
+				}
+			}
+			UpdateFontSize(child);
+		}
 	}
 	//退出
 	public override void _Notification(int what)

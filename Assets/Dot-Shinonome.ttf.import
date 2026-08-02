@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bdk7xuiuykjti"
-path="res://.godot/imported/DTM.otf-bf2d4b3dfb95f01051d9c06b88c2f4b4.fontdata"
+uid="uid://cckvlwcb2jyan"
+path="res://.godot/imported/Dot-Shinonome.ttf-ae4603e8ee2d2b7986d557f6407e99ca.fontdata"
 
 [deps]
 
-source_file="res://Assets/DTM.otf"
-dest_files=["res://.godot/imported/DTM.otf-bf2d4b3dfb95f01051d9c06b88c2f4b4.fontdata"]
+source_file="res://Assets/Dot-Shinonome.ttf"
+dest_files=["res://.godot/imported/Dot-Shinonome.ttf-ae4603e8ee2d2b7986d557f6407e99ca.fontdata"]
 
 [params]
 
