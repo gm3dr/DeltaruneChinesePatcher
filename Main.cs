@@ -90,6 +90,7 @@ public partial class Main : Control
 	static string _7zip = GetGameDirPath("externals/7zip/7z");
 	static bool used_fallback = false; // ws3917 - 是否使用了備用安裝補丁
 	static bool patch_failed = false; // ws3917 - 补丁安装失败的信号
+	static bool patch_failed_invalid = false; // 不是 ws3917 - 失败且是 invalid 的信号；实在看不懂只能出此下策，屎山堆起来了
 	static readonly int too_long_time = 45;
 	static readonly Godot.Collections.Dictionary<string, Godot.Collections.Array<string>> available_externals = new()
 	{
@@ -1120,8 +1121,20 @@ public partial class Main : Control
 							RedirectStandardError = true
 						};
 						fallback_process.EnableRaisingEvents = true;
-						fallback_process.OutputDataReceived += RecivedOutput;
-						fallback_process.ErrorDataReceived += RecivedOutput;
+						fallback_process.OutputDataReceived += (f_sender, f_e) =>
+						{
+							if (f_e.Data.Contains("XD3_INVALID_INPUT"))
+							{
+								patch_failed_invalid = true;
+							}
+						};
+						fallback_process.ErrorDataReceived += (f_sender, f_e) =>
+						{
+							if (f_e.Data.Contains("XD3_INVALID_INPUT"))
+							{
+								patch_failed_invalid = true;
+							}
+						};
 
 						fallback_process.Exited += (f_sender, f_e) =>
 						{
@@ -1234,7 +1247,7 @@ public partial class Main : Control
 		if (patch_failed || ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= too_long_time)))
 		{
 			await KillExternals();
-			if (patch_failed)
+			if (patch_failed && patch_failed_invalid)
 			{
 				CallDeferred("PatchResultHandler", false, "locPatchFailedInvalidInput", (DateTime.Now - starttime).TotalSeconds, new Vector2I(640, 480));
 			}
