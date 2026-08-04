@@ -694,7 +694,7 @@ public partial class Main : Control
 		foreach (var asset in patchreleases["assets"].AsGodotArray())
 		{
 			var filename = asset.AsGodotDictionary()["name"].AsString().ToLower();
-			if (filename.Contains(os_name.ToLower()) && ((demo && filename.Contains("demo")) || ((!demo) && !filename.Contains("demo"))))
+			if (filename.StartsWith("patch_") && filename.Contains(os_name.ToLower()) && ((demo && filename.Contains("demo")) || ((!demo) && !filename.Contains("demo"))))
 			{
 				url = asset.AsGodotDictionary()["browser_download_url"].AsString();
 				file = "_downloadingtemp_" + asset.AsGodotDictionary()["name"].AsString();
