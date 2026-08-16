@@ -1244,18 +1244,24 @@ public partial class Main : Control
 			CallDeferred("Ending");
 			return;
 		}
-		if (patch_failed || ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= too_long_time)))
+		if (patch_failed)
 		{
 			await KillExternals();
-			if (patch_failed && patch_failed_invalid)
+			if (patch_failed_invalid)
 			{
 				CallDeferred("PatchResultHandler", false, "locPatchFailedInvalidInput", (DateTime.Now - starttime).TotalSeconds, new Vector2I(640, 480));
 			}
 			else
 			{
-				CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", too_long_time.ToString(), new Vector2I(480, 240));
+				CallDeferred("PatchResultHandler", false, "locPatchFailed", (DateTime.Now - starttime).TotalSeconds, new Vector2I(480, 240));
 			}
-				
+			return;	
+		}
+		if ((!bypass_too_long) && ((DateTime.Now - starttime).TotalSeconds >= too_long_time))
+		{
+			await KillExternals();
+			CallDeferred("PatchResultHandler", false, "locPatchFailedTakingTooLong", too_long_time.ToString(), new Vector2I(480, 240));
+			return;
 		}
 	}
 	internal static void MoveAfterExtracted(string dir, string relative_dir, string drsdir)
