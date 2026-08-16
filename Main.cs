@@ -1123,14 +1123,14 @@ public partial class Main : Control
 						fallback_process.EnableRaisingEvents = true;
 						fallback_process.OutputDataReceived += (f_sender, f_e) =>
 						{
-							if (f_e.Data.Contains("XD3_INVALID_INPUT"))
+							if (f_e.Data.Contains("XD3_INVALID_INPUT") || f_e.Data.Contains("BLAKE3 mismatch"))
 							{
 								patch_failed_invalid = true;
 							}
 						};
 						fallback_process.ErrorDataReceived += (f_sender, f_e) =>
 						{
-							if (f_e.Data.Contains("XD3_INVALID_INPUT"))
+							if (f_e.Data.Contains("XD3_INVALID_INPUT") || f_e.Data.Contains("BLAKE3 mismatch"))
 							{
 								patch_failed_invalid = true;
 							}
@@ -1597,7 +1597,7 @@ public partial class Main : Control
 		{
 			logtext += i.AsString().TrimPrefix("\r\n").TrimSuffix("\r\n") + "\n";
 		}
-		if (logtext.Contains("XD3_INVALID_INPUT") && !used_fallback)
+		if ((logtext.Contains("XD3_INVALID_INPUT") || logtext.Contains("BLAKE3 mismatch")) && !used_fallback)
 		{
 			PatchResultHandler(false, "locPatchFailedInvalidInput", usedtime, new Vector2I(640, 480));
 		}
