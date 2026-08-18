@@ -159,7 +159,7 @@ jobs:
       
     - name: Install Custom Export Template
       run: |
-        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.7.2.rc.mono"
+        TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.7.3.rc.mono"
         mkdir -p "$TEMPLATE_DIR"
         cp ${{ env.GODOT_SOURCE_PATH }}/bin/godot.linuxbsd.template_release.x86_64.mono "${TEMPLATE_DIR}/linux_release.x86_64"
         TEMPLATE_DIR="/home/runner/.local/share/godot/export_templates/4.4.2.rc.mono"
@@ -176,7 +176,7 @@ jobs:
         project="${{ env.SOURCE_PATH }}/project.godot"
         sed -i 's|config/features=PackedStringArray("4\.7"|config/features=PackedStringArray("4.4"|g' "$project"
         csproj="${{ env.SOURCE_PATH }}/DeltaruneChinesePatcher.csproj"
-        sed -i 's|Godot.NET.Sdk/4\.7\.2-rc|Godot.NET.Sdk/4.4.2-rc|g' "$csproj"
+        sed -i 's|Godot.NET.Sdk/4\.7\.3-rc|Godot.NET.Sdk/4.4.2-rc|g' "$csproj"
         maincs="${{ env.SOURCE_PATH }}/Main.cs"
         sed -i 's|TranslationServer\.FindTranslations(current, true)\[0\]|TranslationServer.GetTranslationObject(current)|g' "$maincs"
         sed -i '/^[[:space:]]*DisplayServer\.WindowSetTaskbarProgress/d' "$maincs"
