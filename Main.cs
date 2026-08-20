@@ -1717,6 +1717,7 @@ public partial class Main : Control
 	// 检查DR路径
 	internal bool PathCheck(string path, bool patching = false)
 	{
+		path = PathTrim(path);
 		//file check
 		if (FileAccess.FileExists(path))
 		{
