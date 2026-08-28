@@ -1610,6 +1610,10 @@ public partial class Main : Control
 		{
 			PatchResultHandler(false, "locPatchFailedDiskSpace", usedtime, new Vector2I(640, 180));
 		}
+		else if (logtext.Contains("Can't open as archive: 1") || logtext.Contains("Cannot open the file as archive"))
+		{
+			PatchResultHandler(false, "locPatchFailedCorrupted", usedtime, new Vector2I(640, 180));
+		}
 		else if (logtext.Replace("\r", "").Replace("\n", "").Replace(" ", "") == "Extracting...")
 		{
 			PatchResultHandler(false, "locPatchFailedExternals" + (os_name == "macOS" ? "Mac" : ""), usedtime, new Vector2I(640, 360));
