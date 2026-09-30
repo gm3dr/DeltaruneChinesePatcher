@@ -1254,7 +1254,7 @@ public partial class Main : Control
 			}
 			else
 			{
-				CallDeferred("PatchResultHandler", false, "locPatchFailed", (DateTime.Now - starttime).TotalSeconds, new Vector2I(480, 240));
+				CallDeferred("Ending");
 			}
 			return;	
 		}
