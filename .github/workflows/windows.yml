@@ -146,6 +146,10 @@ jobs:
       run: dotnet build
       working-directory: ${{ env.SOURCE_PATH }}
 
+    - name: Import Project Assets
+      run: |
+        ${{ env.GODOT_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --import
+
     - name: Install Custom Export Template
       run: |
         $TEMPLATE_DIR = "$env:APPDATA\Godot\export_templates\4.7.3.rc.mono"
@@ -172,6 +176,10 @@ jobs:
         dotnet restore
         dotnet build
       working-directory: ${{ env.SOURCE_PATH }}
+
+    - name: Import Project Assets (Outdated)
+      run: |
+        ${{ env.GODOT_44_EDITOR_PATH }} --headless --path ${{ env.SOURCE_PATH }} --import
 
     - name: Export Project (Outdated)
       run: |
