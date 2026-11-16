@@ -1630,7 +1630,7 @@ public partial class Main : Control
 		{
 			PatchResultHandler(false, "locPatchFailedDenied", usedtime, new Vector2I(640, 360));
 		}
-		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
+		else if (!logtext.Contains("xdelta3: finished") || !logtext.Contains("Everything is Ok") || !logtext.Contains("it already matches the target of this patch") || (logtext.ToLower().Contains("error") && !logtext.Contains("wrong ELF class: ELFCLASS")))
 		{
 			PatchResultHandler(false, "locPatchFailed", usedtime, new Vector2I(480, 240));
 		}
