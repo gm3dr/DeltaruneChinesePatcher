@@ -60,6 +60,41 @@ jobs:
         chmod +x ${{ env.GODOT_SOURCE_PATH }}/misc/scripts/install_vulkan_sdk_macos.sh
         bash ${{ env.GODOT_SOURCE_PATH }}/misc/scripts/install_vulkan_sdk_macos.sh
 
+    - name: Patch Godot Error Message
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      run: |
+        python3 - <<'PY'
+        from pathlib import Path
+
+        def cpp_u32(s: str) -> str:
+            out = []
+            for ch in s:
+                o = ord(ch)
+                if ch == "\n":
+                    out.append("\\n")
+                elif ch == '"':
+                    out.append('\\"')
+                elif ch == "\\":
+                    out.append("\\\\")
+                elif 32 <= o < 127:
+                    out.append(ch)
+                elif o <= 0xFFFF:
+                    out.append(f"\\u{o:04X}")
+                else:
+                    out.append(f"\\U{o:08X}")
+            return "".join(out)
+
+        msg = "请完全解压整个压缩包，而不是直接运行里面的程序，更不是单独把程序解压出来。\n如果你确定已完全解压，但仍看到此窗口，请确认你没有私自修改 .pck 与程序本体的文件名，请确保本程序与 .pck 的文件名是相同的。\n\n請完全提取整個壓縮檔，而不是直接執行裡面的程式，更不是單獨把程式提取出來。\n如果你確定已完全提取，但仍看到此視窗，請確認你沒有私自修改 .pck 與程式本體的檔名，請確保本程式與 .pck 的檔名是相同的。\n\nPlease fully extract the entire archive, rather than directly running the program inside, and certainly do not extract only the executable.\nIf you are sure that everything has been fully extracted but still see this window, please confirm that you didn't rename the .pck file or the program executable. Please ensure that both the program and the .pck file share the exact same filename.\n\n\n"
+
+        main_cpp = Path("${{ env.GODOT_SOURCE_PATH }}") / "main" / "main.cpp"
+        text = main_cpp.read_text(encoding="utf-8")
+        old = 'String error_msg = "Error: Couldn\'t load project data at path \\""'
+        new = ('String error_msg = String(U"' + cpp_u32(msg + 'Error: Couldn\'t load project data at path "') + '")')
+        if old not in text:
+            raise RuntimeError(f"Target string not found in {main_cpp}")
+        main_cpp.write_text(text.replace(old, new, 1), encoding="utf-8")
+        PY
+
     - name: Build Godot
       if: steps.godot-cache.outputs.cache-hit != 'true'
       working-directory: ${{ env.GODOT_SOURCE_PATH }}
